@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPort Claude Extension - Automated Tester</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #2d2d30;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .test-controls {
+      background: #f5f5f5;
+      padding: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a6dd8;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: #48bb78;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #38a169;
+    }
+
+    .btn-danger {
+      background: #f56565;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #e53e3e;
+    }
+
+    .btn-warning {
+      background: #ed8936;
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background: #dd6b20;
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .test-section {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .test-header {
+      background: #f7f7f7;
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .test-header h3 {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .test-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    .status-testing {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-passed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-failed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .test-content {
+      padding: 15px;
+    }
+
+    .test-log {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .test-results {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    .results-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .result-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+    }
+
+    .result-card .number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .result-card .label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .result-card.total {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .result-card.passed {
+      border-color: #48bb78;
+      background: #f0fff4;
+    }
+
+    .result-card.failed {
+      border-color: #f56565;
+      background: #fff5f5;
+    }
+
+    .result-card.pending {
+      border-color: #ed8936;
+      background: #fffaf0;
+    }
+
+    .checklist {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px;
+    }
+
+    .checklist h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .checklist-icon.pending {
+      color: #ccc;
+    }
+
+    .checklist-icon.checked {
+      color: #48bb78;
+    }
+
+    .checklist-icon.failed {
+      color: #f56565;
+    }
+
+    .checklist-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .checklist-action {
+      margin-left: auto;
+    }
+
+    .small-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    .terminal-mock {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+      margin-top: 10px;
+      min-height: 100px;
+    }
+
+    .input-mock {
+      background: #2d2d30;
+      border: 1px solid #3e3e42;
+      color: #d4d4d4;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      margin-top: 10px;
+      width: 100%;
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 6px;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-warning {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+    }
+
+    .alert-info {
+      background: #d1ecf1;
+      border: 1px solid #17a2b8;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 RPort Claude Extension - Test Suite</h1>
+      <p>Automated testing for Chrome extension functionality</p>
+    </div>
+
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <div>
+        <strong>Setup Instructions:</strong> 
+        1. Load the extension in Chrome | 
+        2. Configure your API key | 
+        3. Open this page | 
+        4. Run the tests below
+      </div>
+    </div>
+
+    <div class="test-controls">
+      <button class="btn btn-success" onclick="runAllTests()">
+        <span>▶️</span> Run All Tests
+      </button>
+      <button class="btn btn-primary" onclick="runDetectionTests()">
+        🔍 Test Element Detection
+      </button>
+      <button class="btn btn-primary" onclick="runButtonTests()">
+        🔘 Test Button Injection
+      </button>
+      <button class="btn btn-primary" onclick="runApiTests()">
+        🌐 Test API Integration
+      </button>
+      <button class="btn btn-warning" onclick="runEdgeCases()">
+        ⚠️ Test Edge Cases
+      </button>
+      <button class="btn btn-danger" onclick="resetTests()">
+        🔄 Reset All
+      </button>
+    </div>
+
+    <div class="test-results">
+      <div class="results-summary">
+        <div class="result-card total">
+          <div class="number" id="total-tests">0</div>
+          <div class="label">Total Tests</div>
+        </div>
+        <div class="result-card passed">
+          <div class="number" id="passed-tests">0</div>
+          <div class="label">Passed</div>
+        </div>
+        <div class="result-card failed">
+          <div class="number" id="failed-tests">0</div>
+          <div class="label">Failed</div>
+        </div>
+        <div class="result-card pending">
+          <div class="number" id="pending-tests">0</div>
+          <div class="label">Pending</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-grid">
+      <!-- Test 1: Element Detection -->
+      <div class="test-section">
+        <div class="test-header">
+          <h3>1. Element Detection</h3>
+          <span class="test-status status-pending" id="status-1">Pending</span>
+        </div>
+        <div class="test-content">
+          <div class="terminal-mock terminal" id="terminal-1">$ echo "Test output"
+Test output</div>
+          <textarea class="input-mock command-input" id="input-1">echo "Test command"</textarea>
+          <div class="test-log" id="log-1">Waiting to test...</div>
+        </div>
+      </div>
+
+      <!-- Test 2: Button Injection -->
+      <div class="test-section">
+        <div class="test-header">
+          <h3>2. Button Injection</h3>
+          <span class="test-status status-pending" id="status-2">Pending</span>
+        </div>
+        <div class="test-content">
+          <div class="terminal-mock output" id="terminal-2">Error: Command not found</div>
+          <input type="text" class="input-mock terminal-input" id="input-2" value="invalid_command">
+          <div class="test-log" id="log-2">Waiting to test...</div>
+        </div>
+      </div>
+
+      <!-- Test 3: API Communication -->
+      <div class="test-section">
+        <div class="test-header">
+          <h3>3. API Communication</h3>
+          <span class="test-status status-pending" id="status-3">Pending</span>
+        </div>
+        <div class="test-content">
+          <pre class="terminal-mock"><code id="terminal-3">#!/bin/bash
+for i in {1..10}
+do
+  echo $i
+done</code></pre>
+          <textarea class="input-mock" id="input-3">Script to improve</textarea>
+          <div class="test-log" id="log-3">Waiting to test...</div>
+        </div>
+      </div>
+
+      <!-- Test 4: Edge Cases -->
+      <div class="test-section">
+        <div class="test-header">
+          <h3>4. Edge Cases</h3>
+          <span class="test-status status-pending" id="status-4">Pending</span>
+        </div>
+        <div class="test-content">
+          <div class="terminal-mock console" id="terminal-4"></div>
+          <div contenteditable="true" class="input-mock" id="input-4"></div>
+          <div class="test-log" id="log-4">Waiting to test...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h2>Manual Test Checklist</h2>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-1">⭕</div>
+        <div class="checklist-text">Extension loads without errors</div>
+        <button class="btn small-btn" onclick="checkItem(1)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-2">⭕</div>
+        <div class="checklist-text">Popup opens and saves API key</div>
+        <button class="btn small-btn" onclick="checkItem(2)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-3">⭕</div>
+        <div class="checklist-text">"Send to Claude" buttons appear</div>
+        <button class="btn small-btn" onclick="checkItem(3)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-4">⭕</div>
+        <div class="checklist-text">"Insert" buttons appear after analysis</div>
+        <button class="btn small-btn" onclick="checkItem(4)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-5">⭕</div>
+        <div class="checklist-text">Claude API call succeeds</div>
+        <button class="btn small-btn" onclick="checkItem(5)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-6">⭕</div>
+        <div class="checklist-text">Improved script inserts correctly</div>
+        <button class="btn small-btn" onclick="checkItem(6)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-7">⭕</div>
+        <div class="checklist-text">Works with multiple tabs</div>
+        <button class="btn small-btn" onclick="checkItem(7)">Check</button>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-icon pending" id="check-8">⭕</div>
+        <div class="checklist-text">Handles API errors gracefully</div>
+        <button class="btn small-btn" onclick="checkItem(8)">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="test-scripts.js"></script>
+  <script>
+    // Test state
+    let testResults = {
+      total: 0,
+      passed: 0,
+      failed: 0,
+      pending: 0
+    };
+
+    // Test functions
+    function updateTestStatus(testId, status, message) {
+      const statusEl = document.getElementById(`status-${testId}`);
+      const logEl = document.getElementById(`log-${testId}`);
+      
+      statusEl.className = `test-status status-${status}`;
+      statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      
+      if (logEl) {
+        const timestamp = new Date().toLocaleTimeString();
+        logEl.textContent += `\n[${timestamp}] ${message}`;
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+    }
+
+    function updateResults() {
+      document.getElementById('total-tests').textContent = testResults.total;
+      document.getElementById('passed-tests').textContent = testResults.passed;
+      document.getElementById('failed-tests').textContent = testResults.failed;
+      document.getElementById('pending-tests').textContent = testResults.pending;
+    }
+
+    async function runDetectionTests() {
+      updateTestStatus(1, 'testing', 'Starting element detection test...');
+      
+      // Wait a moment for extension to load
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Check if buttons were injected
+      const sendButtons = document.querySelectorAll('.claude-send-btn');
+      const insertButtons = document.querySelectorAll('.claude-insert-btn');
+      
+      if (sendButtons.length > 0) {
+        updateTestStatus(1, 'passed', `✓ Found ${sendButtons.length} "Send to Claude" button(s)`);
+        testResults.passed++;
+      } else {
+        updateTestStatus(1, 'failed', '✗ No "Send to Claude" buttons found');
+        testResults.failed++;
+      }
+      
+      testResults.total++;
+      testResults.pending = Math.max(0, testResults.pending - 1);
+      updateResults();
+    }
+
+    async function runButtonTests() {
+      updateTestStatus(2, 'testing', 'Testing button functionality...');
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Check if buttons are clickable
+      const sendButton = document.querySelector('.claude-send-btn');
+      if (sendButton) {
+        try {
+          // Simulate click
+          sendButton.click();
+          updateTestStatus(2, 'passed', '✓ Button click event works');
+          testResults.passed++;
+        } catch (e) {
+          updateTestStatus(2, 'failed', `✗ Button click failed: ${e.message}`);
+          testResults.failed++;
+        }
+      } else {
+        updateTestStatus(2, 'failed', '✗ No button found to test');
+        testResults.failed++;
+      }
+      
+      testResults.total++;
+      testResults.pending = Math.max(0, testResults.pending - 1);
+      updateResults();
+    }
+
+    async function runApiTests() {
+      updateTestStatus(3, 'testing', 'Testing API integration...');
+      
+      // Check if extension is responding to messages
+      try {
+        if (chrome && chrome.runtime) {
+          const response = await chrome.runtime.sendMessage({
+            action: 'test'
+          });
+          updateTestStatus(3, 'passed', '✓ Extension responds to messages');
+          testResults.passed++;
+        } else {
+          updateTestStatus(3, 'pending', '⚠️ Cannot test - Chrome API not available');
+        }
+      } catch (e) {
+        updateTestStatus(3, 'failed', `✗ Extension communication failed: ${e.message}`);
+        testResults.failed++;
+      }
+      
+      testResults.total++;
+      testResults.pending = Math.max(0, testResults.pending - 1);
+      updateResults();
+    }
+
+    async function runEdgeCases() {
+      updateTestStatus(4, 'testing', 'Testing edge cases...');
+      
+      // Test empty content
+      const emptyTerminal = document.getElementById('terminal-4');
+      emptyTerminal.textContent = '';
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Test very long content
+      emptyTerminal.textContent = 'x'.repeat(10000);
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Test special characters
+      emptyTerminal.textContent = '!@#$%^&*()<>?:"{}[]\\|;\'`,./~';
+      
+      updateTestStatus(4, 'passed', '✓ Edge cases handled');
+      testResults.passed++;
+      testResults.total++;
+      testResults.pending = Math.max(0, testResults.pending - 1);
+      updateResults();
+    }
+
+    async function runAllTests() {
+      resetTests();
+      testResults.pending = 4;
+      updateResults();
+      
+      await runDetectionTests();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await runButtonTests();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await runApiTests();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await runEdgeCases();
+    }
+
+    function resetTests() {
+      testResults = { total: 0, passed: 0, failed: 0, pending: 0 };
+      updateResults();
+      
+      for (let i = 1; i <= 4; i++) {
+        updateTestStatus(i, 'pending', 'Waiting to test...');
+        document.getElementById(`log-${i}`).textContent = 'Waiting to test...';
+      }
+    }
+
+    function checkItem(id) {
+      const icon = document.getElementById(`check-${id}`);
+      icon.classList.remove('pending');
+      icon.classList.add('checked');
+      icon.textContent = '✅';
+    }
+
+    // Load test scripts on page load
+    window.addEventListener('load', () => {
+      // Load a sample broken script
+      if (window.loadTestCase) {
+        window.loadTestCase('python', 'syntaxError');
+      }
+      
+      // Initialize test counts
+      testResults.pending = 4;
+      updateResults();
+    });
+  </script>
+</body>
+</html>

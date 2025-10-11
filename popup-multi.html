@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Code Buddy by Apra Labs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 420px;
+      min-height: 600px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .provider-selector {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .provider-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .provider-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .provider-card:hover {
+      border-color: #94BA33;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .provider-card.selected {
+      border-color: #94BA33;
+      background: #f4f9eb;
+    }
+
+    .provider-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #94BA33;
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .provider-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .provider-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .status.connected {
+      background: #d4f4dd;
+      color: #1e7e34;
+    }
+
+    .status.disconnected {
+      background: #ffd6d6;
+      color: #bd2130;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .status.connected .status-dot {
+      background: #28a745;
+      animation: pulse 2s infinite;
+    }
+
+    .status.disconnected .status-dot {
+      background: #dc3545;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 60px;
+      resize: vertical;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #94BA33;
+      box-shadow: 0 0 0 3px rgba(148, 186, 51, 0.1);
+    }
+
+    .form-group input[type="password"] {
+      font-family: monospace;
+    }
+
+    .form-group .help-text {
+      font-size: 11px;
+      color: #888;
+      margin-top: 5px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(148, 186, 51, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e5e5;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e5e5e5;
+      margin: 20px 0;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 20px;
+      background: #f5f5f5;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: white;
+      color: #94BA33;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .provider-config {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .provider-config h4 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #555;
+    }
+
+    .config-note {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+      color: #856404;
+      margin-bottom: 15px;
+    }
+
+    .notification {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    .notification.show {
+      display: block;
+    }
+
+    .notification.success {
+      background: #d4f4dd;
+      color: #1e7e34;
+      border: 1px solid #c3e6cb;
+    }
+
+    .notification.error {
+      background: #ffd6d6;
+      color: #bd2130;
+      border: 1px solid #f5c6cb;
+    }
+
+    .notification.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .spinner {
+      display: none;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn.loading .spinner {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer {
+      padding: 15px 20px;
+      background: #f8f9fa;
+      border-top: 1px solid #e5e5e5;
+      text-align: center;
+      font-size: 11px;
+      color: #888;
+    }
+
+    .footer a {
+      color: #94BA33;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .advanced-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .advanced-toggle:hover {
+      background: #e5e5e5;
+    }
+
+    .advanced-content {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .advanced-content.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 AI Code Buddy</h1>
+      <p>by Apra Labs • Turn any web terminal into an AI-powered command center</p>
+    </div>
+
+    <div class="content">
+      <div id="notification" class="notification"></div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="setup">Setup</button>
+        <button class="tab" data-tab="settings">Settings</button>
+        <button class="tab" data-tab="advanced">Advanced</button>
+      </div>
+
+      <!-- Setup Tab -->
+      <div id="setup-tab" class="tab-content active">
+        <div class="provider-selector">
+          <label style="font-size: 13px; font-weight: 500; color: #555;">Select AI Provider</label>
+          <div class="provider-grid">
+            <div class="provider-card" data-provider="claude">
+              <div class="provider-icon">🌟</div>
+              <div class="provider-name">Claude</div>
+            </div>
+            <div class="provider-card" data-provider="openai">
+              <div class="provider-icon">🤖</div>
+              <div class="provider-name">OpenAI</div>
+            </div>
+            <div class="provider-card" data-provider="gemini">
+              <div class="provider-icon">✨</div>
+              <div class="provider-name">Gemini</div>
+            </div>
+            <div class="provider-card" data-provider="azure">
+              <div class="provider-icon">☁️</div>
+              <div class="provider-name">Azure</div>
+            </div>
+            <div class="provider-card" data-provider="cohere">
+              <div class="provider-icon">🔮</div>
+              <div class="provider-name">Cohere</div>
+            </div>
+            <div class="provider-card" data-provider="huggingface">
+              <div class="provider-icon">🤗</div>
+              <div class="provider-name">HuggingFace</div>
+            </div>
+            <div class="provider-card" data-provider="ollama">
+              <div class="provider-icon">🦙</div>
+              <div class="provider-name">Ollama</div>
+            </div>
+            <div class="provider-card" data-provider="replicate">
+              <div class="provider-icon">🔄</div>
+              <div class="provider-name">Replicate</div>
+            </div>
+            <div class="provider-card" data-provider="custom">
+              <div class="provider-icon">⚙️</div>
+              <div class="provider-name">Custom</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="status" class="status disconnected">
+          <span class="status-dot"></span>
+          <span id="status-text">No Provider Configured</span>
+        </div>
+
+        <div class="provider-config" id="provider-config">
+          <h4 id="provider-title">Provider Configuration</h4>
+          
+          <!-- Dynamic configuration fields will be inserted here -->
+          <div id="config-fields"></div>
+
+          <button id="saveConfig" class="btn btn-primary">
+            <span>Save Configuration</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings-tab" class="tab-content">
+        <div class="form-group">
+          <label for="autoImprove">
+            <input type="checkbox" id="autoImprove" style="width: auto; margin-right: 8px;">
+            Auto-improve scripts on failure
+          </label>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>Quick Actions</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="improveSelected" class="btn btn-secondary">
+              Improve Selected Text
+            </button>
+            <button id="testConnection" class="btn btn-secondary">
+              <span>Test Connection</span>
+              <span class="spinner"></span>
+            </button>
+            <button id="clearSettings" class="btn btn-secondary">
+              Clear All Settings
+            </button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>Custom Selectors</label>
+          <div style="margin-bottom: 10px;">
+            <input type="text" id="outputSelector" placeholder="Output selector (e.g., .terminal-output)">
+          </div>
+          <div style="margin-bottom: 10px;">
+            <input type="text" id="inputSelector" placeholder="Input selector (e.g., #command-input)">
+          </div>
+          <button id="saveSelectors" class="btn btn-secondary btn-small">Save Selectors</button>
+        </div>
+      </div>
+
+      <!-- Advanced Tab -->
+      <div id="advanced-tab" class="tab-content">
+        <div class="config-note">
+          ⚠️ Advanced settings for power users. Modify with caution.
+        </div>
+
+        <div class="form-group">
+          <label for="customPrompt">Custom System Prompt</label>
+          <textarea id="customPrompt" placeholder="Override default prompt template..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="maxTokens">Max Tokens</label>
+          <input type="number" id="maxTokens" min="100" max="4000" value="2000">
+        </div>
+
+        <div class="form-group">
+          <label for="temperature">Temperature (0-1)</label>
+          <input type="number" id="temperature" min="0" max="1" step="0.1" value="0.3">
+        </div>
+
+        <div class="form-group">
+          <label for="timeout">Request Timeout (ms)</label>
+          <input type="number" id="timeout" min="5000" max="60000" value="30000">
+        </div>
+
+        <div class="divider"></div>
+
+        <button id="exportConfig" class="btn btn-secondary">Export Configuration</button>
+        <button id="importConfig" class="btn btn-secondary">Import Configuration</button>
+        <input type="file" id="importFile" style="display: none;" accept=".json">
+      </div>
+    </div>
+
+    <div class="footer">
+      <div style="margin-bottom: 8px;">
+        <span style="color: #28a745; font-weight: 600;">🔒 Your keys are safe</span>
+        <span style="font-size: 10px; display: block; margin-top: 2px;">
+          Stored locally • Never sent to us • Open source
+        </span>
+      </div>
+      <div style="margin-bottom: 8px; font-size: 11px; color: #94BA33; font-weight: 600;">
+        Powered by <a href="https://www.apralabs.com" target="_blank" style="color: #94BA33; text-decoration: none; font-weight: 700;">Apra Labs</a>
+      </div>
+      <a href="https://github.com/your-repo/ai-code-buddy/blob/main/SECURITY.md" target="_blank">Security Policy</a>
+      &nbsp;•&nbsp;
+      <a href="https://github.com/your-repo/ai-code-buddy" target="_blank">Documentation</a>
+      &nbsp;•&nbsp;
+      v2.0.0
+    </div>
+  </div>
+
+  <script src="providers.js"></script>
+  <script src="popup-multi.js"></script>
+</body>
+</html>

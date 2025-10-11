@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Load Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .status.pending { background: #ffc107; color: #000; }
+    .status.success { background: #4caf50; color: white; }
+    .status.error { background: #f44336; color: white; }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    .terminal {
+      background: #000;
+      color: #0f0;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin: 15px 0;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Extension Load Test Page</h1>
+
+  <div class="test-card">
+    <h2>Test 1: Extension Loaded</h2>
+    <p>Status: <span class="status pending" id="test1-status">Checking...</span></p>
+    <p id="test1-result">Checking if extension scripts are loaded...</p>
+  </div>
+
+  <div class="test-card">
+    <h2>Test 2: Button Injection</h2>
+    <p>Status: <span class="status pending" id="test2-status">Waiting</span></p>
+    <div class="terminal" id="test-output">
+$ python script.py
+Traceback (most recent call last):
+  File "script.py", line 5, in &lt;module&gt;
+    result = divide(10, 0)
+ZeroDivisionError: division by zero
+    </div>
+    <textarea class="command-input" id="test-input">def divide(a, b):
+    return a / b
+
+result = divide(10, 0)
+print(result)</textarea>
+    <p id="test2-result">Buttons should appear near the terminal output above.</p>
+    <button onclick="checkButtons()">Check for Buttons</button>
+  </div>
+
+  <div class="test-card">
+    <h2>Test 3: Provider Configuration</h2>
+    <p>Status: <span class="status pending" id="test3-status">Waiting</span></p>
+    <p id="test3-result">Click button to check storage.</p>
+    <button onclick="checkStorage()">Check Storage</button>
+  </div>
+
+  <div class="test-card">
+    <h2>Test 4: Message Passing</h2>
+    <p>Status: <span class="status pending" id="test4-status">Waiting</span></p>
+    <p id="test4-result">Test communication with background script.</p>
+    <button onclick="testMessagePassing()">Test Message Passing</button>
+  </div>
+
+  <div class="test-card">
+    <h2>Quick Checks</h2>
+    <pre id="checklist">
+✓ Go to chrome://extensions
+✓ Enable "Developer mode"
+✓ Click "Errors" button on the extension card
+✓ Check for any console errors
+✓ Verify "Service worker (Active)" status
+    </pre>
+  </div>
+
+  <script>
+    // Test 1: Check if extension is loaded
+    setTimeout(() => {
+      const hasButtons = document.querySelectorAll('.claude-assist-btn').length > 0;
+      const hasStyles = !!Array.from(document.styleSheets).find(sheet => {
+        try {
+          return sheet.href && sheet.href.includes('styles.css');
+        } catch(e) {
+          return false;
+        }
+      });
+
+      if (hasButtons || hasStyles) {
+        updateTest(1, 'success', 'Extension appears to be loaded!');
+      } else {
+        updateTest(1, 'pending', 'Extension may still be loading. Wait 5 seconds and refresh.');
+      }
+    }, 2000);
+
+    // Test 2: Check for button injection
+    function checkButtons() {
+      const buttons = document.querySelectorAll('.claude-assist-btn, .claude-send-btn, .claude-insert-btn');
+      if (buttons.length > 0) {
+        updateTest(2, 'success', `Found ${buttons.length} button(s) injected by extension!`);
+      } else {
+        updateTest(2, 'error', 'No buttons found. Check console for errors.');
+      }
+    }
+
+    // Test 3: Check storage
+    async function checkStorage() {
+      try {
+        const settings = await chrome.storage.sync.get(null);
+        if (Object.keys(settings).length > 0) {
+          updateTest(3, 'success', 'Storage working! Settings: ' + JSON.stringify(settings, null, 2));
+        } else {
+          updateTest(3, 'pending', 'No settings stored yet. Configure the extension first.');
+        }
+      } catch(e) {
+        updateTest(3, 'error', 'Cannot access storage: ' + e.message);
+      }
+    }
+
+    // Test 4: Test message passing
+    async function testMessagePassing() {
+      try {
+        const response = await chrome.runtime.sendMessage({
+          action: 'improveScript',
+          data: { script: '# Test' }
+        });
+
+        if (response) {
+          if (response.success) {
+            updateTest(4, 'success', 'Background script responding! API call would work.');
+          } else {
+            updateTest(4, 'pending', 'Background script responded but: ' + response.error);
+          }
+        }
+      } catch(e) {
+        updateTest(4, 'error', 'Cannot communicate with background script: ' + e.message);
+      }
+    }
+
+    function updateTest(testNum, status, message) {
+      document.getElementById(`test${testNum}-status`).className = `status ${status}`;
+      document.getElementById(`test${testNum}-status`).textContent = status.toUpperCase();
+      document.getElementById(`test${testNum}-result`).textContent = message;
+    }
+
+    // Auto-check buttons after 3 seconds
+    setTimeout(checkButtons, 3000);
+  </script>
+</body>
+</html>

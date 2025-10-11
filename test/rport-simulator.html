@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPort Simulator - Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+    }
+
+    .header {
+      background: #2d2d30;
+      padding: 15px;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      color: #569cd6;
+    }
+
+    .server-info {
+      color: #4ec9b0;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #252526;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .terminal-container {
+      padding: 20px;
+    }
+
+    .terminal-section {
+      margin-bottom: 30px;
+      background: #1e1e1e;
+      border: 1px solid #3e3e42;
+      border-radius: 4px;
+      padding: 15px;
+    }
+
+    .section-title {
+      color: #dcdcaa;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Terminal Output Styles */
+    .terminal, .output, .console {
+      background: #000;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-bottom: 10px;
+    }
+
+    .terminal-output {
+      background: #0c0c0c;
+      border: 1px solid #333;
+      color: #f0f0f0;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+
+    .error-output {
+      color: #ff6b6b;
+    }
+
+    .success-output {
+      color: #51cf66;
+    }
+
+    /* Command Input Styles */
+    .command-input, .terminal-input {
+      width: 100%;
+      background: #2d2d30;
+      border: 1px solid #3e3e42;
+      color: #d4d4d4;
+      padding: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 14px;
+      border-radius: 4px;
+      margin-top: 10px;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .command-input:focus, .terminal-input:focus {
+      outline: none;
+      border-color: #569cd6;
+      background: #1e1e1e;
+    }
+
+    input[type="text"].command-line {
+      width: 100%;
+      background: #000;
+      border: none;
+      color: #00ff00;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    /* Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background: #0e639c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #1177bb;
+    }
+
+    .btn-execute {
+      background: #4ec9b0;
+      color: #1e1e1e;
+    }
+
+    .btn-execute:hover {
+      background: #5fd9c0;
+    }
+
+    .btn-clear {
+      background: #f14c4c;
+    }
+
+    .btn-clear:hover {
+      background: #ff6b6b;
+    }
+
+    /* Test Scenarios */
+    .test-scenarios {
+      background: #2d2d30;
+      padding: 20px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .scenario-card {
+      background: #1e1e1e;
+      border: 1px solid #3e3e42;
+      padding: 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-card:hover {
+      border-color: #569cd6;
+      transform: translateY(-2px);
+    }
+
+    .scenario-title {
+      color: #569cd6;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .scenario-desc {
+      color: #808080;
+      font-size: 12px;
+    }
+
+    /* Additional test elements */
+    pre {
+      background: #1a1a1a;
+      padding: 10px;
+      border-left: 3px solid #569cd6;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+
+    code {
+      background: #2d2d30;
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: #ce9178;
+    }
+
+    .contenteditable-area {
+      background: #2d2d30;
+      border: 1px solid #3e3e42;
+      padding: 12px;
+      min-height: 80px;
+      border-radius: 4px;
+      color: #d4d4d4;
+      margin: 10px 0;
+    }
+
+    .contenteditable-area:focus {
+      outline: none;
+      border-color: #569cd6;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #3e3e42;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: #808080;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: #569cd6;
+      border-bottom: 2px solid #569cd6;
+      margin-bottom: -2px;
+    }
+
+    .tab:hover {
+      color: #d4d4d4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🖥️ RPort Terminal Simulator</h1>
+      <div class="server-info">Server: test-server-01 | Status: Connected</div>
+    </div>
+
+    <div class="terminal-container">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('terminal')">Terminal</button>
+        <button class="tab" onclick="switchTab('scripts')">Scripts</button>
+        <button class="tab" onclick="switchTab('logs')">Logs</button>
+      </div>
+
+      <!-- Test Scenario 1: Basic Terminal with Output -->
+      <div class="terminal-section">
+        <div class="section-title">Terminal Output (class="terminal")</div>
+        <div class="terminal" id="terminal1">$ ps aux | grep python
+user     1234  0.0  0.1  12345  6789 ?        S    10:00   0:00 python3 app.py
+user     2345  0.0  0.2  23456  7890 ?        S    10:01   0:00 python3 worker.py
+user     3456  0.0  0.1  34567  8901 ?        S    10:02   0:00 grep python</div>
+        <textarea class="command-input" placeholder="Enter command...">ps aux | grep python</textarea>
+      </div>
+
+      <!-- Test Scenario 2: Error Output -->
+      <div class="terminal-section">
+        <div class="section-title">Command Output with Error (class="output")</div>
+        <div class="output error-output" id="output1">ERROR: Command failed
+Traceback (most recent call last):
+  File "/usr/local/bin/deploy.py", line 42, in &lt;module&gt;
+    config = load_config(sys.argv[1])
+  File "/usr/local/bin/deploy.py", line 15, in load_config
+    with open(config_file, 'r') as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'config.yaml'
+
+Exit code: 1</div>
+        <input type="text" class="command-line command-input" value="python deploy.py config.yaml" />
+      </div>
+
+      <!-- Test Scenario 3: Pre/Code Elements -->
+      <div class="terminal-section">
+        <div class="section-title">Script Output (using &lt;pre&gt; and &lt;code&gt;)</div>
+        <pre><code>#!/bin/bash
+# Backup script with error
+
+BACKUP_DIR="/backup"
+SOURCE_DIR="/data"
+
+if [ ! -d "$SOURCE_DIR" ]; then
+    echo "Error: Source directory does not exist"
+    exit 1
+fi
+
+tar -czf $BACKUP_DIR/backup_$(date +%Y%m%d).tar.gz $SOURCE_DIR
+# Missing error handling for tar command
+echo "Backup completed"</code></pre>
+        <textarea class="terminal-input" rows="10">#!/bin/bash
+BACKUP_DIR="/backup"
+SOURCE_DIR="/data"
+tar -czf $BACKUP_DIR/backup_$(date +%Y%m%d).tar.gz $SOURCE_DIR
+echo "Backup completed"</textarea>
+      </div>
+
+      <!-- Test Scenario 4: Console Output -->
+      <div class="terminal-section">
+        <div class="section-title">Console Output (class="console")</div>
+        <div class="console">Starting deployment process...
+[INFO] Checking dependencies...
+[ERROR] Missing required package: nginx
+[ERROR] Missing required package: postgresql-client
+[INFO] Installing missing packages...
+E: Unable to locate package postgresql-client
+[FATAL] Package installation failed
+
+Deployment aborted.</div>
+        <div contenteditable="true" class="contenteditable-area">apt-get update && apt-get install -y nginx postgresql-client</div>
+      </div>
+
+      <!-- Test Scenario 5: Terminal Output Class -->
+      <div class="terminal-section">
+        <div class="section-title">RPort Style Output (class="terminal-output")</div>
+        <div class="terminal-output">root@server:/var/log# tail -f system.log
+2024-01-15 10:30:45 [ERROR] Database connection failed: Connection refused
+2024-01-15 10:30:46 [INFO] Retrying database connection...
+2024-01-15 10:30:47 [ERROR] Database connection failed: Connection refused
+2024-01-15 10:30:48 [WARN] Max retries reached, falling back to cache
+2024-01-15 10:30:49 [ERROR] Cache initialization failed: Redis not running
+2024-01-15 10:30:50 [FATAL] System unable to start without database or cache</div>
+        <textarea id="command-input" class="command-input">systemctl restart postgresql && systemctl restart redis</textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-execute" onclick="executeCommand()">Execute Command</button>
+        <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
+        <button class="btn" onclick="loadTestScript(1)">Load Error Script</button>
+        <button class="btn" onclick="loadTestScript(2)">Load Working Script</button>
+      </div>
+    </div>
+
+    <div class="test-scenarios">
+      <div class="section-title">Quick Test Scenarios</div>
+      <div class="scenario-grid">
+        <div class="scenario-card" onclick="loadScenario('syntax-error')">
+          <div class="scenario-title">Python Syntax Error</div>
+          <div class="scenario-desc">Script with missing colon and indentation issues</div>
+        </div>
+        <div class="scenario-card" onclick="loadScenario('bash-error')">
+          <div class="scenario-title">Bash Script Error</div>
+          <div class="scenario-desc">Missing quotes and error handling</div>
+        </div>
+        <div class="scenario-card" onclick="loadScenario('sql-error')">
+          <div class="scenario-title">SQL Query Error</div>
+          <div class="scenario-desc">Incorrect SQL syntax</div>
+        </div>
+        <div class="scenario-card" onclick="loadScenario('docker-error')">
+          <div class="scenario-title">Docker Command Error</div>
+          <div class="scenario-desc">Invalid docker-compose configuration</div>
+        </div>
+        <div class="scenario-card" onclick="loadScenario('permission-error')">
+          <div class="scenario-title">Permission Denied</div>
+          <div class="scenario-desc">File permission issues</div>
+        </div>
+        <div class="scenario-card" onclick="loadScenario('network-error')">
+          <div class="scenario-title">Network Error</div>
+          <div class="scenario-desc">Connection timeout issues</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Test script scenarios
+    const scenarios = {
+      'syntax-error': {
+        output: `File "script.py", line 5
+    if x > 10
+            ^
+SyntaxError: invalid syntax`,
+        script: `def process_data(x):
+    if x > 10
+        print("Large value")
+    else
+        print("Small value")`
+      },
+      'bash-error': {
+        output: `./backup.sh: line 3: [: missing \`]'
+./backup.sh: line 7: /backup/data_20240115.tar.gz: No such file or directory
+tar: Cowardly refusing to create an empty archive`,
+        script: `#!/bin/bash
+SOURCE=/data
+if [ -d $SOURCE
+then
+    tar -czf /backup/data_$(date +%Y%m%d).tar.gz
+fi`
+      },
+      'sql-error': {
+        output: `ERROR:  syntax error at or near "FORM"
+LINE 1: SELECT * FORM users WHERE created_at > '2024-01-01' AND st...
+                 ^`,
+        script: `SELECT * FORM users WHERE created_at > '2024-01-01' AND status = active;`
+      },
+      'docker-error': {
+        output: `ERROR: yaml.scanner.ScannerError: while scanning for the next token
+found character '\t' that cannot start any token
+  in "./docker-compose.yml", line 4, column 1`,
+        script: `version: '3'
+services:
+  web:
+	image: nginx:latest
+    ports:
+      - "80:80"`
+      },
+      'permission-error': {
+        output: `bash: ./deploy.sh: Permission denied
+ls: cannot open directory '/root/secrets': Permission denied
+cp: cannot create regular file '/etc/config.conf': Permission denied`,
+        script: `./deploy.sh
+ls /root/secrets
+cp config.conf /etc/config.conf`
+      },
+      'network-error': {
+        output: `curl: (7) Failed to connect to api.service.local port 443: Connection refused
+ping: connect: Network is unreachable
+wget: unable to resolve host address 'download.server.com'`,
+        script: `curl -X POST https://api.service.local/deploy
+ping 10.0.0.1
+wget https://download.server.com/package.tar.gz`
+      }
+    };
+
+    function loadScenario(type) {
+      const scenario = scenarios[type];
+      if (scenario) {
+        // Update the first terminal output
+        document.getElementById('terminal1').textContent = scenario.output;
+        // Update the first input
+        document.querySelector('.command-input').value = scenario.script;
+        
+        // Scroll to top to see the changes
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Flash the updated elements
+        const terminal = document.getElementById('terminal1');
+        terminal.style.transition = 'background-color 0.3s';
+        terminal.style.backgroundColor = '#2d4a2b';
+        setTimeout(() => {
+          terminal.style.backgroundColor = '';
+        }, 500);
+      }
+    }
+
+    function executeCommand() {
+      const inputs = document.querySelectorAll('.command-input, .terminal-input, .contenteditable-area');
+      const randomInput = inputs[Math.floor(Math.random() * inputs.length)];
+      const command = randomInput.value || randomInput.textContent;
+      
+      // Simulate command execution
+      const outputs = document.querySelectorAll('.terminal, .output, .console, .terminal-output');
+      const randomOutput = outputs[Math.floor(Math.random() * outputs.length)];
+      
+      randomOutput.textContent = `$ ${command}
+Executing command...
+Command completed successfully.`;
+      
+      // Flash success
+      randomOutput.style.transition = 'background-color 0.3s';
+      randomOutput.style.backgroundColor = '#1a3a1a';
+      setTimeout(() => {
+        randomOutput.style.backgroundColor = '';
+      }, 500);
+    }
+
+    function clearAll() {
+      document.querySelectorAll('.command-input, .terminal-input').forEach(el => el.value = '');
+      document.querySelectorAll('.contenteditable-area').forEach(el => el.textContent = '');
+      document.querySelectorAll('.terminal, .output, .console, .terminal-output, pre code').forEach(el => {
+        el.textContent = '$ Ready for commands...';
+      });
+    }
+
+    function loadTestScript(num) {
+      const script1 = `#!/bin/bash
+# Broken script
+for file in $(ls *.txt)
+do
+  cat $file | grep error
+  rm -rf $file  # Dangerous!
+done`;
+
+      const script2 = `#!/bin/bash
+# Fixed script
+for file in *.txt; do
+  if [ -f "$file" ]; then
+    grep "error" "$file" || true
+    # rm "$file"  # Commented out for safety
+  fi
+done`;
+
+      const inputs = document.querySelectorAll('.command-input, .terminal-input');
+      inputs.forEach(input => {
+        input.value = num === 1 ? script1 : script2;
+      });
+    }
+
+    function switchTab(tab) {
+      // Simple tab switching simulation
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // You could load different content here
+      console.log('Switched to tab:', tab);
+    }
+
+    // Add some dynamic behavior
+    document.addEventListener('DOMContentLoaded', () => {
+      // Make contenteditable areas work properly
+      document.querySelectorAll('.contenteditable-area').forEach(area => {
+        area.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const text = e.clipboardData.getData('text/plain');
+          document.execCommand('insertText', false, text);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

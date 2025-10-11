@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Code Buddy Icon Generator - Apra Labs</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #94BA33;
+    }
+    .tagline {
+      color: #666;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    canvas {
+      border: 2px solid #94BA33;
+      margin: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Code Buddy Icon Generator</h1>
+  <p class="tagline">"Turn any web terminal into an AI-powered command center"</p>
+  <p><strong>by Apra Labs</strong> - Use this page to generate PNG icons with Apra Labs branding.</p>
+  
+  <canvas id="canvas16" width="16" height="16"></canvas>
+  <canvas id="canvas48" width="48" height="48"></canvas>
+  <canvas id="canvas128" width="128" height="128"></canvas>
+  
+  <div>
+    <h2>Instructions:</h2>
+    <ol>
+      <li>Open this HTML file in a browser</li>
+      <li>Right-click each canvas and save as PNG</li>
+      <li>Save them as icon16.png, icon48.png, and icon128.png respectively</li>
+    </ol>
+  </div>
+  
+  <script>
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#6d8c26;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="24" fill="url(#grad1)"/>
+      <circle cx="64" cy="50" r="28" fill="white" opacity="0.2"/>
+      <text x="64" y="68" font-family="Arial, sans-serif" font-size="54" font-weight="bold" text-anchor="middle" fill="white">🤖</text>
+      <text x="64" y="98" font-family="Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white">AI Code</text>
+      <text x="64" y="113" font-family="Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white">Buddy</text>
+    </svg>`;
+    
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, size, size);
+        // Create download link
+        const link = document.createElement('a');
+        link.download = `icon${size}.png`;
+        link.href = canvas.toDataURL();
+        link.textContent = `Download icon${size}.png`;
+        link.style.display = 'block';
+        link.style.margin = '10px 0';
+        canvas.parentNode.insertBefore(link, canvas.nextSibling);
+      };
+      
+      const svgBlob = new Blob([svgString], {type: 'image/svg+xml'});
+      const url = URL.createObjectURL(svgBlob);
+      img.src = url;
+    }
+    
+    // Generate all icons
+    drawIcon('canvas16', 16);
+    drawIcon('canvas48', 48);
+    drawIcon('canvas128', 128);
+  </script>
+</body>
+</html>

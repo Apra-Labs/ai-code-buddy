@@ -1,0 +1,34 @@
+{
+  "name": "ai-code-buddy",
+  "version": "2.0.0",
+  "description": "Turn any web terminal into an AI-powered command center",
+  "main": "background.js",
+  "scripts": {
+    "test": "node test/popup-multi.test.js && node test/conversation-context.test.js",
+    "test:unit": "node test/popup-multi.test.js && node test/conversation-context.test.js",
+    "test:model-migration": "node test/popup-multi.test.js",
+    "test:conversation": "node test/conversation-context.test.js",
+    "test:validate": "cd icons && npm install && cd .. && node test/image-validator.js && node test/link-validator.js",
+    "test:images": "cd icons && npm install && cd .. && node test/image-validator.js",
+    "test:links": "node test/link-validator.js",
+    "test:all": "npm run test:unit && npm run test:validate",
+    "test:watch": "nodemon --exec npm test",
+    "build": "build-extension.bat"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Apra-Labs/ai-code-buddy.git"
+  },
+  "keywords": [
+    "ai",
+    "terminal",
+    "chrome-extension",
+    "code-assistant"
+  ],
+  "author": "Apra Labs",
+  "license": "MIT",
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

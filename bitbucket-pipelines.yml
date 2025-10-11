@@ -2,6 +2,15 @@ image: node:20
 
 definitions:
   steps:
+    - step: &run-tests
+        name: Run Unit Tests
+        caches:
+          - node
+        script:
+          - echo "Running unit tests..."
+          - npm test
+          - echo "✅ All tests passed!"
+
     - step: &build-extension
         name: Build Chrome Extension
         caches:
@@ -77,17 +86,22 @@ definitions:
 
 pipelines:
   default:
+    - step: *run-tests
     - step: *build-extension
     - step: *validate-extension
 
   branches:
     main:
+      - step: *run-tests
       - step: *build-extension
       - step: *validate-extension
       - step: *create-git-tag
 
   tags:
     'v*':
+      - step:
+          <<: *run-tests
+          name: Run Tests for Release
       - step:
           <<: *build-extension
           name: Build Release for Chrome Web Store
@@ -116,6 +130,10 @@ pipelines:
             - echo "============================================"
 
   custom:
+    # Manual trigger for testing only
+    test-only:
+      - step: *run-tests
+
     # Manual trigger for building without tagging
     build-only:
       - step: *build-extension

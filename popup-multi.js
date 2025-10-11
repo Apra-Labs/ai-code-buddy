@@ -312,10 +312,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Only load if this is the currently saved provider
       if (settings.provider === providerType) {
+        // Validate model preference against current provider models
+        let modelPreference = settings.modelPreference;
+        const provider = AI_PROVIDERS[providerType];
+
+        if (modelPreference && provider.models && provider.models.length > 0) {
+          // Check if saved model exists in current provider's models
+          const modelExists = provider.models.some(m => m.id === modelPreference);
+
+          if (!modelExists) {
+            // Saved model no longer exists, use default model instead
+            console.warn(`Saved model "${modelPreference}" not found in ${providerType} models. Using default.`);
+            const defaultModel = provider.models.find(m => m.default);
+            modelPreference = defaultModel ? defaultModel.id : provider.models[0].id;
+
+            // Update storage with new default
+            await chrome.storage.sync.set({ modelPreference });
+          }
+        }
+
         // Fill in the fields
         const fields = {
           'apiKey': settings.apiKey,
-          'model': settings.modelPreference,
+          'model': modelPreference,
           'endpoint': settings.endpoint,
           'deploymentName': settings.deploymentName,
           'apiVersion': settings.apiVersion,

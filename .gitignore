@@ -49,3 +49,4 @@ pipeline-status.json
 pipelines.json
 *-pipelines-unix.yml
 remote-pipelines.yml
+.claude/settings.local.json

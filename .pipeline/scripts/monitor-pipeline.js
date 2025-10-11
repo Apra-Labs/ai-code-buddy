@@ -5,7 +5,19 @@
  * Monitors the latest pipeline build in real-time
  */
 
+const fs = require('fs');
+const path = require('path');
 const https = require('https');
+
+// Load environment from .env.pipeline
+const envPath = path.join(__dirname, '../../.env.pipeline');
+if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf-8');
+    envContent.split('\n').forEach(line => {
+        const [key, value] = line.split('=');
+        if (key && value) process.env[key.trim()] = value.trim();
+    });
+}
 
 const WORKSPACE = process.env.BITBUCKET_WORKSPACE || 'kumaakh';
 const REPO = process.env.BITBUCKET_REPO || 'ai-code-buddy';

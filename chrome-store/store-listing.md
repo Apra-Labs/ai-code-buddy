@@ -315,3 +315,236 @@ inkscape promotional-marquee.svg --export-filename=promotional-marquee.png --exp
 ```
 
 Or use online converter: https://cloudconvert.com/svg-to-png
+
+---
+
+## Chrome Web Store Privacy Practices
+
+### Single Purpose Description
+
+**Required field - 132 characters max:**
+```
+Integrates AI assistance into web terminals to help developers debug scripts, fix errors, and optimize code.
+```
+
+---
+
+### Permission Justifications
+
+#### 1. storage Permission
+
+**Why we need it:**
+- Store user's API key securely in Chrome's encrypted storage
+- Save user preferences (chosen AI provider, model selection)
+- Remember settings between sessions
+- Allow export/import of configuration
+
+**How it's used:**
+```
+User's API key and settings are stored ONLY in Chrome's local encrypted storage on their device. This data NEVER leaves the user's browser except when the user explicitly sends a request to their chosen AI provider (Claude/OpenAI/Gemini) using their own API key. We have no access to this data - no servers, no analytics, no tracking.
+```
+
+**Can we work without it?**
+NO - Users would need to re-enter their API key every time they open the extension, making it unusable.
+
+---
+
+#### 2. activeTab Permission
+
+**Why we need it:**
+- Read selected text when user clicks "Send to AI" button
+- Inject "Send to AI" button into web pages
+- Access the page content only when user explicitly activates the extension
+
+**How it's used:**
+```
+Only when the user selects text and clicks the "Send to AI" button, the extension reads the selected text from the active tab. The text is then sent directly to the user's chosen AI provider using their API key. The extension does not access tabs in the background or monitor browsing activity - it only works when explicitly activated by the user.
+```
+
+**Can we work without it?**
+NO - This is the core functionality. Without it, users cannot send terminal output or code to AI for analysis.
+
+---
+
+#### 3. Host Permissions (https://*/* and http://*/*)
+
+**Why we need it:**
+- **AI Provider APIs**: Make API calls to Claude (api.anthropic.com), OpenAI (api.openai.com), Gemini (generativelanguage.googleapis.com), and other AI providers
+- **Universal Compatibility**: Inject "Send to AI" button into ANY web-based terminal (RPort, Cloud Shell, GitPod, AWS CloudShell, VS Code Web, custom terminals)
+
+**How it's used:**
+```
+1. API Calls: Direct HTTPS requests from user's browser to AI providers using user's API key. No intermediary servers - the extension acts as a client-side bridge.
+
+2. Content Script Injection: The extension injects a small "Send to AI" button into web pages containing terminals or text areas. This works across multiple terminal platforms (RPort, Cloud Shell, etc.), so broad permissions are necessary.
+
+All network requests are visible in Chrome DevTools. No data is sent to our servers.
+```
+
+**Can we work without it?**
+PARTIALLY - We could:
+- Limit to specific domains (but this would break compatibility with custom/self-hosted terminals)
+- Require users to manually copy-paste instead of using the button (poor UX)
+- Support only 1-2 specific terminals instead of universal compatibility
+
+**Trade-off**: Broad permissions enable universal compatibility with any web terminal. Users can inspect all network traffic to verify no data is sent to unauthorized destinations.
+
+---
+
+### Remote Code Use
+
+**Answer: NO**
+
+```
+This extension does NOT execute remote code. All JavaScript is bundled in the extension package and reviewed during Chrome Web Store submission.
+
+AI responses contain text (including code suggestions) which are displayed to the user for manual review. The extension does not automatically execute any code from AI responses. No eval(), Function(), or dynamic code execution is used.
+```
+
+---
+
+### Data Collection & Privacy Certification
+
+**Does your extension collect user data?**
+**Answer: NO**
+
+```
+AI Code Buddy does NOT collect, store, or transmit user data to our servers.
+
+✓ NO data collection
+✓ NO analytics or tracking
+✓ NO user accounts
+✓ NO backend servers
+✓ NO third-party data sharing (except user's direct communication with their chosen AI provider)
+
+Data flow:
+1. User enters API key → Stored locally in Chrome's encrypted storage (never sent to us)
+2. User selects text → Kept in memory temporarily
+3. User clicks "Send to AI" → Text sent directly to user's chosen AI provider using user's API key
+4. AI response → Displayed to user
+
+We never see, store, or have access to API keys, selected text, or AI responses.
+```
+
+**Privacy Policy:** https://apra-labs.github.io/ai-code-buddy/privacy.html
+
+**Compliance:**
+- ✓ GDPR compliant
+- ✓ CCPA compliant
+- ✓ Chrome Developer Program Policies compliant
+
+---
+
+### Icon Upload (128x128 Required)
+
+**✅ USE THIS ICON FOR CHROME WEB STORE:**
+```
+File: c:\akhil\git\ai-code-buddy\icons\icon128.png
+Size: 128x128 pixels ✓
+Format: PNG with transparency (RGBA) ✓
+File size: 3.07KB ✓
+Design: Modern { } code brackets with AI spark
+Branding: Apra Labs green (#94BA33)
+```
+
+**Chrome Web Store Requirements:**
+- ✓ 128x128 pixels (exact size required)
+- ✓ PNG format
+- ✓ Square aspect ratio (1:1)
+- ✓ File size under 5MB
+- ✓ Professional design with transparency
+
+**How to upload:**
+1. In Chrome Web Store Developer Console → "Store Listing" tab
+2. Under "Icon" section → Click "Upload icon"
+3. Browse to: `c:\akhil\git\ai-code-buddy\icons\icon128.png`
+4. Upload and verify it displays correctly
+
+**Alternative location:**
+If you extract the ZIP (`ai-code-buddy-v2.0.0.zip`), the icon is at: `icons/icon128.png`
+
+**Note:** The extension manifest.json already references this icon, so Chrome should auto-detect it from the ZIP. If you see "Icon image is missing" error, manually upload as described above.
+
+---
+
+### Screenshot Requirements
+
+**Status: REQUIRED - At least 1 screenshot needed**
+
+Create screenshots following `screenshot-guide.md`:
+- Minimum: 1 screenshot (1280x800 recommended)
+- Recommended: 5 screenshots showing key features
+- Format: PNG
+- Max size: 5MB per image
+
+**Quick screenshots to create:**
+1. Extension popup showing provider selection
+2. RPort or Cloud Shell terminal with "Send to AI" button
+3. AI response dialog with code improvement
+
+---
+
+## Quick Copy-Paste Justifications
+
+### Single Purpose (use this exactly):
+```
+Integrates AI assistance into web terminals to help developers debug scripts, fix errors, and optimize code.
+```
+
+### storage Permission:
+```
+Required to securely store user's API key and preferences locally in Chrome's encrypted storage. Data never leaves the user's device except when sending requests to their chosen AI provider using their own API key. No backend servers, no data collection.
+```
+
+**Character count: 262 / 1000**
+
+### activeTab Permission:
+```
+Required to read user-selected text only when the user explicitly clicks "Send to AI" button. Enables injecting the button into web-based terminals. No background monitoring or automatic data access.
+```
+
+**Character count: 203 / 1000**
+
+### Host Permissions:
+```
+Required for: (1) API calls to AI providers (Claude/OpenAI/Gemini) using user's API key - direct browser-to-AI communication, no intermediary servers. (2) Injecting "Send to AI" button into web terminals (RPort, Cloud Shell, GitPod, custom terminals) for universal compatibility. Extension acts as client-side bridge only. All requests visible in DevTools.
+```
+
+**Character count: 348 / 1000**
+
+### Remote Code:
+```
+No remote code execution. All JavaScript bundled in package. AI responses displayed as text only, not executed. No eval() or dynamic code loading.
+```
+
+**Character count: 151 / 1000**
+
+### Data Collection:
+```
+This extension does NOT collect user data. API keys stored locally in Chrome's encrypted storage. Selected text sent directly to user's chosen AI provider using user's API key. No backend servers, no analytics, no tracking. Privacy policy: https://apra-labs.github.io/ai-code-buddy/privacy.html
+```
+
+**Character count: 308 / 1000**
+
+---
+
+## Submission Checklist
+
+Before submitting, ensure:
+- [x] Extension ZIP uploaded
+- [x] Store listing text added
+- [x] Privacy policy URL entered
+- [ ] **Single purpose description added** ← REQUIRED
+- [ ] **Permission justifications added** ← REQUIRED
+- [ ] **Data collection certified** ← REQUIRED
+- [ ] **At least 1 screenshot uploaded** ← REQUIRED
+- [x] Icon present (auto-detected or manually uploaded)
+- [x] Promotional images uploaded (small tile, marquee)
+- [x] Category selected (Developer Tools)
+- [x] Support URL entered
+- [x] Homepage URL entered
+
+---
+
+**Last Updated:** 2025-10-11
+**Ready for submission after adding screenshots and privacy justifications**

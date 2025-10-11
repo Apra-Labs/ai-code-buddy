@@ -10,6 +10,36 @@ Chrome Web Store requires **at least 1 screenshot** but recommends **5 screensho
 - **Aspect ratio:** 16:10
 - **Content:** Should showcase key features
 
+## ⚠️ IMPORTANT: What to Capture
+
+**✅ DO capture (content only):**
+- Extension popup content area (NOT including Chrome UI)
+- Web page content showing the extension in action
+- Dialog boxes / AI response panels
+
+**❌ DON'T capture:**
+- Chrome browser chrome (address bar, tabs, bookmarks bar)
+- Chrome DevTools panel
+- Windows taskbar or desktop
+- Operating system UI
+
+**The screenshot should be EXACTLY 1280x800 pixels of CONTENT, not the entire Chrome window.**
+
+### Best Method: Chrome DevTools Screenshot
+
+```bash
+1. Open your page/extension popup
+2. Press F12 (open DevTools)
+3. Press Ctrl+Shift+M (toggle device emulator)
+4. Select your 1280x800 custom device
+5. Press Ctrl+Shift+P (command palette)
+6. Type: "Capture screenshot"
+7. Select: "Capture screenshot" (captures viewport at 1280x800)
+8. PNG automatically downloads - perfect dimensions!
+```
+
+This captures ONLY the content at exactly 1280x800, without any browser UI.
+
 ---
 
 ## Recommended 5 Screenshots

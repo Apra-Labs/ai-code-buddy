@@ -33,7 +33,7 @@ Quick guide to getting API keys for all supported providers.
 
 ---
 
-## 🤖 OpenAI (GPT-4 / GPT-3.5)
+## 💬 OpenAI (GPT-4 / GPT-3.5)
 
 ### Get Your API Key
 
@@ -476,4 +476,67 @@ Request Template: {"model": "ggml-gpt4all", "prompt": "{prompt}", "max_tokens": 
 
 ---
 
-**Need help?** Check the [main README](README-MULTI-PROVIDER.md) or [open an issue](https://github.com/your-repo/issues)
+## 📋 Provider Feature Comparison
+
+### Supported Models by Provider
+
+| Provider | Models Available | Best For |
+|----------|-----------------|----------|
+| **Claude** | Claude 3 Opus/Sonnet/Haiku, Claude 2.1 | Code analysis & improvements |
+| **OpenAI** | GPT-4 Turbo, GPT-4, GPT-3.5 Turbo | General purpose, wide selection |
+| **Gemini** | Gemini Pro, Gemini Pro Vision | Google integration, free tier |
+| **Azure** | Your deployed models | Enterprise, compliance |
+| **Ollama** | Llama 2, CodeLlama, Mistral, Mixtral | Local/offline, privacy |
+| **HuggingFace** | CodeLlama, StarCoder, Phi-2 | Open source, experimentation |
+| **Cohere** | Command, Command Nightly, Command Light | Cost-effective alternative |
+| **Replicate** | Llama 2 70B, CodeLlama 34B, Mixtral | Pay-per-use, latest models |
+
+### Performance Comparison
+
+| Provider | Avg Response Time | Quality Score | Cost/1K requests |
+|----------|------------------|--------------|------------------|
+| Ollama (local) | <1s | 8/10 | $0 |
+| Claude Haiku | 1-2s | 8/10 | $0.25 |
+| GPT-3.5 Turbo | 1-3s | 7/10 | $2 |
+| Gemini Pro | 1-2s | 7/10 | Free |
+| Claude Sonnet | 2-4s | 9/10 | $15 |
+| GPT-4 Turbo | 3-5s | 10/10 | $30 |
+
+### Data Privacy by Provider
+
+| Provider | Data Retention | Privacy Notes |
+|----------|---------------|---------------|
+| **Ollama** | None (local) | ⭐⭐⭐⭐⭐ Best - runs on your machine |
+| **Azure** | Enterprise policy | ⭐⭐⭐⭐⭐ Corporate data protection |
+| **Claude** | 30 days | ⭐⭐⭐ SOC 2 compliant |
+| **OpenAI** | 30 days | ⭐⭐⭐ Used for safety monitoring |
+| **Gemini** | Per Google policy | ⭐⭐⭐ Standard Google privacy |
+| **Custom** | Your control | ⭐⭐⭐⭐⭐ Depends on your setup |
+
+---
+
+## 🎯 Use Case Recommendations
+
+### For Code Quality
+- **Best**: Claude Sonnet or GPT-4 Turbo
+- **Fast**: Claude Haiku
+- **Local**: CodeLlama via Ollama
+
+### For Speed
+- GPT-3.5 Turbo (fastest cloud)
+- Ollama (no network latency)
+- Claude Haiku (fast + quality)
+
+### For Privacy
+- Ollama (100% local, no data leaves machine)
+- Azure OpenAI (enterprise compliance)
+- Custom API (self-hosted)
+
+### For Cost
+- Gemini (free tier, 60 req/min)
+- Ollama (completely free, unlimited)
+- HuggingFace (free tier available)
+
+---
+
+**Need help?** Check the [main README](../README.md) or [troubleshooting guide](TROUBLESHOOTING.md)

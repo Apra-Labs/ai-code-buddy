@@ -1,0 +1,16 @@
+{
+  "name": "ai-code-buddy-icons",
+  "version": "1.0.0",
+  "description": "Icon generator for AI Code Buddy browser extension",
+  "main": "generate-icons.js",
+  "scripts": {
+    "generate": "node generate-icons.js",
+    "build": "npm run generate"
+  },
+  "keywords": ["icons", "browser-extension", "ai-code-buddy"],
+  "author": "Apra Labs",
+  "license": "ISC",
+  "devDependencies": {
+    "sharp": "^0.34.4"
+  }
+}

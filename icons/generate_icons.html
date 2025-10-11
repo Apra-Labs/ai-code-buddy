@@ -48,14 +48,37 @@
       <defs>
         <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#6d8c26;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#b5d957;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#94BA33;stop-opacity:1" />
         </linearGradient>
       </defs>
-      <rect width="128" height="128" rx="24" fill="url(#grad1)"/>
-      <circle cx="64" cy="50" r="28" fill="white" opacity="0.2"/>
-      <text x="64" y="68" font-family="Arial, sans-serif" font-size="54" font-weight="bold" text-anchor="middle" fill="white">🤖</text>
-      <text x="64" y="98" font-family="Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white">AI Code</text>
-      <text x="64" y="113" font-family="Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white">Buddy</text>
+
+      <!-- Background -->
+      <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+
+      <!-- Modern code bracket design -->
+      <g transform="translate(64, 64)">
+        <!-- Left bracket -->
+        <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+              stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+
+        <!-- Right bracket -->
+        <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+              stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+
+        <!-- AI spark/star element in center -->
+        <circle cx="0" cy="0" r="6" fill="url(#grad2)" opacity="0.9"/>
+        <circle cx="0" cy="0" r="3.5" fill="white"/>
+
+        <!-- Subtle glow lines radiating from center -->
+        <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      </g>
     </svg>`;
     
     function drawIcon(canvasId, size) {

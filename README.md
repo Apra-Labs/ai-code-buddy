@@ -19,55 +19,75 @@ A Chrome extension that integrates **multiple AI providers** (Claude, OpenAI, Ge
 - **Custom Selectors**: Configure selectors for any specific web application
 - **Privacy First**: API keys stored locally, fully open source, optional local AI with Ollama
 
-## Installation
+## 🚀 Quick Start (5 Minutes)
 
-### Development Installation
+### Step 1: Install the Extension (1 minute)
 
 1. Clone or download this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" (toggle in top right)
-4. Click "Load unpacked"
+2. Open Chrome and go to `chrome://extensions/`
+3. Enable **"Developer mode"** (toggle in top right)
+4. Click **"Load unpacked"**
 5. Select the extension directory
 
-### Icon Setup (Optional)
+✅ You should see "AI Code Buddy" appear in your extensions list!
 
-1. Open `icons/generate_icons.html` in Chrome
-2. Click each download link to save the PNG icons
-3. Replace the placeholder PNG files in the `icons` directory
+### Step 2: Choose Your AI Provider (1 minute)
 
-## Setup
+Pick one based on your needs:
 
-### 1. Choose Your AI Provider
+| If you want... | Choose... | Cost |
+|----------------|-----------|------|
+| **Best code quality** | Claude | $20/month API |
+| **General purpose** | OpenAI | $20/month API |
+| **FREE option** | Gemini | FREE tier |
+| **100% privacy** | Ollama | FREE (runs locally) |
 
-The extension supports multiple providers:
+**Don't have any?** Start with Gemini (it's free!) or Ollama (completely private).
 
-| Provider | Best For | Cost | Privacy |
-|----------|----------|------|---------|
-| **Claude** | Code quality & safety | $$ | Cloud |
-| **OpenAI** | General purpose | $$ | Cloud |
-| **Gemini** | Google integration | FREE tier | Cloud |
-| **Ollama** | Complete privacy | FREE | 100% Local |
-| **Azure** | Enterprise | $$$ | Cloud |
-| **Cohere** | Specialized tasks | $$ | Cloud |
-| And more... | | | |
+### Step 3: Get Your API Key (2 minutes)
 
-### 2. Get Your API Key
+**For Gemini (FREE - Recommended for testing):**
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Click "Create API Key"
+3. Copy the key (starts with `AIza...`)
 
-See our comprehensive guide: [docs/API-KEYS-GUIDE.md](docs/API-KEYS-GUIDE.md)
+**For Claude:**
+1. Go to [Anthropic Console](https://console.anthropic.com/)
+2. Click "API Keys" → "Create Key"
+3. Copy the key (starts with `sk-ant-...`)
 
-Quick links:
-- [Anthropic Console](https://console.anthropic.com/) for Claude
-- [OpenAI Platform](https://platform.openai.com/api-keys) for OpenAI
-- [Google AI Studio](https://makersuite.google.com/app/apikey) for Gemini (FREE)
-- [Ollama Installation](https://ollama.ai/) for local AI (no key needed)
+**For OpenAI:**
+1. Go to [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Click "Create new secret key"
+3. Copy the key (starts with `sk-...`)
 
-### 3. Configure the Extension
+**For Ollama (no key needed!):**
+1. Install from [ollama.ai](https://ollama.ai/)
+2. Run: `ollama pull codellama`
+3. Your endpoint: `http://localhost:11434`
 
-1. Click the extension icon in Chrome toolbar
-2. Select your AI provider from the grid
-3. Enter your API key (or endpoint for Ollama/custom)
-4. Click "Save Configuration"
-5. Click "Test Connection" to verify
+📚 **More providers:** See [docs/API-KEYS-GUIDE.md](docs/API-KEYS-GUIDE.md)
+
+### Step 4: Configure the Extension (1 minute)
+
+1. **Click** the extension icon in Chrome toolbar
+2. **Select** your AI provider from the grid
+3. **Enter** your API key (or endpoint for Ollama)
+4. **Click** "Save Configuration"
+5. **Click** "Test Connection" to verify
+
+✅ Status should show "Connected" in green!
+
+### Step 5: Use It! (30 seconds)
+
+1. **Open** any web terminal (RPort, Cloud Shell, etc.)
+2. **Run** any command
+3. **Click** the "Send to AI" button near the output
+4. AI analyzes and provides an improved script
+5. **Click** "Insert Improved Script" button
+6. **Run** the improved script!
+
+🎉 **You're done!** If the script fails, click "Send to AI" again - the AI learns from previous attempts!
 
 ## Usage
 
@@ -140,10 +160,9 @@ Access via the extension popup:
 
 Comprehensive guides available:
 
-- **[API Keys Guide](docs/API-KEYS-GUIDE.md)** - How to get API keys for all providers
+- **[API Keys Guide](docs/API-KEYS-GUIDE.md)** - How to get API keys, provider comparisons, and setup guides
 - **[Security Policy](docs/SECURITY.md)** - Complete security & privacy transparency
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
-- **[Multi-Provider Guide](docs/README-MULTI-PROVIDER.md)** - Detailed provider information
 
 ## Troubleshooting
 
@@ -180,13 +199,12 @@ ai-code-buddy/
 ├── popup-multi.html        # Settings interface
 ├── popup-multi.js          # Popup functionality
 ├── styles.css              # Injected styles
-├── icons/                  # Extension icons
+├── icons/                  # Extension icons & generator
 ├── docs/                   # Comprehensive documentation
-│   ├── API-KEYS-GUIDE.md
-│   ├── SECURITY.md
-│   ├── TROUBLESHOOTING.md
-│   └── README-MULTI-PROVIDER.md
-└── README.md              # This file
+│   ├── API-KEYS-GUIDE.md   # API keys & provider comparisons
+│   ├── SECURITY.md         # Security & privacy details
+│   └── TROUBLESHOOTING.md  # Common issues & solutions
+└── README.md               # This file
 ```
 
 ## Browser Compatibility

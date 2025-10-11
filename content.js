@@ -192,7 +192,7 @@
     const button = document.createElement('button');
     button.className = 'claude-assist-btn claude-send-btn';
     button.innerHTML = `
-      <span class="claude-btn-icon">🤖</span>
+      <span class="claude-btn-icon">✨</span>
       <span class="claude-btn-text">Send to AI</span>
     `;
     button.title = 'Analyze this output with AI';

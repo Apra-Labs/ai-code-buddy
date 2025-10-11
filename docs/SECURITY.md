@@ -580,7 +580,7 @@ fetch('https://api.claude.com')  // ✅ Allowed, monitored by you
 
 ---
 
-**Last Updated**: 2024
+**Last Updated**: 2025
 **Security Version**: 1.0
 **Next Review**: Every major release
 

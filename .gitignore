@@ -28,3 +28,12 @@ npm-debug.log*
 # Build outputs
 dist/
 build/
+
+# Pipeline credentials and artifacts
+.env.pipeline
+logs/pipeline-*
+temp/
+pipeline-status.json
+pipelines.json
+*-pipelines-unix.yml
+remote-pipelines.yml

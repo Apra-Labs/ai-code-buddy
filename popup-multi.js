@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize
   await loadSettings();
   setupEventListeners();
+  setupProviderScrollButtons();
 
   // Load saved settings
   async function loadSettings() {
@@ -180,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Generate configuration fields
   function generateConfigFields(provider, providerType) {
     let html = '';
+    let credentialsHtml = '';
 
     // Add provider-specific note if needed
     if (providerType === 'ollama') {
@@ -190,13 +192,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       html += `<div class="config-note">Configure your custom API endpoint and request format.</div>`;
     }
 
-    // API Key field (if needed)
-    if (provider.configFields.includes('apiKey')) {
+    // Model selection (if applicable) - ALWAYS VISIBLE
+    if (provider.models && provider.models.length > 0) {
       html += `
+        <div class="form-group">
+          <label for="config-model">Model</label>
+          <select id="config-model">
+            ${provider.models.map(model =>
+              `<option value="${model.id}" ${model.default ? 'selected' : ''}>${model.name}</option>`
+            ).join('')}
+          </select>
+        </div>`;
+    }
+
+    // API Key field (if needed) - COLLAPSIBLE
+    if (provider.configFields.includes('apiKey')) {
+      credentialsHtml += `
         <div class="form-group">
           <label for="config-apiKey">API Key</label>
           <input type="password" id="config-apiKey" placeholder="${provider.apiKeyPlaceholder || 'Enter API key'}" autocomplete="off">
-          ${provider.name === 'Claude (Anthropic)' ? 
+          ${provider.name === 'Claude (Anthropic)' ?
             '<div class="help-text">Get your API key from <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a></div>' :
           provider.name === 'OpenAI (GPT-4/GPT-3.5)' ?
             '<div class="help-text">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></div>' :
@@ -206,32 +221,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>`;
     }
 
-    // Model selection (if applicable)
-    if (provider.models && provider.models.length > 0) {
-      html += `
-        <div class="form-group">
-          <label for="config-model">Model</label>
-          <select id="config-model">
-            ${provider.models.map(model => 
-              `<option value="${model.id}" ${model.default ? 'selected' : ''}>${model.name}</option>`
-            ).join('')}
-          </select>
-        </div>`;
-    }
-
-    // Endpoint field (for Azure, Ollama, Custom)
+    // Endpoint field (for Azure, Ollama, Custom) - COLLAPSIBLE
     if (provider.configFields.includes('endpoint')) {
       const defaultEndpoint = providerType === 'ollama' ? 'http://localhost:11434' : '';
-      html += `
+      credentialsHtml += `
         <div class="form-group">
           <label for="config-endpoint">Endpoint URL</label>
           <input type="url" id="config-endpoint" placeholder="${defaultEndpoint || 'https://your-endpoint.com'}" value="${defaultEndpoint}">
         </div>`;
     }
 
-    // Azure-specific fields
+    // Azure-specific fields - COLLAPSIBLE
     if (providerType === 'azure') {
-      html += `
+      credentialsHtml += `
         <div class="form-group">
           <label for="config-deploymentName">Deployment Name</label>
           <input type="text" id="config-deploymentName" placeholder="your-deployment-name">
@@ -242,18 +244,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>`;
     }
 
-    // OpenAI organization field
+    // OpenAI organization field - COLLAPSIBLE
     if (providerType === 'openai') {
-      html += `
+      credentialsHtml += `
         <div class="form-group">
           <label for="config-organization">Organization ID (Optional)</label>
           <input type="text" id="config-organization" placeholder="org-...">
         </div>`;
     }
 
-    // Custom provider fields
+    // Custom provider fields - COLLAPSIBLE
     if (providerType === 'custom') {
-      html += `
+      credentialsHtml += `
         <div class="form-group">
           <label for="config-headers">Request Headers (JSON)</label>
           <textarea id="config-headers" placeholder='{"Authorization": "Bearer YOUR_KEY"}'></textarea>
@@ -265,7 +267,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>`;
     }
 
+    // Add collapsible credentials section if there are any credentials fields
+    if (credentialsHtml) {
+      html += `
+        <div class="advanced-toggle" id="credentials-toggle">
+          <span class="advanced-toggle-text">
+            <span class="twistie">▸</span>
+            API Credentials & Settings
+          </span>
+          <span style="font-size: 9px; color: #888;">(configured)</span>
+        </div>
+        <div class="advanced-content credentials-section" id="credentials-content">
+          ${credentialsHtml}
+        </div>`;
+    }
+
     elements.configFields.innerHTML = html;
+
+    // Setup toggle functionality
+    const toggle = document.getElementById('credentials-toggle');
+    const content = document.getElementById('credentials-content');
+    if (toggle && content) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('expanded');
+        content.classList.toggle('show');
+      });
+    }
   }
 
   // Load provider configuration
@@ -556,10 +583,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     const notification = elements.notification;
     notification.textContent = message;
     notification.className = `notification ${type} show`;
-    
+
     clearTimeout(notification.hideTimeout);
     notification.hideTimeout = setTimeout(() => {
       notification.classList.remove('show');
     }, 3000);
+  }
+
+  // Setup provider scroll buttons
+  function setupProviderScrollButtons() {
+    const grid = document.getElementById('provider-grid');
+    const leftBtn = document.getElementById('scroll-left');
+    const rightBtn = document.getElementById('scroll-right');
+
+    if (!grid || !leftBtn || !rightBtn) return;
+
+    // Function to update button visibility
+    function updateScrollButtons() {
+      const scrollLeft = grid.scrollLeft;
+      const scrollWidth = grid.scrollWidth;
+      const clientWidth = grid.clientWidth;
+      const isScrollable = scrollWidth > clientWidth;
+
+      // Show/hide buttons based on scroll position and scrollability
+      if (!isScrollable) {
+        leftBtn.classList.remove('show');
+        rightBtn.classList.remove('show');
+      } else {
+        // Show left button if not at start
+        leftBtn.classList.toggle('show', scrollLeft > 5);
+        // Show right button if not at end
+        rightBtn.classList.toggle('show', scrollLeft < scrollWidth - clientWidth - 5);
+      }
+    }
+
+    // Scroll handler
+    function scrollGrid(direction) {
+      const scrollAmount = 200; // Scroll by ~2 cards
+      const targetScroll = direction === 'left'
+        ? grid.scrollLeft - scrollAmount
+        : grid.scrollLeft + scrollAmount;
+
+      grid.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    }
+
+    // Event listeners
+    leftBtn.addEventListener('click', () => scrollGrid('left'));
+    rightBtn.addEventListener('click', () => scrollGrid('right'));
+
+    // Update on scroll
+    grid.addEventListener('scroll', updateScrollButtons);
+
+    // Update on resize
+    window.addEventListener('resize', updateScrollButtons);
+
+    // Initial update
+    setTimeout(updateScrollButtons, 100);
   }
 });

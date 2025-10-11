@@ -13,7 +13,8 @@
 
     body {
       width: 420px;
-      min-height: 600px;
+      height: 580px;
+      overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
       color: #333;
@@ -21,59 +22,121 @@
 
     .container {
       background: white;
-      min-height: 600px;
+      height: 100%;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .header {
       background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
       color: white;
-      padding: 20px;
+      padding: 10px 20px;
       text-align: center;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
     }
 
     .header h1 {
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 600;
-      margin-bottom: 5px;
+      margin-bottom: 2px;
     }
 
     .header p {
-      font-size: 12px;
+      font-size: 10px;
       opacity: 0.9;
+      line-height: 1.2;
     }
 
     .content {
-      padding: 20px;
+      padding: 10px 20px 8px;
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .provider-selector {
       background: #f8f9fa;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
+      border-radius: 6px;
+      padding: 8px 8px 10px 8px;
+      margin-bottom: 10px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .provider-grid-wrapper {
+      position: relative;
     }
 
     .provider-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 3px 0 5px 0;
+      scroll-behavior: smooth;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .provider-grid::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+
+    .provider-scroll-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(248, 249, 250, 0.95), rgba(248, 249, 250, 0.85));
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 600;
+      color: #94BA33;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .provider-scroll-btn:hover {
+      background: linear-gradient(90deg, rgba(148, 186, 51, 0.15), rgba(148, 186, 51, 0.1));
+      color: #6d8c26;
+    }
+
+    .provider-scroll-btn.left {
+      left: -8px;
+      border-radius: 6px 0 0 6px;
+      background: linear-gradient(90deg, rgba(248, 249, 250, 0.98), rgba(248, 249, 250, 0.7));
+    }
+
+    .provider-scroll-btn.right {
+      right: -8px;
+      border-radius: 0 6px 6px 0;
+      background: linear-gradient(-90deg, rgba(248, 249, 250, 0.98), rgba(248, 249, 250, 0.7));
+    }
+
+    .provider-scroll-btn.show {
+      display: flex;
     }
 
     .provider-card {
       background: white;
       border: 2px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 10px;
+      border-radius: 5px;
+      padding: 6px 8px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
       position: relative;
+      min-width: 80px;
+      flex-shrink: 0;
     }
 
     .provider-card:hover {
@@ -104,12 +167,12 @@
     }
 
     .provider-icon {
-      font-size: 24px;
-      margin-bottom: 4px;
+      font-size: 20px;
+      margin-bottom: 1px;
     }
 
     .provider-name {
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 500;
       color: #555;
     }
@@ -117,10 +180,10 @@
     .status {
       display: flex;
       align-items: center;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
+      padding: 6px 8px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      font-size: 11px;
     }
 
     .status.connected {
@@ -156,13 +219,13 @@
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
+      margin-bottom: 3px;
+      font-size: 11px;
       font-weight: 500;
       color: #555;
     }
@@ -171,10 +234,10 @@
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 10px 12px;
+      padding: 6px 8px;
       border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: 4px;
+      font-size: 12px;
       transition: border-color 0.2s;
       font-family: inherit;
     }
@@ -199,9 +262,10 @@
     }
 
     .form-group .help-text {
-      font-size: 11px;
+      font-size: 10px;
       color: #888;
-      margin-top: 5px;
+      margin-top: 3px;
+      line-height: 1.3;
     }
 
     .form-row {
@@ -211,17 +275,17 @@
     }
 
     .btn {
-      padding: 10px 16px;
+      padding: 7px 12px;
       border: none;
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: 4px;
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 5px;
     }
 
     .btn-primary {
@@ -262,20 +326,20 @@
 
     .tabs {
       display: flex;
-      gap: 5px;
-      margin-bottom: 20px;
+      gap: 3px;
+      margin-bottom: 10px;
       background: #f5f5f5;
-      padding: 4px;
-      border-radius: 8px;
+      padding: 2px;
+      border-radius: 5px;
     }
 
     .tab {
       flex: 1;
-      padding: 8px;
+      padding: 5px;
       background: transparent;
       border: none;
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: 4px;
+      font-size: 11px;
       font-weight: 500;
       color: #666;
       cursor: pointer;
@@ -304,32 +368,33 @@
 
     .provider-config {
       background: #f8f9fa;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 15px;
+      border-radius: 5px;
+      padding: 8px;
+      margin-top: 0;
     }
 
     .provider-config h4 {
-      font-size: 14px;
-      margin-bottom: 12px;
+      font-size: 12px;
+      margin-bottom: 6px;
       color: #555;
     }
 
     .config-note {
       background: #fff3cd;
       border: 1px solid #ffc107;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 12px;
+      border-radius: 4px;
+      padding: 5px 7px;
+      font-size: 9px;
       color: #856404;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
+      line-height: 1.3;
     }
 
     .notification {
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-size: 12px;
+      padding: 5px 7px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 10px;
       display: none;
       animation: slideIn 0.3s ease;
     }
@@ -386,12 +451,14 @@
     }
 
     .footer {
-      padding: 15px 20px;
+      padding: 8px 20px;
       background: #f8f9fa;
       border-top: 1px solid #e5e5e5;
       text-align: center;
-      font-size: 11px;
+      font-size: 8px;
       color: #888;
+      flex-shrink: 0;
+      line-height: 1.4;
     }
 
     .footer a {
@@ -407,24 +474,47 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px;
+      padding: 8px 10px;
       background: #f5f5f5;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      margin-top: 15px;
+      margin-bottom: 8px;
+      user-select: none;
     }
 
     .advanced-toggle:hover {
       background: #e5e5e5;
     }
 
+    .advanced-toggle .twistie {
+      transition: transform 0.2s;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .advanced-toggle.expanded .twistie {
+      transform: rotate(90deg);
+    }
+
+    .advanced-toggle-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555;
+    }
+
     .advanced-content {
       display: none;
-      margin-top: 15px;
+      margin-bottom: 10px;
     }
 
     .advanced-content.show {
       display: block;
+    }
+
+    .credentials-section {
+      border-left: 2px solid #94BA33;
+      padding-left: 10px;
+      margin-left: 5px;
     }
   </style>
 </head>
@@ -447,44 +537,52 @@
       <!-- Setup Tab -->
       <div id="setup-tab" class="tab-content active">
         <div class="provider-selector">
-          <label style="font-size: 13px; font-weight: 500; color: #555;">Select AI Provider</label>
-          <div class="provider-grid">
-            <div class="provider-card" data-provider="claude">
-              <div class="provider-icon">🌟</div>
-              <div class="provider-name">Claude</div>
+          <label style="font-size: 11px; font-weight: 500; color: #555;">Select AI Provider</label>
+          <div class="provider-grid-wrapper">
+            <button class="provider-scroll-btn left" id="scroll-left" aria-label="Scroll left">
+              {
+            </button>
+            <div class="provider-grid" id="provider-grid">
+              <div class="provider-card" data-provider="claude">
+                <div class="provider-icon">🌟</div>
+                <div class="provider-name">Claude</div>
+              </div>
+              <div class="provider-card" data-provider="openai">
+                <div class="provider-icon">💬</div>
+                <div class="provider-name">OpenAI</div>
+              </div>
+              <div class="provider-card" data-provider="gemini">
+                <div class="provider-icon">✨</div>
+                <div class="provider-name">Gemini</div>
+              </div>
+              <div class="provider-card" data-provider="azure">
+                <div class="provider-icon">☁️</div>
+                <div class="provider-name">Azure</div>
+              </div>
+              <div class="provider-card" data-provider="cohere">
+                <div class="provider-icon">🔮</div>
+                <div class="provider-name">Cohere</div>
+              </div>
+              <div class="provider-card" data-provider="huggingface">
+                <div class="provider-icon">🤗</div>
+                <div class="provider-name">HuggingFace</div>
+              </div>
+              <div class="provider-card" data-provider="ollama">
+                <div class="provider-icon">🦙</div>
+                <div class="provider-name">Ollama</div>
+              </div>
+              <div class="provider-card" data-provider="replicate">
+                <div class="provider-icon">🔄</div>
+                <div class="provider-name">Replicate</div>
+              </div>
+              <div class="provider-card" data-provider="custom">
+                <div class="provider-icon">⚙️</div>
+                <div class="provider-name">Custom</div>
+              </div>
             </div>
-            <div class="provider-card" data-provider="openai">
-              <div class="provider-icon">💬</div>
-              <div class="provider-name">OpenAI</div>
-            </div>
-            <div class="provider-card" data-provider="gemini">
-              <div class="provider-icon">✨</div>
-              <div class="provider-name">Gemini</div>
-            </div>
-            <div class="provider-card" data-provider="azure">
-              <div class="provider-icon">☁️</div>
-              <div class="provider-name">Azure</div>
-            </div>
-            <div class="provider-card" data-provider="cohere">
-              <div class="provider-icon">🔮</div>
-              <div class="provider-name">Cohere</div>
-            </div>
-            <div class="provider-card" data-provider="huggingface">
-              <div class="provider-icon">🤗</div>
-              <div class="provider-name">HuggingFace</div>
-            </div>
-            <div class="provider-card" data-provider="ollama">
-              <div class="provider-icon">🦙</div>
-              <div class="provider-name">Ollama</div>
-            </div>
-            <div class="provider-card" data-provider="replicate">
-              <div class="provider-icon">🔄</div>
-              <div class="provider-name">Replicate</div>
-            </div>
-            <div class="provider-card" data-provider="custom">
-              <div class="provider-icon">⚙️</div>
-              <div class="provider-name">Custom</div>
-            </div>
+            <button class="provider-scroll-btn right" id="scroll-right" aria-label="Scroll right">
+              }
+            </button>
           </div>
         </div>
 
@@ -582,20 +680,22 @@
     </div>
 
     <div class="footer">
-      <div style="margin-bottom: 8px;">
+      <div style="margin-bottom: 4px;">
         <span style="color: #28a745; font-weight: 600;">🔒 Your keys are safe</span>
-        <span style="font-size: 10px; display: block; margin-top: 2px;">
+        <span style="font-size: 7px; display: block; margin-top: 1px;">
           Stored locally • Never sent to us • Open source
         </span>
       </div>
-      <div style="margin-bottom: 8px; font-size: 11px; color: #94BA33; font-weight: 600;">
+      <div style="margin-bottom: 3px; font-size: 8px; color: #94BA33; font-weight: 600;">
         Powered by <a href="https://www.apralabs.com" target="_blank" style="color: #94BA33; text-decoration: none; font-weight: 700;">Apra Labs</a>
       </div>
-      <a href="https://apralabs.github.io/ai-code-buddy/privacy.html" target="_blank">Privacy</a>
-      &nbsp;•&nbsp;
-      <a href="https://apralabs.github.io/ai-code-buddy/security.html" target="_blank">Security</a>
-      &nbsp;•&nbsp;
-      <a href="https://apralabs.github.io/ai-code-buddy/" target="_blank">Docs</a>
+      <div>
+        <a href="https://apralabs.github.io/ai-code-buddy/privacy.html" target="_blank">Privacy</a>
+        &nbsp;•&nbsp;
+        <a href="https://apralabs.github.io/ai-code-buddy/security.html" target="_blank">Security</a>
+        &nbsp;•&nbsp;
+        <a href="https://apralabs.github.io/ai-code-buddy/" target="_blank">Docs</a>
+      </div>
     </div>
   </div>
 

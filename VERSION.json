@@ -1,0 +1,49 @@
+{
+  "version": "2.0.0",
+  "name": "AI Code Buddy",
+  "description": "Turn any web terminal into an AI-powered command center",
+  "release_date": "2025-10-11",
+  "repositories": {
+    "bitbucket_source": "https://bitbucket.org/kumaakh/ai-code-buddy",
+    "bitbucket_pipelines": "https://bitbucket.org/kumaakh/ai-code-buddy/addon/pipelines/home",
+    "github_docs": "https://github.com/Apra-Labs/ai-code-buddy",
+    "github_pages": "https://apra-labs.github.io/ai-code-buddy/",
+    "github_issues": "https://github.com/Apra-Labs/ai-code-buddy/issues"
+  },
+  "chrome_web_store": {
+    "status": "pending_submission",
+    "submission_date": null,
+    "published_date": null,
+    "store_url": null,
+    "version_published": null
+  },
+  "build_info": {
+    "note": "Builds are automated via Bitbucket Pipelines",
+    "artifact_format": "ai-code-buddy-v{version}-{git_hash}.zip",
+    "contains_build_metadata": true,
+    "build_metadata_file": "build-info.json"
+  },
+  "release_notes": [
+    "Multi-AI provider support (Claude, OpenAI, Gemini, Ollama)",
+    "Universal web terminal integration (RPort, Cloud Shell, GitPod, AWS CloudShell)",
+    "Privacy-first architecture with local encrypted storage",
+    "Modern { } branding with Apra Labs green",
+    "Comprehensive documentation and GDPR/CCPA compliant privacy policy",
+    "One-click AI analysis and script insertion",
+    "Context-aware error detection and fixes"
+  ],
+  "authors": [
+    {
+      "name": "Akhil Kumar",
+      "email": "akhil@apralabs.com",
+      "company": "Apra Labs"
+    }
+  ],
+  "license": "Proprietary",
+  "support": {
+    "documentation": "https://apra-labs.github.io/ai-code-buddy/",
+    "issues": "https://github.com/Apra-Labs/ai-code-buddy/issues",
+    "security": "https://apra-labs.github.io/ai-code-buddy/security.html",
+    "email": "akhil@apralabs.com"
+  }
+}

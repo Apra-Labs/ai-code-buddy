@@ -1,0 +1,172 @@
+image: node:20
+
+definitions:
+  steps:
+    - step: &build-extension
+        name: Build Chrome Extension
+        caches:
+          - node
+        script:
+          # Get git metadata
+          - export GIT_COMMIT=$(git rev-parse --short HEAD)
+          - export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          - export BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          - export VERSION=$(node -p "require('./manifest.json').version")
+
+          # Display build info
+          - echo "Building AI Code Buddy v${VERSION}"
+          - echo "Git Commit: ${GIT_COMMIT}"
+          - echo "Git Branch: ${GIT_BRANCH}"
+          - echo "Build Date: ${BUILD_DATE}"
+
+          # Create build metadata file
+          - |
+            cat > build-info.json << EOF
+            {
+              "version": "${VERSION}",
+              "git_commit": "${GIT_COMMIT}",
+              "git_commit_full": "$(git rev-parse HEAD)",
+              "git_branch": "${GIT_BRANCH}",
+              "git_tag": "$(git describe --tags --always)",
+              "build_date": "${BUILD_DATE}",
+              "build_number": "${BITBUCKET_BUILD_NUMBER}",
+              "bitbucket_repo": "${BITBUCKET_REPO_FULL_NAME}",
+              "bitbucket_commit_url": "https://bitbucket.org/${BITBUCKET_REPO_FULL_NAME}/commits/${BITBUCKET_COMMIT}",
+              "github_docs": "https://github.com/Apra-Labs/ai-code-buddy",
+              "github_pages": "https://apra-labs.github.io/ai-code-buddy/"
+            }
+            EOF
+
+          # Display build-info.json
+          - cat build-info.json
+
+          # Create build directory
+          - mkdir -p build
+
+          # Copy extension files (exclude dev files)
+          - |
+            rsync -av \
+              --exclude='.git' \
+              --exclude='.claude' \
+              --exclude='.gitignore' \
+              --exclude='bitbucket-pipelines.yml' \
+              --exclude='icons/node_modules' \
+              --exclude='icons/package*.json' \
+              --exclude='icons/generate-icons.js' \
+              --exclude='test' \
+              --exclude='chrome-store' \
+              --exclude='github-repo' \
+              --exclude='docs-site' \
+              --exclude='build' \
+              --exclude='*.zip' \
+              --exclude='*.crx' \
+              --exclude='*.pem' \
+              --exclude='popup.html' \
+              --exclude='popup.js' \
+              ./ build/
+
+          # Add build-info.json to the extension
+          - cp build-info.json build/
+
+          # Create ZIP with version and git hash in filename
+          - cd build
+          - zip -r "../ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" .
+          - cd ..
+
+          # Also create a "latest" version without git hash for convenience
+          - cp "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" "ai-code-buddy-v${VERSION}.zip"
+
+          # Display ZIP info
+          - ls -lh ai-code-buddy-*.zip
+          - unzip -l "ai-code-buddy-v${VERSION}.zip" | head -20
+
+          # Verify build-info.json is in the package
+          - echo "Verifying build-info.json in package:"
+          - unzip -p "ai-code-buddy-v${VERSION}.zip" build-info.json
+        artifacts:
+          - ai-code-buddy-*.zip
+          - build-info.json
+
+    - step: &validate-extension
+        name: Validate Extension
+        caches:
+          - node
+        script:
+          # Install dependencies for validation
+          - cd icons && npm install && cd ..
+
+          # Run image validator
+          - echo "Running image validator..."
+          - cd test && node image-validator.js || true
+
+          # Run link validator (allow to fail, just for info)
+          - echo "Running link validator..."
+          - timeout 60 node link-validator.js || true
+
+    - step: &create-git-tag
+        name: Create Git Tag
+        script:
+          - export VERSION=$(node -p "require('./manifest.json').version")
+          - export GIT_COMMIT=$(git rev-parse --short HEAD)
+
+          # Check if tag already exists
+          - |
+            if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+              echo "Tag v${VERSION} already exists, skipping tag creation"
+            else
+              echo "Creating tag v${VERSION} for commit ${GIT_COMMIT}"
+              git tag -a "v${VERSION}" -m "Release v${VERSION} - Chrome Web Store submission"
+              git push origin "v${VERSION}"
+              echo "Tag v${VERSION} created and pushed"
+            fi
+
+pipelines:
+  default:
+    - step: *build-extension
+    - step: *validate-extension
+
+  branches:
+    main:
+      - step: *build-extension
+      - step: *validate-extension
+      - step: *create-git-tag
+
+  tags:
+    'v*':
+      - step:
+          <<: *build-extension
+          name: Build Release for Chrome Web Store
+      - step:
+          <<: *validate-extension
+          name: Validate Release Build
+      - step:
+          name: Prepare Chrome Web Store Submission
+          script:
+            - export VERSION=$(node -p "require('./manifest.json').version")
+            - export GIT_TAG=$(git describe --tags --exact-match)
+            - echo "============================================"
+            - echo "   CHROME WEB STORE SUBMISSION READY"
+            - echo "============================================"
+            - echo "Version: ${VERSION}"
+            - echo "Git Tag: ${GIT_TAG}"
+            - echo ""
+            - echo "Download artifact: ai-code-buddy-v${VERSION}.zip"
+            - echo ""
+            - echo "Next steps:"
+            - echo "1. Download the ZIP artifact from this build"
+            - echo "2. Go to Chrome Web Store Developer Console"
+            - echo "3. Upload the ZIP file"
+            - echo "4. Update VERSION.json with store URL after publication"
+            - echo "============================================"
+          artifacts:
+            - ai-code-buddy-*.zip
+            - build-info.json
+
+  custom:
+    # Manual trigger for building without tagging
+    build-only:
+      - step: *build-extension
+
+    # Manual trigger for validation only
+    validate-only:
+      - step: *validate-extension

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - AI Code Buddy</title>
+  <meta name="description" content="Privacy policy for AI Code Buddy Chrome Extension. Your API keys are stored locally and never sent to Apra Labs.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Support</a>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="btn-primary">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="container" style="padding: 20px 20px 0;">
+    <div style="font-size: 14px; color: #777;">
+      <a href="index.html" style="color: var(--apra-green); text-decoration: none;">Home</a>
+      <span style="margin: 0 8px;">›</span>
+      <span>Privacy Policy</span>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Content -->
+  <section class="documentation" style="padding-top: 40px;">
+    <div class="container">
+      <h1 style="font-size: 42px; margin-bottom: 10px; color: var(--text-dark);">Privacy Policy</h1>
+      <p style="color: var(--text-light); margin-bottom: 40px;"><strong>Last Updated:</strong> January 2025</p>
+
+      <div style="background: #e8f5e9; border-left: 4px solid var(--apra-green); padding: 20px; margin-bottom: 40px; border-radius: 8px;">
+        <h3 style="margin-top: 0; color: var(--apra-green);">🔒 Your Privacy is Our Priority</h3>
+        <p style="margin-bottom: 0; line-height: 1.6;">
+          AI Code Buddy is built with privacy-first architecture. We have <strong>zero backend infrastructure</strong>,
+          meaning your API keys and data are <strong>never sent to Apra Labs</strong>. Everything stays on your device.
+        </p>
+      </div>
+
+      <!-- TL;DR -->
+      <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; margin-bottom: 40px;">
+        <h2 style="margin-top: 0;">TL;DR</h2>
+        <ul style="line-height: 2; margin: 0;">
+          <li>✅ <strong>We collect ZERO data</strong> - No analytics, no tracking, no backend</li>
+          <li>✅ <strong>API keys stored locally</strong> - In Chrome's encrypted storage on your device</li>
+          <li>✅ <strong>Never sent to Apra Labs</strong> - We literally cannot access them</li>
+          <li>✅ <strong>Only sent to your chosen AI provider</strong> - You control which provider</li>
+          <li>✅ <strong>100% offline option</strong> - Use Ollama for complete privacy</li>
+          <li>✅ <strong>Open source</strong> - Audit the code yourself</li>
+        </ul>
+      </div>
+
+      <!-- Table of Contents -->
+      <div style="background: white; border: 2px solid var(--border-light); padding: 25px; border-radius: 12px; margin-bottom: 40px;">
+        <h3 style="margin-top: 0;">Table of Contents</h3>
+        <ol style="line-height: 2;">
+          <li><a href="#what-we-collect" style="color: var(--apra-green);">What Data We Collect</a></li>
+          <li><a href="#what-we-dont" style="color: var(--apra-green);">What We Do NOT Collect</a></li>
+          <li><a href="#how-stored" style="color: var(--apra-green);">How Data is Stored</a></li>
+          <li><a href="#third-parties" style="color: var(--apra-green);">Third-Party Data Sharing</a></li>
+          <li><a href="#your-rights" style="color: var(--apra-green);">Your Rights and Controls</a></li>
+          <li><a href="#gdpr-ccpa" style="color: var(--apra-green);">GDPR & CCPA Compliance</a></li>
+          <li><a href="#changes" style="color: var(--apra-green);">Changes to This Policy</a></li>
+          <li><a href="#contact" style="color: var(--apra-green);">Contact Us</a></li>
+        </ol>
+      </div>
+
+      <!-- Section 1 -->
+      <div id="what-we-collect" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          1. What Data We Collect
+        </h2>
+        <p>AI Code Buddy collects <strong>minimal data</strong>, and all of it stays on your device:</p>
+
+        <h3>📝 Configuration Data (Stored Locally)</h3>
+        <ul style="line-height: 1.8;">
+          <li><strong>AI Provider Selection</strong> - Which provider you chose (Claude, OpenAI, etc.)</li>
+          <li><strong>API Keys</strong> - Stored encrypted in Chrome's local storage</li>
+          <li><strong>Model Preferences</strong> - Which model you selected (e.g., GPT-4, Claude Sonnet)</li>
+          <li><strong>Custom Settings</strong> - Temperature, max tokens, custom prompts, CSS selectors</li>
+          <li><strong>Extension Preferences</strong> - UI settings, auto-improve toggle, etc.</li>
+        </ul>
+
+        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin-top: 20px;">
+          <strong>⚠️ Important:</strong> ALL of this data is stored locally on your device using Chrome's
+          <code>chrome.storage.local</code> API. It is <strong>never transmitted to Apra Labs</strong>.
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div id="what-we-dont" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          2. What We Do NOT Collect
+        </h2>
+        <p>We are committed to your privacy. We <strong>explicitly DO NOT collect</strong>:</p>
+
+        <ul style="line-height: 2;">
+          <li>❌ <strong>Personal Information</strong> - No name, email, phone, address</li>
+          <li>❌ <strong>Browsing History</strong> - We don't track which websites you visit</li>
+          <li>❌ <strong>Command History</strong> - We don't store commands you run in terminals</li>
+          <li>❌ <strong>AI Responses</strong> - We don't see what AI providers send back</li>
+          <li>❌ <strong>Analytics</strong> - No Google Analytics, no telemetry, no tracking pixels</li>
+          <li>❌ <strong>Crash Reports</strong> - We don't collect error logs or diagnostics</li>
+          <li>❌ <strong>Usage Statistics</strong> - We don't know how often you use the extension</li>
+          <li>❌ <strong>Location Data</strong> - We never access your location</li>
+          <li>❌ <strong>Device Information</strong> - We don't fingerprint your device</li>
+        </ul>
+
+        <div style="background: #d4f4dd; border: 1px solid #28c840; padding: 20px; border-radius: 8px; margin-top: 20px;">
+          <h4 style="margin-top: 0; color: #1e7e34;">Why We Can't Collect Data</h4>
+          <p style="margin-bottom: 0;">
+            Unlike typical web services, AI Code Buddy has <strong>zero backend infrastructure</strong>.
+            There are no servers, no databases, and no analytics platforms. We literally have nowhere
+            to send your data even if we wanted to. The extension runs entirely client-side in your browser.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div id="how-stored" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          3. How Data is Stored
+        </h2>
+
+        <h3>🔐 Chrome's Encrypted Storage</h3>
+        <p>Your API keys and settings are stored using Chrome's built-in <code>chrome.storage.local</code> API:</p>
+
+        <ul style="line-height: 1.8;">
+          <li><strong>Encrypted at rest</strong> - Chrome automatically encrypts storage</li>
+          <li><strong>Isolated to extension</strong> - Other extensions can't access it</li>
+          <li><strong>Syncs with Chrome Sync</strong> - Only if you enable Chrome sync (optional)</li>
+          <li><strong>Cleared when extension removed</strong> - Uninstalling removes all data</li>
+        </ul>
+
+        <h3>🌐 Network Transmission</h3>
+        <p>When you use AI Code Buddy, here's exactly what happens:</p>
+
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="margin-top: 0;">Data Flow:</h4>
+          <ol style="line-height: 2;">
+            <li>You click "Send to AI" on terminal output</li>
+            <li>Extension retrieves your API key from <strong>local storage</strong></li>
+            <li>Extension sends request <strong>directly to your chosen AI provider</strong> (e.g., api.anthropic.com)</li>
+            <li>AI provider processes the request and sends response</li>
+            <li>Extension displays the response to you</li>
+          </ol>
+          <p style="margin: 20px 0 0; padding: 15px; background: #fff3cd; border-radius: 6px;">
+            <strong>⚠️ Critical:</strong> At no point in this flow does data pass through Apra Labs servers.
+            The connection is direct: <strong>Your Browser ↔ AI Provider</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div id="third-parties" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          4. Third-Party Data Sharing
+        </h2>
+
+        <p>AI Code Buddy sends data <strong>only to the AI provider you explicitly choose</strong>. Here's how each provider handles your data:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background: var(--apra-green); color: white;">
+              <th style="padding: 12px; text-align: left;">Provider</th>
+              <th style="padding: 12px; text-align: left;">Data Sent</th>
+              <th style="padding: 12px; text-align: left;">Privacy Policy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: #f8f9fa;">
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><strong>Ollama</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">100% Local - Nothing leaves your machine</td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">N/A (Local)</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><strong>Claude</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">API Key + Your prompts</td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><a href="https://www.anthropic.com/legal/privacy" target="_blank">Anthropic Privacy</a></td>
+            </tr>
+            <tr style="background: #f8f9fa;">
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><strong>OpenAI</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">API Key + Your prompts</td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><a href="https://openai.com/privacy/" target="_blank">OpenAI Privacy</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><strong>Google Gemini</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">API Key + Your prompts</td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a></td>
+            </tr>
+            <tr style="background: #f8f9fa;">
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><strong>Azure OpenAI</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;">API Key + Your prompts</td>
+              <td style="padding: 12px; border-bottom: 1px solid #ddd;"><a href="https://privacy.microsoft.com/" target="_blank">Microsoft Privacy</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px;"><strong>Others</strong></td>
+              <td style="padding: 12px;">API Key + Your prompts</td>
+              <td style="padding: 12px;">See provider's privacy policy</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background: #d1ecf1; border: 1px solid #0c5460; padding: 20px; border-radius: 8px; margin-top: 20px;">
+          <h4 style="margin-top: 0; color: #0c5460;">💡 For Maximum Privacy</h4>
+          <p style="margin-bottom: 0;">
+            Use <strong>Ollama</strong> to run AI models locally on your machine. With Ollama, <strong>zero data leaves your device</strong> -
+            no API keys needed, no internet connection required, 100% private.
+            <br><br>
+            <a href="api-keys.html#ollama" style="color: #0c5460; font-weight: 600;">Learn how to set up Ollama →</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 5 -->
+      <div id="your-rights" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          5. Your Rights and Controls
+        </h2>
+
+        <p>You have <strong>complete control</strong> over your data:</p>
+
+        <h3>✅ What You Can Do</h3>
+        <ul style="line-height: 2;">
+          <li><strong>View Your Data</strong> - Check Chrome DevTools → Application → Storage → Extensions</li>
+          <li><strong>Export Settings</strong> - Use "Export Configuration" in Advanced tab</li>
+          <li><strong>Delete Data</strong> - Click "Clear All Settings" in extension popup</li>
+          <li><strong>Switch Providers</strong> - Change AI provider anytime</li>
+          <li><strong>Uninstall Extension</strong> - Removes all locally stored data</li>
+          <li><strong>Revoke API Keys</strong> - Delete keys from AI provider's dashboard</li>
+        </ul>
+
+        <h3>🔧 How to Delete Your Data</h3>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin-bottom: 10px;"><strong>Option 1: Clear Settings (keeps extension installed)</strong></p>
+          <ol style="line-height: 1.8;">
+            <li>Click AI Code Buddy icon in Chrome toolbar</li>
+            <li>Go to "Settings" tab</li>
+            <li>Click "Clear All Settings"</li>
+            <li>Confirm deletion</li>
+          </ol>
+
+          <p style="margin: 20px 0 10px;"><strong>Option 2: Uninstall Extension (complete removal)</strong></p>
+          <ol style="line-height: 1.8;">
+            <li>Go to <code>chrome://extensions/</code></li>
+            <li>Find "AI Code Buddy"</li>
+            <li>Click "Remove"</li>
+            <li>All data is permanently deleted</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Section 6 -->
+      <div id="gdpr-ccpa" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          6. GDPR & CCPA Compliance
+        </h2>
+
+        <h3>🇪🇺 GDPR (European Users)</h3>
+        <p>Under GDPR, you have the right to:</p>
+        <ul style="line-height: 1.8;">
+          <li><strong>Access</strong> - View what data is stored (check Chrome storage)</li>
+          <li><strong>Rectification</strong> - Edit your settings anytime</li>
+          <li><strong>Erasure</strong> - Delete all data (clear settings or uninstall)</li>
+          <li><strong>Portability</strong> - Export your configuration</li>
+          <li><strong>Object</strong> - Stop using the extension anytime</li>
+        </ul>
+
+        <p><strong>Legal Basis for Processing:</strong> Consent - By installing and using AI Code Buddy, you consent to local storage of your settings.</p>
+
+        <h3>🇺🇸 CCPA (California Users)</h3>
+        <p>Under CCPA, you have the right to:</p>
+        <ul style="line-height: 1.8;">
+          <li><strong>Know</strong> - We've disclosed all data collection above</li>
+          <li><strong>Delete</strong> - Clear settings or uninstall the extension</li>
+          <li><strong>Opt-Out</strong> - Don't install or use the extension</li>
+        </ul>
+
+        <div style="background: #e8f5e9; border-left: 4px solid var(--apra-green); padding: 20px; margin-top: 20px; border-radius: 8px;">
+          <p style="margin: 0;">
+            <strong>Note:</strong> Since we collect no personal information and have no servers,
+            most GDPR/CCPA requirements don't apply to Apra Labs. However, they may apply to
+            the AI provider you choose. Please review their privacy policies.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 7 -->
+      <div id="changes" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          7. Changes to This Policy
+        </h2>
+        <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last Updated" date.</p>
+
+        <p><strong>Significant changes will be announced via:</strong></p>
+        <ul style="line-height: 1.8;">
+          <li>Extension update notification</li>
+          <li>GitHub repository announcement</li>
+          <li>Documentation website banner</li>
+        </ul>
+
+        <p>Continued use of AI Code Buddy after changes constitutes acceptance of the updated policy.</p>
+      </div>
+
+      <!-- Section 8 -->
+      <div id="contact" style="margin-bottom: 50px;">
+        <h2 style="color: var(--apra-green); border-bottom: 2px solid var(--apra-green); padding-bottom: 10px;">
+          8. Contact Us
+        </h2>
+
+        <p>Questions about this Privacy Policy or your data?</p>
+
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+          <p style="margin-bottom: 15px;"><strong>Contact Apra Labs:</strong></p>
+          <ul style="line-height: 2; list-style: none; padding-left: 0;">
+            <li>🌐 Website: <a href="https://www.apralabs.com" target="_blank">www.apralabs.com</a></li>
+            <li>📧 GitHub Issues: <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Report Issue</a></li>
+            <li>💬 GitHub Discussions: <a href="https://github.com/Apra-Labs/ai-code-buddy/discussions" target="_blank">Community Forum</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Summary Box -->
+      <div style="background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%); color: white; padding: 40px; border-radius: 12px; text-align: center; margin: 50px 0;">
+        <h2 style="margin-top: 0; color: white;">Your Privacy Matters</h2>
+        <p style="font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+          AI Code Buddy is designed from the ground up to protect your privacy.
+          Zero backend, zero tracking, zero compromise.
+        </p>
+        <a href="security.html" style="background: white; color: var(--apra-green); padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-block;">
+          Learn More About Security →
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="https://chrome.google.com/webstore" target="_blank">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+            <a href="privacy.html">Privacy Policy</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. All Rights Reserved.</p>
+        <p>🔒 Your API keys are safe - stored locally, never sent to us. <a href="privacy.html">Privacy Policy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" style="position: fixed; bottom: 30px; right: 30px; background: var(--apra-green); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.3s;" title="Back to top">↑</a>
+
+</body>
+</html>

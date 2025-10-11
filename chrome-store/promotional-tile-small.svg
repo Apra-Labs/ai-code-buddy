@@ -1,0 +1,46 @@
+<!-- Chrome Web Store Small Tile: 440x280px -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="440" height="280" fill="url(#bgGrad)"/>
+
+  <!-- Icon (scaled up) -->
+  <g transform="translate(100, 140)">
+    <rect x="-45" y="-45" width="90" height="90" rx="18" fill="url(#iconGrad)"/>
+    <!-- Left bracket -->
+    <path d="M -20 -15 L -25 -15 Q -28 -15 -28 -11 L -28 11 Q -28 15 -25 15 L -20 15"
+          stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+    <!-- Right bracket -->
+    <path d="M 20 -15 L 25 -15 Q 28 -15 28 -11 L 28 11 Q 28 15 25 15 L 20 15"
+          stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+    <!-- AI spark -->
+    <circle cx="0" cy="0" r="4.5" fill="#b5d957" opacity="0.9"/>
+    <circle cx="0" cy="0" r="2.5" fill="white"/>
+    <!-- Glow lines -->
+    <line x1="0" y1="-9" x2="0" y2="-13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="0" y1="9" x2="0" y2="13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="-9" y1="0" x2="-13" y2="0" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="9" y1="0" x2="13" y2="0" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  </g>
+
+  <!-- Text -->
+  <text x="220" y="115" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#212529" text-anchor="start">AI Code Buddy</text>
+  <text x="220" y="155" font-family="Arial, sans-serif" font-size="18" fill="#6c757d" text-anchor="start">Your AI assistant for</text>
+  <text x="220" y="180" font-family="Arial, sans-serif" font-size="18" fill="#6c757d" text-anchor="start">terminal scripts</text>
+
+  <!-- Badge -->
+  <g transform="translate(360, 230)">
+    <rect x="-35" y="-12" width="70" height="24" rx="12" fill="#94BA33"/>
+    <text x="0" y="4" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Free</text>
+  </g>
+</svg>

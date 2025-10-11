@@ -12,6 +12,7 @@ definitions:
           - export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           - export BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           - export VERSION=$(node -p "require('./manifest.json').version")
+          - echo "Creating build-info.json with git metadata..."
           - |
             cat > build-info.json << EOF
             {
@@ -29,16 +30,17 @@ definitions:
             }
             EOF
           - cat build-info.json
-          - mkdir -p build
-          - cp -r icons build/
-          - cp background.js content.js manifest.json popup-multi.html popup-multi.js build-info.json build/
-          - cd build
-          - zip -r "../ai-code-buddy.zip" .
-          - cd ..
-          - mv "ai-code-buddy.zip" "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+          - echo "Running build-extension.sh to create production package..."
+          - chmod +x build-extension.sh
+          - ./build-extension.sh
+          - echo "Adding build-info.json to the package..."
+          - zip -u ai-code-buddy-v${VERSION}.zip build-info.json
+          - echo "Renaming to include git commit hash..."
+          - mv "ai-code-buddy-v${VERSION}.zip" "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+          - echo "Verifying package contents..."
           - ls -lh ai-code-buddy-*.zip
-          - unzip -l "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" | head -20
-          - echo "Verifying build-info.json in package"
+          - unzip -l "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" | head -30
+          - echo "Verifying build-info.json in package..."
           - unzip -p "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" build-info.json
           - echo "✅ Build artifacts created successfully!"
           - echo "📦 ZIP file ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"

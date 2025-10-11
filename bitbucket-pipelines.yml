@@ -41,8 +41,7 @@ definitions:
           - echo "Verifying build-info.json in package"
           - unzip -p "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" build-info.json
           - echo "✅ Build artifacts created successfully!"
-          - echo ""
-          - echo "📦 ZIP file: ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+          - echo "📦 ZIP file ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
           - echo "🔗 Download from https://bitbucket.org/${BITBUCKET_REPO_FULL_NAME}/pipelines/results/${BITBUCKET_BUILD_NUMBER}/artifacts"
         artifacts:
           - ai-code-buddy-*.zip

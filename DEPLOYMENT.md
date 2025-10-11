@@ -58,8 +58,10 @@ git push origin main
 #    - Tags commit as v2.1.0
 
 # 4. Download artifact from Bitbucket Pipelines
-#    Go to: Bitbucket → Pipelines → Latest build → Downloads
-#    Download: ai-code-buddy-v2.1.0.zip
+#    Go to: https://bitbucket.org/kumaakh/ai-code-buddy/pipelines
+#    Click on the latest successful build for main branch
+#    Click "Artifacts" tab at the top
+#    Download: ai-code-buddy-v2.1.0-{git-hash}.zip
 
 # 5. Upload to Chrome Web Store
 ```
@@ -87,7 +89,10 @@ git push origin v2.1.0
 #    - Runs full validation
 #    - Creates artifact with special release notes
 
-# 5. Download from Pipelines → Artifacts
+# 5. Download from Pipelines
+#    https://bitbucket.org/kumaakh/ai-code-buddy/pipelines
+#    Select the build → Artifacts tab → Download ZIP
+#
 # 6. Upload to Chrome Web Store
 ```
 
@@ -121,9 +126,13 @@ unzip -p ai-code-buddy-v2.0.0.zip build-info.json
 
 **Method 3: From Bitbucket Artifacts**
 ```
-Bitbucket → Repository → Pipelines → Build #42
+Go to: https://bitbucket.org/kumaakh/ai-code-buddy/pipelines
+Click: Build #42 → Artifacts tab
 Download: ai-code-buddy-v2.0.0-3fe6800.zip
           ↑ This hash matches git commit
+
+Artifacts are stored in each pipeline build and can be accessed via:
+https://bitbucket.org/kumaakh/ai-code-buddy/pipelines/results/{BUILD_NUMBER}/artifacts
 ```
 
 ---

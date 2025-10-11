@@ -72,17 +72,30 @@ These extensions can capture exact dimensions automatically.
 #### Best Method: Load Popup as Full Page
 
 ```bash
-1. Right-click extension icon → "Inspect popup"
-2. DevTools opens - look at the URL bar in DevTools
-3. You'll see something like: chrome-extension://abc123def/popup-multi.html
-4. COPY that full URL
-5. Open a NEW TAB
-6. PASTE the URL in address bar and press Enter
-7. Now your popup loads as a FULL WEBPAGE!
-8. Use Method 1 (device toolbar screenshot):
-   - F12 → Ctrl+Shift+M → 1280x800 device
-   - Click ⋮ → Capture screenshot
-9. Perfect 1280x800 screenshot of your popup!
+1. Click extension icon to open popup
+2. Right-click INSIDE the popup → "Inspect"
+3. DevTools opens - click the "Console" tab
+4. Type: location.href
+5. Press Enter
+6. You'll see: "chrome-extension://abc123def456/popup-multi.html"
+7. RIGHT-CLICK the URL text → "Copy string contents"
+8. Open a NEW TAB
+9. PASTE the URL in address bar and press Enter
+10. Your popup now loads as a FULL WEBPAGE!
+11. Use device toolbar screenshot:
+    - F12 → Ctrl+Shift+M → 1280x800 device
+    - Click ⋮ → Capture screenshot
+12. Perfect 1280x800 screenshot of your popup!
+```
+
+**Alternative - Get Extension ID manually:**
+```bash
+1. Go to chrome://extensions/
+2. Enable "Developer mode" (top-right toggle)
+3. Find "AI Code Buddy by Apra Labs"
+4. Copy the "ID" (long string like: abcdefghijklmnopqrstuvwxyz123456)
+5. Manual URL: chrome-extension://[PASTE-ID-HERE]/popup-multi.html
+6. Open in new tab → screenshot as above
 ```
 
 **This is the BEST method for popup screenshots!**

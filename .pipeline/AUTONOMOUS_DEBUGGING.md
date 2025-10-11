@@ -168,6 +168,18 @@ node .pipeline/scripts/debug-pipeline.js logs 42
 ```
 Downloads all step logs to `logs/pipeline-42/`
 
+**Check artifacts:**
+```bash
+node .pipeline/scripts/debug-pipeline.js artifacts 42
+```
+Shows artifact information and web UI link (see [Artifact Limitations](#bitbucket-api-limitations))
+
+**List Downloads:**
+```bash
+node .pipeline/scripts/debug-pipeline.js downloads
+```
+Lists files uploaded to repository Downloads section
+
 ---
 
 ### `monitor-pipeline.js` - Real-time monitoring
@@ -347,7 +359,9 @@ artifacts:
 
 ---
 
-### Issue 4: API Returns 404 for Artifacts Endpoint
+### Issue 4: Bitbucket API Limitations
+
+#### Artifacts Not Accessible via API
 
 **Symptom:**
 ```
@@ -355,12 +369,108 @@ Error: Status 404: Resource not found
 Path: /pipelines/{uuid}/steps/{uuid}/artifacts
 ```
 
-**Cause:** Bitbucket Pipelines API v2 doesn't expose artifacts via API.
+**Root Cause:** Bitbucket Pipelines API v2 **does not expose pipeline artifacts** through any REST endpoint. This is a platform limitation, not a bug.
 
-**Workaround:** Artifacts are only accessible via web UI:
+**What We Know:**
+
+1. **No API Endpoint Exists**
+   - Tested endpoints: `/pipelines/{uuid}/artifacts`, `/steps/{uuid}/artifacts` → 404
+   - Pipeline and step objects have NO artifact-related fields
+   - No `links` field pointing to artifacts
+
+2. **Web UI Only Access**
+   - Artifacts are stored for 14 days
+   - 1 GB total size limit per pipeline
+   - Only accessible through web interface:
+   ```
+   https://bitbucket.org/{workspace}/{repo}/pipelines/results/{uuid}/artifacts
+   ```
+
+3. **API Research Findings**
+   - Bitbucket API v2 documentation has NO artifacts endpoint for pipelines
+   - Community forums confirm this limitation (2022-2025)
+   - Atlassian developer portal: No pipeline artifacts API reference
+
+**Workarounds:**
+
+**Option 1: Use the Web UI** (14-day retention)
+```bash
+# Our tooling shows the direct link
+node .pipeline/scripts/debug-pipeline.js artifacts 42
 ```
-https://bitbucket.org/{workspace}/{repo}/pipelines/results/{build-number}/artifacts
+
+Output:
 ```
+🔗 Access artifacts via web UI:
+   https://bitbucket.org/workspace/repo/pipelines/results/{uuid}/artifacts
+
+📦 Steps with artifact configuration:
+✅ Build Chrome Extension
+   Status: SUCCESSFUL
+   Duration: 10s
+```
+
+**Option 2: Use Downloads API** (indefinite retention)
+
+Upload artifacts to repository Downloads section, which HAS API support:
+
+1. Add to `bitbucket-pipelines.yml`:
+```yaml
+- pipe: atlassian/bitbucket-upload-file:0.3.2
+  variables:
+    BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+    BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+    FILENAME: 'ai-code-buddy-*.zip'
+```
+
+2. Access via API:
+```bash
+# List all downloads
+node .pipeline/scripts/debug-pipeline.js downloads
+
+# Download via API
+curl -u username:app-password -L -O <download-url>
+```
+
+**Option 3: Third-Party Storage**
+
+Upload to S3, Azure Blob, or Artifactory and link using Bitbucket Build Status API:
+```bash
+- aws s3 cp artifact.zip s3://bucket/artifacts/
+- curl -X POST https://api.bitbucket.org/2.0/repositories/.../commit/.../statuses/build
+```
+
+**Verification:**
+
+To verify artifacts were uploaded successfully, check build logs:
+```bash
+node .pipeline/scripts/debug-pipeline.js logs 42
+grep -i "artifact\|upload" logs/pipeline-42/build-*.log
+```
+
+Look for:
+```
+Searching for files matching artifact pattern ai-code-buddy-*.zip
+Artifact pattern matched 1 files with a total size of 26.8 KiB
+Successfully uploaded artifact in 0 seconds
+```
+
+**Impact on Automation:**
+
+| Task | Possible? | Method |
+|------|-----------|--------|
+| List artifacts | ❌ No | Web UI only |
+| Download artifacts | ❌ No | Web UI only (14 days) |
+| Verify artifact uploaded | ✅ Yes | Parse build logs |
+| Check artifact size | ✅ Yes | Parse build logs |
+| Long-term storage | ✅ Yes | Downloads API or S3 |
+
+**Recommendation:**
+
+For DevOps automation and monitoring:
+1. **Short-term (< 14 days)**: Use web UI link from our tooling
+2. **Long-term**: Implement Downloads API upload in pipeline
+3. **Verification**: Parse build logs to confirm artifact upload success
 
 ---
 

@@ -12,6 +12,8 @@
  *   inspect <pipeline-num>  - Inspect pipeline structure and status
  *   error <pipeline-num>    - Get detailed error information
  *   logs <pipeline-num>     - Fetch and save build logs
+ *   artifacts <pipeline-num> - Show artifact information and web UI link
+ *   downloads               - List artifacts uploaded to Downloads section
  */
 
 const https = require('https');
@@ -203,6 +205,106 @@ async function fetchLogs(pipelineNum) {
   console.log(`\n✅ All logs saved to: logs/pipeline-${pipelineNum}/`);
 }
 
+async function getArtifacts(pipelineNum) {
+  console.log(`Getting artifact information for pipeline #${pipelineNum}\n`);
+
+  const pipelines = await apiRequest('/pipelines?pagelen=50&sort=-created_on');
+  const pipeline = pipelines.values.find(p => p.build_number == pipelineNum);
+
+  if (!pipeline) {
+    console.log(`❌ Pipeline #${pipelineNum} not found`);
+    return;
+  }
+
+  const uuid = pipeline.uuid.replace(/[{}]/g, '');
+  const encodedUuid = encodeURIComponent(`{${uuid}}`);
+
+  console.log('⚠️  IMPORTANT: Bitbucket Pipelines API Limitation');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('');
+  console.log('Bitbucket does NOT expose pipeline artifacts through the REST API v2.');
+  console.log('Artifacts can ONLY be accessed through the web UI.');
+  console.log('');
+  console.log('Key Facts:');
+  console.log('  • Artifacts are stored for 14 days');
+  console.log('  • 1 GB size limit');
+  console.log('  • No API endpoint to list or download artifacts');
+  console.log('  • Must use web UI for artifact access');
+  console.log('');
+  console.log('🔗 Access artifacts via web UI:');
+  console.log(`   https://bitbucket.org/${workspace}/${repo}/pipelines/results/${uuid}/artifacts`);
+  console.log('');
+  console.log('Alternative: Use Downloads API for long-term storage');
+  console.log('  • Upload artifacts to Downloads section using bitbucket-upload-file pipe');
+  console.log('  • Then use: node debug-pipeline.js downloads');
+  console.log('');
+
+  // Get steps to show what was configured to be artifacts
+  const steps = await apiRequest(`/pipelines/${encodedUuid}/steps/`);
+
+  console.log('📦 Steps with artifact configuration:');
+  console.log('');
+
+  for (const step of steps.values) {
+    // Check teardown commands for UPLOAD_ARTIFACTS action
+    const uploadArtifact = step.teardown_commands?.find(c => c.action === 'UPLOAD_ARTIFACTS');
+
+    if (uploadArtifact) {
+      const status = step.state.result?.name || step.state.name;
+      const icon = status === 'SUCCESSFUL' ? '✅' : status === 'FAILED' ? '❌' : '⏳';
+      console.log(`${icon} ${step.name}`);
+      console.log(`   Status: ${status}`);
+      console.log(`   Started: ${new Date(step.started_on).toLocaleString()}`);
+      if (step.completed_on) {
+        console.log(`   Completed: ${new Date(step.completed_on).toLocaleString()}`);
+        console.log(`   Duration: ${step.duration_in_seconds}s`);
+      }
+      console.log('');
+    }
+  }
+
+  console.log('💡 To verify artifact contents from our pipeline config:');
+  console.log('   grep -A5 "artifacts:" bitbucket-pipelines.yml');
+}
+
+async function listDownloads() {
+  console.log('Listing files in Downloads section\n');
+
+  try {
+    const downloads = await apiRequest('/downloads?pagelen=50');
+
+    if (!downloads.values || downloads.values.length === 0) {
+      console.log('📭 No files in Downloads section');
+      console.log('');
+      console.log('To upload pipeline artifacts to Downloads:');
+      console.log('  1. Add bitbucket-upload-file pipe to your bitbucket-pipelines.yml');
+      console.log('  2. Configure it to upload your artifacts');
+      console.log('  3. Artifacts will be accessible via API indefinitely');
+      return;
+    }
+
+    console.log(`📦 Found ${downloads.values.length} file(s):\n`);
+
+    for (const file of downloads.values) {
+      const size = (file.size / 1024).toFixed(2);
+      const sizeStr = file.size > 1024 * 1024
+        ? `${(file.size / 1024 / 1024).toFixed(2)} MB`
+        : `${size} KB`;
+
+      console.log(`📄 ${file.name}`);
+      console.log(`   Size: ${sizeStr}`);
+      console.log(`   Uploaded: ${new Date(file.created_on).toLocaleString()}`);
+      console.log(`   Download: ${file.links.self.href}`);
+      console.log('');
+    }
+
+    console.log('💡 To download a file:');
+    console.log('   curl -u username:app-password -L -O <download-url>');
+  } catch (err) {
+    console.error('❌ Failed to list downloads:', err.message);
+  }
+}
+
 async function main() {
   const command = process.argv[2];
   const arg = process.argv[3];
@@ -215,6 +317,8 @@ async function main() {
     console.log('  inspect <pipeline-num>  - Inspect pipeline structure');
     console.log('  error <pipeline-num>    - Get error details');
     console.log('  logs <pipeline-num>     - Fetch and save logs');
+    console.log('  artifacts <pipeline-num> - Show artifact info and web UI link');
+    console.log('  downloads               - List Downloads section files');
     process.exit(0);
   }
 
@@ -243,6 +347,16 @@ async function main() {
           process.exit(1);
         }
         await fetchLogs(arg);
+        break;
+      case 'artifacts':
+        if (!arg) {
+          console.error('❌ Please provide pipeline number');
+          process.exit(1);
+        }
+        await getArtifacts(arg);
+        break;
+      case 'downloads':
+        await listDownloads();
         break;
       default:
         console.error(`❌ Unknown command: ${command}`);

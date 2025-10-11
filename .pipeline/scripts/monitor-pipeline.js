@@ -125,9 +125,13 @@ async function monitor() {
                     if (result !== 'SUCCESSFUL') {
                         log('');
                         log('🔍 To fetch detailed logs, run:');
-                        log(`   bash temp/apra-lic-mgr/scripts/fetch-logs.sh ${pipelineUuid}`);
+                        log(`   node .pipeline/scripts/debug-pipeline.js logs ${buildNum}`);
                     } else {
                         log('🎉 Pipeline succeeded!');
+                        log('');
+                        log('📦 To view/download artifacts:');
+                        log(`   Web UI: https://bitbucket.org/${WORKSPACE}/${REPO}/pipelines/results/${pipelineUuid}/artifacts`);
+                        log(`   CLI: node .pipeline/scripts/debug-pipeline.js artifacts ${buildNum}`);
                     }
 
                     break;

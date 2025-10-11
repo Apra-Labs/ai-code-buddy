@@ -226,11 +226,40 @@ ai-code-buddy/
 
 ### Building for Production
 
-1. Generate proper PNG icons from the SVG
-2. Update version in `manifest.json`
-3. Test with multiple providers
-4. Zip all files except `.git` and test directories
-5. Upload to Chrome Web Store (optional)
+**Important:** Use the build script to create a production package that excludes development files.
+
+**Windows:**
+```bash
+build-extension.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x build-extension.sh
+./build-extension.sh
+```
+
+The build script will:
+- ✅ Copy only essential extension files
+- ✅ Include icons (PNG and SVG only)
+- ✅ Include essential docs (SECURITY.md, TROUBLESHOOTING.md)
+- ❌ Exclude `icons/node_modules/` (reduces size by ~20MB)
+- ❌ Exclude `icons/generate-icons.js`, `icons/package*.json`
+- ❌ Exclude `.git`, `.claude`, `.gitignore`
+- ❌ Exclude `test/` directory
+- ❌ Exclude legacy files (`popup.html`, `popup.js`)
+- 📦 Create ZIP file: `ai-code-buddy-vX.X.X.zip`
+
+**Manual Build:**
+1. Update version in `manifest.json`
+2. Test with multiple providers
+3. Run the build script
+4. Test the generated ZIP before uploading
+5. Upload to Chrome Web Store
+
+**Build Output:**
+- Typical size: ~50KB (vs ~20MB with dev files)
+- Ready for Chrome Web Store submission
 
 ## Version History
 

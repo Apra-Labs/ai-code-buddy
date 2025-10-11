@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Code Buddy - Turn any web terminal into an AI-powered command center</title>
+  <meta name="description" content="Chrome extension that integrates multiple AI providers into any web-based terminal. Works with RPort, Cloud Shell, GitPod, VS Code Web, and more!">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#quick-start">Quick Start</a>
+        <a href="#docs">Docs</a>
+        <a href="#feedback">Feedback</a>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="btn-primary">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h2 class="hero-title">Turn any web terminal into an AI-powered command center</h2>
+        <p class="hero-subtitle">Chrome extension that integrates multiple AI providers directly into your browser-based terminals and code editors.</p>
+        <div class="hero-cta">
+          <a href="https://chrome.google.com/webstore" target="_blank" class="btn-large">
+            <span>Add to Chrome - It's Free</span>
+          </a>
+          <a href="#quick-start" class="btn-secondary-large">Quick Start Guide</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>9+</strong>
+            <span>AI Providers</span>
+          </div>
+          <div class="stat">
+            <strong>100%</strong>
+            <span>Open Source</span>
+          </div>
+          <div class="stat">
+            <strong>0</strong>
+            <span>Backend Required</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="browser-window">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">localhost:8080/terminal</div>
+          </div>
+          <div class="terminal-demo">
+            <div class="terminal-line">$ ./deploy.sh</div>
+            <div class="terminal-line error">Error: Permission denied</div>
+            <div class="terminal-button">✨ Send to AI</div>
+            <div class="terminal-line success">$ chmod +x deploy.sh && ./deploy.sh</div>
+            <div class="terminal-line success">✅ Deployment successful!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2 class="section-title">Why AI Code Buddy?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3>Universal Compatibility</h3>
+          <p>Works with RPort, Cloud Shell, GitPod, VS Code Web, CodeSandbox, Replit, and any web-based terminal.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>Multi-Provider Support</h3>
+          <p>Choose from Claude, OpenAI, Gemini, Ollama, and 5+ more AI providers. Switch anytime.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Context-Aware</h3>
+          <p>AI remembers your last 5 attempts and learns from errors. No repeated mistakes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>One-Click Workflow</h3>
+          <p>Click "Send to AI" → Get improved script → Click "Insert" → Done! No copy-paste.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Privacy First</h3>
+          <p>API keys stored locally. Zero backend. 100% offline option with Ollama. Fully open source.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Free Options</h3>
+          <p>Use Gemini (free tier) or Ollama (completely local) without spending a dime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start Section -->
+  <section id="quick-start" class="quick-start">
+    <div class="container">
+      <h2 class="section-title">Get Started in 5 Minutes</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Install Extension</h3>
+          <p>Add to Chrome from the Web Store. Enable it in chrome://extensions/</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Choose AI Provider</h3>
+          <p>Pick Gemini (free), Ollama (local), or premium options like Claude/GPT-4</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Get API Key</h3>
+          <p>Follow our guide to get your API key in 2 minutes (skip for Ollama)</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Start Using</h3>
+          <p>Open any web terminal, run commands, click "Send to AI" button!</p>
+        </div>
+      </div>
+      <div class="quick-start-cta">
+        <a href="quick-start.html" class="btn-large">View Detailed Guide</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Providers Section -->
+  <section class="providers">
+    <div class="container">
+      <h2 class="section-title">Supported AI Providers</h2>
+      <div class="provider-grid">
+        <div class="provider-card">
+          <div class="provider-name">Claude</div>
+          <div class="provider-tag best">Best Quality</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">OpenAI</div>
+          <div class="provider-tag popular">Most Popular</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Gemini</div>
+          <div class="provider-tag free">Free Tier</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Ollama</div>
+          <div class="provider-tag privacy">100% Local</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Azure</div>
+          <div class="provider-tag">Enterprise</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Cohere</div>
+          <div class="provider-tag">Affordable</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">HuggingFace</div>
+          <div class="provider-tag">Open Source</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Replicate</div>
+          <div class="provider-tag">Pay-per-use</div>
+        </div>
+        <div class="provider-card">
+          <div class="provider-name">Custom</div>
+          <div class="provider-tag">Self-hosted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentation Section -->
+  <section id="docs" class="documentation">
+    <div class="container">
+      <h2 class="section-title">Documentation</h2>
+      <div class="docs-grid">
+        <a href="quick-start.html" class="doc-card">
+          <h3>🚀 Quick Start Guide</h3>
+          <p>Get up and running in 5 minutes with step-by-step instructions.</p>
+        </a>
+        <a href="api-keys.html" class="doc-card">
+          <h3>🔑 API Keys Guide</h3>
+          <p>How to get API keys for all providers with pricing comparisons.</p>
+        </a>
+        <a href="security.html" class="doc-card">
+          <h3>🔒 Security & Privacy</h3>
+          <p>Complete transparency on how we handle your API keys and data.</p>
+        </a>
+        <a href="troubleshooting.html" class="doc-card">
+          <h3>🛠️ Troubleshooting</h3>
+          <p>Common issues and solutions to get you unstuck quickly.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feedback Section -->
+  <section id="feedback" class="feedback">
+    <div class="container">
+      <h2 class="section-title">Feedback & Support</h2>
+      <div class="feedback-grid">
+        <div class="feedback-card">
+          <h3>🐛 Found a Bug?</h3>
+          <p>Report issues on GitHub so we can fix them quickly.</p>
+          <a href="https://github.com/apralabs/ai-code-buddy/issues" target="_blank" class="btn-secondary">Report Issue</a>
+        </div>
+        <div class="feedback-card">
+          <h3>💡 Feature Request?</h3>
+          <p>Share your ideas to make AI Code Buddy better.</p>
+          <a href="https://github.com/apralabs/ai-code-buddy/issues/new" target="_blank" class="btn-secondary">Suggest Feature</a>
+        </div>
+        <div class="feedback-card">
+          <h3>⭐ Love It?</h3>
+          <p>Rate us on Chrome Web Store and spread the word!</p>
+          <a href="https://chrome.google.com/webstore" target="_blank" class="btn-secondary">Leave Review</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="https://chrome.google.com/webstore" target="_blank">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/apralabs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/apralabs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>🔒 Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

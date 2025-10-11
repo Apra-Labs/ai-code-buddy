@@ -1,0 +1,33 @@
+# GitHub Pages Configuration for AI Code Buddy
+
+title: AI Code Buddy
+description: Turn any web terminal into an AI-powered command center
+author: Apra Labs
+url: https://apralabs.github.io
+baseurl: /ai-code-buddy
+
+# Social
+twitter_username: apralabs
+github_username: apralabs
+
+# Build settings
+markdown: kramdown
+theme: null
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+
+# Include custom files
+include:
+  - _redirects
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag

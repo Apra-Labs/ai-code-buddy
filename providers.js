@@ -9,10 +9,11 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'sk-ant-api03-...',
     configFields: ['apiKey', 'model'],
     models: [
-      { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet (Best)', default: true },
+      { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet v2 (Best)', default: true },
+      { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku (Fast & Affordable)' },
+      { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus (Most Capable)' },
       { id: 'claude-3-sonnet-20240229', name: 'Claude 3 Sonnet' },
-      { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus' },
-      { id: 'claude-3-haiku-20240307', name: 'Claude 3 Haiku (Fastest)' }
+      { id: 'claude-3-haiku-20240307', name: 'Claude 3 Haiku' }
     ],
     endpoint: 'https://api.anthropic.com/v1/messages',
     headers: (config) => ({
@@ -49,10 +50,13 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'sk-...',
     configFields: ['apiKey', 'model', 'organization'],
     models: [
-      { id: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo (Most Capable)' },
+      { id: 'gpt-4o-mini', name: 'GPT-4o Mini (Fast & Cheap)', default: true },
+      { id: 'gpt-4o', name: 'GPT-4o (Best - Multimodal)' },
+      { id: 'o1-preview', name: 'o1-preview (Reasoning)' },
+      { id: 'o1-mini', name: 'o1-mini (Fast Reasoning)' },
+      { id: 'gpt-4-turbo', name: 'GPT-4 Turbo' },
       { id: 'gpt-4', name: 'GPT-4' },
-      { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo (Fast)', default: true },
-      { id: 'gpt-3.5-turbo-16k', name: 'GPT-3.5 Turbo 16K' }
+      { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' }
     ],
     endpoint: 'https://api.openai.com/v1/chat/completions',
     headers: (config) => {
@@ -66,7 +70,7 @@ const AI_PROVIDERS = {
       return headers;
     },
     buildRequest: (prompt, config) => ({
-      model: config.model || 'gpt-3.5-turbo',
+      model: config.model || 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
@@ -174,9 +178,10 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: '40-character API key',
     configFields: ['apiKey', 'model'],
     models: [
-      { id: 'command', name: 'Command', default: true },
-      { id: 'command-nightly', name: 'Command Nightly' },
-      { id: 'command-light', name: 'Command Light (Fast)' }
+      { id: 'command-light', name: 'Command Light (Fast & Cheap)', default: true },
+      { id: 'command-r', name: 'Command R' },
+      { id: 'command-r-plus', name: 'Command R+ (Best)' },
+      { id: 'command', name: 'Command (Legacy)' }
     ],
     endpoint: 'https://api.cohere.ai/v1/generate',
     headers: (config) => ({
@@ -184,7 +189,7 @@ const AI_PROVIDERS = {
       'Authorization': `Bearer ${config.apiKey}`
     }),
     buildRequest: (prompt, config) => ({
-      model: config.model || 'command',
+      model: config.model || 'command-light',
       prompt: `You are a helpful assistant that improves and fixes scripts. Given the following request, provide ONLY the improved executable code without any explanations or markdown formatting:\n\n${prompt}\n\nImproved script:`,
       max_tokens: 2000,
       temperature: 0.3,
@@ -208,12 +213,14 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'hf_...',
     configFields: ['apiKey', 'model'],
     models: [
-      { id: 'codellama/CodeLlama-34b-Instruct-hf', name: 'CodeLlama 34B', default: true },
-      { id: 'bigcode/starcoder', name: 'StarCoder' },
-      { id: 'Salesforce/codegen-16B-multi', name: 'CodeGen 16B' },
-      { id: 'microsoft/phi-2', name: 'Phi-2' }
+      { id: 'Qwen/Qwen2.5-Coder-32B-Instruct', name: 'Qwen 2.5 Coder 32B (Best)', default: true },
+      { id: 'meta-llama/Llama-3.1-70B-Instruct', name: 'Llama 3.1 70B' },
+      { id: 'codellama/CodeLlama-34b-Instruct-hf', name: 'CodeLlama 34B' },
+      { id: 'deepseek-ai/deepseek-coder-33b-instruct', name: 'DeepSeek Coder 33B' },
+      { id: 'bigcode/starcoder2-15b', name: 'StarCoder 2 15B' },
+      { id: 'microsoft/phi-3-medium-4k-instruct', name: 'Phi-3 Medium' }
     ],
-    endpoint: (config) => `https://api-inference.huggingface.co/models/${config.model || 'codellama/CodeLlama-34b-Instruct-hf'}`,
+    endpoint: (config) => `https://api-inference.huggingface.co/models/${config.model || 'Qwen/Qwen2.5-Coder-32B-Instruct'}`,
     headers: (config) => ({
       'Authorization': `Bearer ${config.apiKey}`,
       'Content-Type': 'application/json'
@@ -248,19 +255,22 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'Not required (local)',
     configFields: ['endpoint', 'model'],
     models: [
-      { id: 'llama2', name: 'Llama 2' },
-      { id: 'codellama', name: 'Code Llama', default: true },
-      { id: 'mistral', name: 'Mistral' },
-      { id: 'mixtral', name: 'Mixtral' },
-      { id: 'deepseek-coder', name: 'DeepSeek Coder' },
-      { id: 'phind-codellama', name: 'Phind CodeLlama' }
+      { id: 'qwen2.5-coder:7b', name: 'Qwen 2.5 Coder 7B (Fast)', default: true },
+      { id: 'qwen2.5-coder:latest', name: 'Qwen 2.5 Coder (Best)' },
+      { id: 'llama3.2:latest', name: 'Llama 3.2' },
+      { id: 'llama3.1:latest', name: 'Llama 3.1' },
+      { id: 'deepseek-coder-v2:latest', name: 'DeepSeek Coder v2' },
+      { id: 'codellama:latest', name: 'Code Llama' },
+      { id: 'gemma2:latest', name: 'Gemma 2' },
+      { id: 'mistral:latest', name: 'Mistral' },
+      { id: 'mixtral:latest', name: 'Mixtral' }
     ],
     endpoint: (config) => `${config.endpoint || 'http://localhost:11434'}/api/generate`,
     headers: () => ({
       'Content-Type': 'application/json'
     }),
     buildRequest: (prompt, config) => ({
-      model: config.model || 'codellama',
+      model: config.model || 'qwen2.5-coder:7b',
       prompt: `You are a helpful assistant that improves and fixes scripts. Given the following request, provide ONLY the improved executable code without any explanations or markdown formatting:\n\n${prompt}\n\nImproved script:`,
       stream: false,
       options: {
@@ -319,9 +329,11 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'r8_...',
     configFields: ['apiKey', 'model'],
     models: [
-      { id: 'meta/llama-2-70b-chat', name: 'Llama 2 70B', default: true },
-      { id: 'meta/codellama-34b-instruct', name: 'CodeLlama 34B' },
-      { id: 'mistralai/mixtral-8x7b-instruct-v0.1', name: 'Mixtral 8x7B' }
+      { id: 'meta/meta-llama-3.1-8b-instruct', name: 'Llama 3.1 8B (Fast & Cheap)', default: true },
+      { id: 'meta/meta-llama-3.1-70b-instruct', name: 'Llama 3.1 70B' },
+      { id: 'meta/meta-llama-3.1-405b-instruct', name: 'Llama 3.1 405B (Best)' },
+      { id: 'mistralai/mixtral-8x7b-instruct-v0.1', name: 'Mixtral 8x7B' },
+      { id: 'deepseek-ai/deepseek-coder-33b-instruct', name: 'DeepSeek Coder 33B' }
     ],
     endpoint: 'https://api.replicate.com/v1/predictions',
     headers: (config) => ({

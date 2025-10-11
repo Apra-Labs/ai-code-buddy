@@ -43,22 +43,21 @@ definitions:
           - echo "Uploading to Bitbucket Downloads for easy access..."
           - echo "Repository ${BITBUCKET_REPO_FULL_NAME}"
           - echo "File to upload ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+          - echo "Username ${BITBUCKET_USERNAME}"
           - |
-            if [ -n "${BITBUCKET_REPO_FULL_NAME}" ]; then
+            if [ -n "${BITBUCKET_REPO_FULL_NAME}" ] && [ -n "${BITBUCKET_USERNAME}" ] && [ -n "${BITBUCKET_APP_PASSWORD}" ]; then
               echo "Attempting upload..."
-              RESPONSE=$(curl -w "\nHTTP_STATUS:%{http_code}" -X POST \
+              curl -v -X POST \
                 "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_FULL_NAME}/downloads" \
                 -u "${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}" \
-                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" 2>&1)
-              echo "$RESPONSE"
-              HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
-              if [ "$HTTP_STATUS" = "201" ] || [ "$HTTP_STATUS" = "200" ]; then
-                echo "✅ Upload successful!"
-              else
-                echo "❌ Upload failed with status: $HTTP_STATUS"
-              fi
+                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+              echo ""
+              echo "Upload command completed"
             else
-              echo "BITBUCKET_REPO_FULL_NAME not set, skipping upload"
+              echo "❌ Missing required variables:"
+              echo "  BITBUCKET_REPO_FULL_NAME: ${BITBUCKET_REPO_FULL_NAME:-NOT SET}"
+              echo "  BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-NOT SET}"
+              echo "  BITBUCKET_APP_PASSWORD: ${BITBUCKET_APP_PASSWORD:+SET}"
             fi
         artifacts:
           - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip

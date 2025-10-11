@@ -98,10 +98,13 @@ const AI_PROVIDERS = {
     apiKeyPlaceholder: 'AIza...',
     configFields: ['apiKey', 'model'],
     models: [
-      { id: 'gemini-pro', name: 'Gemini Pro', default: true },
-      { id: 'gemini-pro-vision', name: 'Gemini Pro Vision' }
+      { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Free - Fast)', default: true },
+      { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro (Free - Best)' },
+      { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash (Experimental)' },
+      { id: 'gemini-pro', name: 'Gemini Pro (Legacy)' },
+      { id: 'gemini-pro-vision', name: 'Gemini Pro Vision (Legacy)' }
     ],
-    endpoint: (config) => `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-pro'}:generateContent?key=${config.apiKey}`,
+    endpoint: (config) => `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`,
     headers: () => ({
       'Content-Type': 'application/json'
     }),

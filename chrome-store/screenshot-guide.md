@@ -63,6 +63,46 @@ These extensions can capture exact dimensions automatically.
 
 ---
 
+## 🔧 SPECIAL: Capturing Extension Popup Windows
+
+**IMPORTANT:** Extension popups are separate windows. The device toolbar method captures WEB PAGES, not extension popups!
+
+### For Extension Popup Screenshots (Method 1 & 2):
+
+#### Best Method: Load Popup as Full Page
+
+```bash
+1. Right-click extension icon → "Inspect popup"
+2. DevTools opens - look at the URL bar in DevTools
+3. You'll see something like: chrome-extension://abc123def/popup-multi.html
+4. COPY that full URL
+5. Open a NEW TAB
+6. PASTE the URL in address bar and press Enter
+7. Now your popup loads as a FULL WEBPAGE!
+8. Use Method 1 (device toolbar screenshot):
+   - F12 → Ctrl+Shift+M → 1280x800 device
+   - Click ⋮ → Capture screenshot
+9. Perfect 1280x800 screenshot of your popup!
+```
+
+**This is the BEST method for popup screenshots!**
+
+#### Alternative: Manual Capture + Resize
+
+```bash
+1. Click extension icon to open popup
+2. Use Win+Shift+S to capture the small popup window
+3. Open in Paint or image editor
+4. Resize/scale to 1280x800
+5. May look stretched - not ideal but works
+```
+
+### For Web Page Screenshots (Method 3-5):
+
+Use the device toolbar method - it works perfectly for regular web pages showing the extension in action.
+
+---
+
 ## Recommended 5 Screenshots
 
 ### Screenshot 1: Extension Popup - Provider Selection

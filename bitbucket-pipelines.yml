@@ -40,6 +40,13 @@ definitions:
           - unzip -l "ai-code-buddy-v${VERSION}.zip" | head -20
           - echo "Verifying build-info.json in package"
           - unzip -p "ai-code-buddy-v${VERSION}.zip" build-info.json
+          - echo "Uploading to Bitbucket Downloads for easy access..."
+          - |
+            if [ -n "${BITBUCKET_REPO_OWNER}" ] && [ -n "${BITBUCKET_REPO_SLUG}" ]; then
+              curl -X POST "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" \
+                -u "${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}" \
+                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" || echo "Upload to downloads failed or not configured"
+            fi
         artifacts:
           - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip
           - build-info.json
@@ -90,29 +97,25 @@ pipelines:
           <<: *validate-extension
           name: Validate Release Build
       - step:
-          name: Prepare Chrome Web Store Submission
+          name: Chrome Web Store Submission Ready
           script:
             - export VERSION=$(node -p "require('./manifest.json').version")
             - export GIT_COMMIT=$(git rev-parse --short HEAD)
             - export GIT_TAG=$(git describe --tags --exact-match)
-            - echo "Listing available artifacts..."
-            - ls -lh ai-code-buddy-*.zip || echo "No ZIP files found!"
             - echo "============================================"
             - echo "   CHROME WEB STORE SUBMISSION READY"
             - echo "============================================"
-            - echo "Version:${VERSION}"
-            - echo "Git Tag:${GIT_TAG}"
-            - echo "Commit Hash:${GIT_COMMIT}"
-            - echo "Download artifact:ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+            - echo "Version: ${VERSION}"
+            - echo "Git Tag: ${GIT_TAG}"
+            - echo "Commit Hash: ${GIT_COMMIT}"
+            - echo "Download from: https://bitbucket.org/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads/"
+            - echo "Filename: ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
             - echo "Next steps:"
-            - echo "1. Download the ZIP artifact from this build"
+            - echo "1. Download the ZIP from the link above"
             - echo "2. Go to Chrome Web Store Developer Console"
             - echo "3. Upload the ZIP file"
             - echo "4. Update VERSION.json with store URL after publication"
             - echo "============================================"
-          artifacts:
-            - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip
-            - build-info.json
 
   custom:
     # Manual trigger for building without tagging

@@ -4,11 +4,27 @@ Chrome Web Store requires **at least 1 screenshot** but recommends **5 screensho
 
 ## Screenshot Requirements
 
-- **Dimensions:** 1280x800 or 640x400 (recommended: 1280x800)
-- **Format:** PNG or JPG
+- **Minimum Dimensions:** 640x400 pixels
+- **Maximum Dimensions:** 3840x2400 pixels
+- **Format:** PNG or JPG (PNG recommended for better quality)
 - **File size:** Max 5MB per image
-- **Aspect ratio:** 16:10
-- **Content:** Should showcase key features
+- **Aspect ratio:** Flexible! No strict requirement
+- **Content:** Should showcase key features naturally
+
+### 📐 Recommended Dimensions by Screenshot Type:
+
+**For Extension Popups (Portrait/Vertical):**
+- 640x800 (4:5 ratio) ← RECOMMENDED for vertical popups
+- 800x1000 (4:5 ratio)
+- 480x800 (3:5 ratio - narrow popup)
+- 800x800 (1:1 square - also works)
+
+**For Web Pages/Terminals (Landscape):**
+- 1280x800 (16:10 ratio) ← Standard landscape
+- 1920x1080 (16:9 ratio)
+- 1600x900 (16:9 ratio)
+
+**✅ You can MIX different dimensions!** Use portrait for popups, landscape for terminals/pages.
 
 ## ⚠️ IMPORTANT: What to Capture
 
@@ -83,9 +99,11 @@ These extensions can capture exact dimensions automatically.
 9. PASTE the URL in address bar and press Enter
 10. Your popup now loads as a FULL WEBPAGE!
 11. Use device toolbar screenshot:
-    - F12 → Ctrl+Shift+M → 1280x800 device
+    - F12 → Ctrl+Shift+M
+    - Create/select custom device: 640x800 (for vertical popup)
+      OR 800x1000 if you want taller
     - Click ⋮ → Capture screenshot
-12. Perfect 1280x800 screenshot of your popup!
+12. Perfect portrait screenshot of your popup!
 ```
 
 **Alternative - Get Extension ID manually:**
@@ -119,7 +137,8 @@ Use the device toolbar method - it works perfectly for regular web pages showing
 ## Recommended 5 Screenshots
 
 ### Screenshot 1: Extension Popup - Provider Selection
-**Filename:** `01-provider-selection.png` (1280x800)
+**Filename:** `01-provider-selection.png`
+**Dimensions:** 640x800 (portrait - vertical popup)
 
 **What to capture:**
 1. Open extension popup (click extension icon)
@@ -146,7 +165,8 @@ Use the device toolbar method - it works perfectly for regular web pages showing
 ---
 
 ### Screenshot 2: Extension Popup - Configuration
-**Filename:** `02-configuration.png` (1280x800)
+**Filename:** `02-configuration.png`
+**Dimensions:** 640x800 (portrait - vertical popup)
 
 **What to capture:**
 1. Extension popup with API key section visible

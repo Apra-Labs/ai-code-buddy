@@ -223,8 +223,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     
     // Set default settings
     chrome.storage.sync.set({
-      provider: 'claude', // Default to Claude
-      autoImprove: false
+      provider: 'claude' // Default to Claude
     });
   }
 });

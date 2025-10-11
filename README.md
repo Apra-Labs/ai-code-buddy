@@ -294,7 +294,7 @@ The build script will:
 
 ## Support
 
-- **Issues & Bugs**: [GitHub Issues](https://github.com/your-repo/ai-code-buddy)
+- **Issues & Bugs**: [GitHub Issues](https://github.com/Apra-Labs/ai-code-buddy/issues)
 - **Security Issues**: See [docs/SECURITY.md](docs/SECURITY.md) for private disclosure
 - **Extension Version**: 2.0.0
 - **Tested with**: RPort, Google Cloud Shell, GitPod, VS Code Web, CodeSandbox, Replit, and more!

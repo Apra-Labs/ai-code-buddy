@@ -56,9 +56,9 @@ definitions:
         script:
           - cd icons && npm install && cd ..
           - echo "Running image validator..."
-          - cd test && node image-validator.js || true
+          - cd test && node image-validator.js
           - echo "Running link validator..."
-          - timeout 60 node link-validator.js || true
+          - timeout 60 node link-validator.js
 
     - step: &create-git-tag
         name: Create Git Tag

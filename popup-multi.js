@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
   setupEventListeners();
   setupProviderScrollButtons();
+  displayVersionInfo();
 
   // Load saved settings
   async function loadSettings() {
@@ -648,5 +649,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initial update
     setTimeout(updateScrollButtons, 100);
+  }
+
+  // Display version information
+  async function displayVersionInfo() {
+    const versionElement = document.getElementById('extension-version');
+    if (!versionElement) return;
+
+    try {
+      // Get version from manifest
+      const manifest = chrome.runtime.getManifest();
+      const version = manifest.version;
+
+      // Try to fetch VERSION.json for git commit info
+      try {
+        const response = await fetch(chrome.runtime.getURL('VERSION.json'));
+        const versionData = await response.json();
+
+        if (versionData.git_commit_short) {
+          versionElement.textContent = `v${version} (${versionData.git_commit_short})`;
+        } else {
+          versionElement.textContent = `v${version}`;
+        }
+      } catch (error) {
+        // If VERSION.json doesn't exist, just show manifest version
+        versionElement.textContent = `v${version}`;
+      }
+    } catch (error) {
+      console.error('Error displaying version:', error);
+      versionElement.textContent = 'Version info unavailable';
+    }
   }
 });

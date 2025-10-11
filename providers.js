@@ -108,7 +108,7 @@ const AI_PROVIDERS = {
       { id: 'gemini-pro', name: 'Gemini Pro (Legacy)' },
       { id: 'gemini-pro-vision', name: 'Gemini Pro Vision (Legacy)' }
     ],
-    endpoint: (config) => `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`,
+    endpoint: (config) => `https://generativelanguage.googleapis.com/v1/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`,
     headers: () => ({
       'Content-Type': 'application/json'
     }),

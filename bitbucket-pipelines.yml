@@ -40,25 +40,10 @@ definitions:
           - unzip -l "ai-code-buddy-v${VERSION}.zip" | head -20
           - echo "Verifying build-info.json in package"
           - unzip -p "ai-code-buddy-v${VERSION}.zip" build-info.json
-          - echo "Uploading to Bitbucket Downloads for easy access..."
-          - echo "Repository ${BITBUCKET_REPO_FULL_NAME}"
-          - echo "File to upload ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
-          - echo "Username ${BITBUCKET_USERNAME}"
-          - |
-            if [ -n "${BITBUCKET_REPO_FULL_NAME}" ] && [ -n "${BITBUCKET_USERNAME}" ] && [ -n "${BITBUCKET_APP_PASSWORD}" ]; then
-              echo "Attempting upload..."
-              curl -v -X POST \
-                "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_FULL_NAME}/downloads" \
-                -u "${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}" \
-                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
-              echo ""
-              echo "Upload command completed"
-            else
-              echo "❌ Missing required variables:"
-              echo "  BITBUCKET_REPO_FULL_NAME: ${BITBUCKET_REPO_FULL_NAME:-NOT SET}"
-              echo "  BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-NOT SET}"
-              echo "  BITBUCKET_APP_PASSWORD: ${BITBUCKET_APP_PASSWORD:+SET}"
-            fi
+          - echo "✅ Build artifacts created successfully!"
+          - echo ""
+          - echo "📦 Artifact ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip is available in this pipeline's artifacts"
+          - echo "🔗 Download from https://bitbucket.org/${BITBUCKET_REPO_FULL_NAME}/pipelines/results/${BITBUCKET_BUILD_NUMBER}/artifacts"
         artifacts:
           - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip
           - build-info.json

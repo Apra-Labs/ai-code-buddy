@@ -533,7 +533,7 @@
   // Reset button state
   function resetButton(button) {
     button.classList.remove('loading');
-    button.querySelector('.claude-btn-text').textContent = 'Send to Claude';
+    button.querySelector('.claude-btn-text').textContent = 'Send to AI';
     button.disabled = false;
   }
 

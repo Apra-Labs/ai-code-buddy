@@ -150,7 +150,6 @@ async function testExtensionFiles() {
   const extensionFiles = [
     'manifest.json',
     'popup-multi.html',
-    'popup.html',
     'content.js',
     'background.js',
     'icons/icon16.png',
@@ -242,7 +241,6 @@ async function testHtmlLinks() {
 
   const htmlFiles = [
     'popup-multi.html',
-    'popup.html',
     'docs-site/index.html',
     'docs-site/quick-start.html',
     'docs-site/api-keys.html',

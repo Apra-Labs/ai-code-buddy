@@ -29,6 +29,18 @@ npm-debug.log*
 dist/
 build/
 
+# Extension build artifacts
+*.crx
+*.pem
+ai-code-buddy-*.zip
+
+# Windows artifacts
+nul
+
+# Old/temporary screenshots
+chrome-store/*-temp-*.png
+chrome-store/01-*.png
+
 # Pipeline credentials and artifacts
 .env.pipeline
 logs/pipeline-*

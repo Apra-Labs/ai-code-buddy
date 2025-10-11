@@ -30,10 +30,9 @@ Complete checklist before Chrome Web Store submission.
 ### Core Files
 - [ ] manifest.json (version 2.0.0)
 - [ ] popup-multi.html (updated with correct links)
-- [ ] popup.html (updated with correct links)
 - [ ] content.js
 - [ ] background.js
-- [ ] config.js
+- [ ] providers.js
 
 ### Icons
 - [ ] icons/icon16.png (16x16)

@@ -212,6 +212,8 @@
       customSelectors?.commandOutput
     );
 
+    console.log(`[Button Injection] Found ${outputElements.length} output elements`);
+
     outputElements.forEach(element => {
       // Check if we've already processed this element
       if (processedElements.has(element)) {

@@ -93,13 +93,17 @@ pipelines:
           name: Prepare Chrome Web Store Submission
           script:
             - export VERSION=$(node -p "require('./manifest.json').version")
+            - export GIT_COMMIT=$(git rev-parse --short HEAD)
             - export GIT_TAG=$(git describe --tags --exact-match)
+            - echo "Listing available artifacts..."
+            - ls -lh ai-code-buddy-*.zip || echo "No ZIP files found!"
             - echo "============================================"
             - echo "   CHROME WEB STORE SUBMISSION READY"
             - echo "============================================"
             - echo "Version:${VERSION}"
             - echo "Git Tag:${GIT_TAG}"
-            - echo "Download artifact:ai-code-buddy-v${VERSION}.zip"
+            - echo "Commit Hash:${GIT_COMMIT}"
+            - echo "Download artifact:ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
             - echo "Next steps:"
             - echo "1. Download the ZIP artifact from this build"
             - echo "2. Go to Chrome Web Store Developer Console"
@@ -107,7 +111,7 @@ pipelines:
             - echo "4. Update VERSION.json with store URL after publication"
             - echo "============================================"
           artifacts:
-            - ai-code-buddy-*.zip
+            - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip
             - build-info.json
 
   custom:

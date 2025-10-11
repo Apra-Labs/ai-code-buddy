@@ -33,19 +33,19 @@ definitions:
           - cp -r icons build/
           - cp background.js content.js manifest.json popup-multi.html popup-multi.js build-info.json build/
           - cd build
-          - zip -r "../ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" .
+          - zip -r "../ai-code-buddy.zip" .
           - cd ..
-          - cp "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" "ai-code-buddy-v${VERSION}.zip"
+          - mv "ai-code-buddy.zip" "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
           - ls -lh ai-code-buddy-*.zip
-          - unzip -l "ai-code-buddy-v${VERSION}.zip" | head -20
+          - unzip -l "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" | head -20
           - echo "Verifying build-info.json in package"
-          - unzip -p "ai-code-buddy-v${VERSION}.zip" build-info.json
+          - unzip -p "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" build-info.json
           - echo "✅ Build artifacts created successfully!"
           - echo ""
-          - echo "📦 Artifact ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip is available in this pipeline's artifacts"
+          - echo "📦 ZIP file: ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
           - echo "🔗 Download from https://bitbucket.org/${BITBUCKET_REPO_FULL_NAME}/pipelines/results/${BITBUCKET_BUILD_NUMBER}/artifacts"
         artifacts:
-          - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip
+          - ai-code-buddy-*.zip
           - build-info.json
 
     - step: &validate-extension

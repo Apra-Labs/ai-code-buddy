@@ -25,20 +25,41 @@ Chrome Web Store requires **at least 1 screenshot** but recommends **5 screensho
 
 **The screenshot should be EXACTLY 1280x800 pixels of CONTENT, not the entire Chrome window.**
 
-### Best Method: Chrome DevTools Screenshot
+### Method 1: Chrome DevTools Device Toolbar Screenshot (RECOMMENDED)
 
 ```bash
 1. Open your page/extension popup
 2. Press F12 (open DevTools)
-3. Press Ctrl+Shift+M (toggle device emulator)
+3. Press Ctrl+Shift+M (toggle device toolbar)
 4. Select your 1280x800 custom device
-5. Press Ctrl+Shift+P (command palette)
-6. Type: "Capture screenshot"
-7. Select: "Capture screenshot" (captures viewport at 1280x800)
-8. PNG automatically downloads - perfect dimensions!
+5. Click the three dots (⋮) in the device toolbar
+   (Located at the top-right corner of the emulated viewport)
+6. Select "Capture screenshot" from the menu
+7. PNG automatically downloads at exactly 1280x800 - perfect!
 ```
 
 This captures ONLY the content at exactly 1280x800, without any browser UI.
+
+### Method 2: Windows Snipping Tool (Manual)
+
+```bash
+1. F12 → Ctrl+Shift+M → Select 1280x800 device
+2. Press Win+Shift+S (Windows Snipping Tool)
+3. Manually drag to select ONLY the content area (not browser chrome)
+4. Click to capture
+5. Paste into Paint/image editor
+6. Save as PNG
+7. Verify dimensions are 1280x800 (right-click → Properties)
+```
+
+### Method 3: Screenshot Extension (Easiest for beginners)
+
+Install a Chrome screenshot extension:
+- **Awesome Screenshot** (free, precise dimensions)
+- **Nimbus Screenshot** (annotations included)
+- **GoFullPage** (for full-page captures)
+
+These extensions can capture exact dimensions automatically.
 
 ---
 

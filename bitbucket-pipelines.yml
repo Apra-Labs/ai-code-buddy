@@ -41,11 +41,14 @@ definitions:
           - echo "Verifying build-info.json in package"
           - unzip -p "ai-code-buddy-v${VERSION}.zip" build-info.json
           - echo "Uploading to Bitbucket Downloads for easy access..."
+          - echo "Repository ${BITBUCKET_REPO_FULL_NAME}"
           - |
-            if [ -n "${BITBUCKET_REPO_OWNER}" ] && [ -n "${BITBUCKET_REPO_SLUG}" ]; then
-              curl -X POST "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" \
+            if [ -n "${BITBUCKET_REPO_FULL_NAME}" ]; then
+              curl -v -X POST "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_FULL_NAME}/downloads" \
                 -u "${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}" \
-                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" || echo "Upload to downloads failed or not configured"
+                -F "files=@ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" 2>&1 | tail -20
+            else
+              echo "BITBUCKET_REPO_FULL_NAME not set, skipping upload"
             fi
         artifacts:
           - ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip

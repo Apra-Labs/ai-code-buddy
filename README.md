@@ -360,3 +360,4 @@ Learn more at [apralabs.com](https://www.apralabs.com)
 ---
 
 **🔒 Security Note**: This extension has zero backend infrastructure. Your API keys are stored locally in Chrome's encrypted storage and only sent to your chosen AI provider. [Full details](docs/SECURITY.md)
+

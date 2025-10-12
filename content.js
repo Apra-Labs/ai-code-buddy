@@ -98,7 +98,7 @@
           }, 8000);
 
           // Mark as shown
-          await chrome.storage.local.set({ shortcutsBannerShown: true });
+          chrome.storage.local.set({ shortcutsBannerShown: true });
         }, 2000);
       }
     } catch (error) {

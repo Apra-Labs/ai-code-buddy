@@ -20,6 +20,24 @@ mkdir -p "$BUILD_DIR"
 
 echo "📦 Copying extension files..."
 
+# Get current git commit info
+GIT_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+GIT_COMMIT_SHORT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+echo "📝 Updating VERSION.json with git commit: $GIT_COMMIT_SHORT"
+
+# Copy and update VERSION.json with current git commit
+if [ -f VERSION.json ]; then
+  # Update VERSION.json with current git commit before copying
+  cat VERSION.json | \
+    sed "s/\"git_commit\": \"[^\"]*\"/\"git_commit\": \"$GIT_COMMIT\"/" | \
+    sed "s/\"git_commit_short\": \"[^\"]*\"/\"git_commit_short\": \"$GIT_COMMIT_SHORT\"/" | \
+    sed "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" \
+    > "$BUILD_DIR/VERSION.json"
+else
+  echo "⚠️  Warning: VERSION.json not found, skipping"
+fi
+
 # Copy essential extension files
 cp manifest.json "$BUILD_DIR/"
 cp content.js "$BUILD_DIR/"

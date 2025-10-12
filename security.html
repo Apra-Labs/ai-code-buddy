@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security & Privacy - AI Code Buddy</title>
+  <meta name="description" content="Complete transparency on how AI Code Buddy handles your API keys and data. Open source, privacy-first, and secure.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+  <style>
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #e8f8ee 0%, #ffffff 100%);
+      padding: 60px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+    .security-badges {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .security-badge {
+      background: white;
+      border: 2px solid #28c840;
+      color: var(--text-dark);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .security-badge::before {
+      content: '✓';
+      color: #28c840;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .content-section {
+      padding: 60px 0;
+    }
+    .highlight-box {
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      padding: 50px;
+      border-radius: 12px;
+      margin: 40px 0;
+    }
+    .highlight-box h2 {
+      font-size: 32px;
+      margin-bottom: 25px;
+      color: white;
+    }
+    .highlight-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .highlight-item {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .highlight-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .section-card {
+      background: white;
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+    .section-card h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+    }
+    .section-card h3 {
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .section-card p, .section-card li {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .section-card ul {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+    .section-card code {
+      background: var(--bg-light);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .comparison-table th {
+      background: var(--apra-green);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .comparison-table td {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-medium);
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    .flow-diagram {
+      background: var(--bg-light);
+      padding: 30px;
+      border-radius: 12px;
+      margin: 25px 0;
+      text-align: center;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 2;
+    }
+    .flow-step {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px auto;
+      max-width: 600px;
+      border-left: 4px solid var(--apra-green);
+    }
+    .info-box {
+      background: #e8f4ff;
+      border-left: 4px solid #4a90e2;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .success-box {
+      background: #e8f8ee;
+      border-left: 4px solid #28c840;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .warning-box {
+      background: #fff4e6;
+      border-left: 4px solid #ffa726;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .danger-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+    .checklist {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      border: 2px solid var(--border-light);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+    .checklist-item input {
+      margin-top: 3px;
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="api-keys.html">API Keys</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Troubleshooting</a>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="btn-primary">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>&gt;</span>
+      <span>Security & Privacy</span>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Security & Privacy</h1>
+      <p>Complete transparency on how your API keys and data are handled</p>
+      <div class="security-badges">
+        <div class="security-badge">Local Storage Only</div>
+        <div class="security-badge">No Backend Server</div>
+        <div class="security-badge">100% Open Source</div>
+        <div class="security-badge">No Tracking</div>
+        <div class="security-badge">Offline Option Available</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+
+      <!-- TL;DR -->
+      <div class="highlight-box">
+        <h2>Is It Safe? YES - Here's Why</h2>
+        <div class="highlight-list">
+          <div class="highlight-item">
+            <div class="highlight-icon">🔒</div>
+            <div>
+              <strong>Stored Locally</strong><br>
+              API keys are stored in Chrome's encrypted storage, never on any server
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🚫</div>
+            <div>
+              <strong>Never Sent to Us</strong><br>
+              No backend server exists - we physically cannot access your keys
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🔐</div>
+            <div>
+              <strong>Only to AI Provider</strong><br>
+              Keys are only sent to your chosen AI provider (Claude, OpenAI, etc.)
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">👁️</div>
+            <div>
+              <strong>Fully Open Source</strong><br>
+              All code is public - audit it yourself, no hidden behavior
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">📊</div>
+            <div>
+              <strong>Zero Tracking</strong><br>
+              No analytics, no telemetry, no usage statistics collected
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">💻</div>
+            <div>
+              <strong>Offline Option</strong><br>
+              Use Ollama for 100% local AI - no network, no API key needed
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How Keys are Stored -->
+      <div class="section-card">
+        <h2>How Your API Keys Are Stored</h2>
+        <p>Understanding where and how your API keys are stored is crucial for security. Here's the complete picture:</p>
+
+        <h3>Storage Location</h3>
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <strong>1. You enter API key in extension popup</strong>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>2. Extension validates the key format</strong>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>3. Stored in chrome.storage.sync</strong><br>
+            <span style="font-size: 12px; color: var(--text-light);">(Chrome automatically encrypts this storage)</span>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>4. Only accessible to this extension</strong><br>
+            <span style="font-size: 12px; color: var(--text-light);">(Websites and other extensions cannot access it)</span>
+          </div>
+        </div>
+
+        <h3>Chrome's Encryption</h3>
+        <p>Chrome automatically encrypts extension storage using OS-level encryption:</p>
+        <ul>
+          <li><strong>Windows:</strong> DPAPI (Data Protection API)</li>
+          <li><strong>Mac:</strong> Keychain</li>
+          <li><strong>Linux:</strong> gnome-keyring or KWallet</li>
+        </ul>
+
+        <div class="success-box">
+          <p><strong>Bottom Line:</strong> Your API keys are encrypted at rest and only accessible when you're logged into your Chrome profile.</p>
+        </div>
+      </div>
+
+      <!-- What Data is Sent Where -->
+      <div class="section-card">
+        <h2>What Data is Sent Where</h2>
+        <p>Complete transparency on all network activity:</p>
+
+        <h3>Data Flow When You Click "Send to AI"</h3>
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <strong>1. Command output captured from terminal</strong>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>2. Extension reads API key from local storage</strong>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>3. Request sent ONLY to your chosen AI provider</strong><br>
+            <span style="font-size: 12px; color: var(--text-light);">(e.g., api.anthropic.com or api.openai.com)</span>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>4. AI provider processes and returns improved script</strong>
+          </div>
+          <div style="font-size: 20px; margin: 15px 0;">↓</div>
+          <div class="flow-step">
+            <strong>5. Response displayed in your browser</strong>
+          </div>
+        </div>
+
+        <h3>What Each Party Receives</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>What They Receive</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Apra Labs (Us)</strong></td>
+              <td style="color: #28c840; font-weight: 600;">NOTHING</td>
+              <td>No backend server exists</td>
+            </tr>
+            <tr>
+              <td><strong>Your AI Provider</strong></td>
+              <td>API key, command output, context</td>
+              <td>To process your request and return improved script</td>
+            </tr>
+            <tr>
+              <td><strong>Websites You Visit</strong></td>
+              <td style="color: #28c840; font-weight: 600;">NOTHING</td>
+              <td>Extension data is isolated from web pages</td>
+            </tr>
+            <tr>
+              <td><strong>Other Extensions</strong></td>
+              <td style="color: #28c840; font-weight: 600;">NOTHING</td>
+              <td>Chrome isolates extension storage</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning-box">
+          <p><strong>Important:</strong> When you use cloud AI providers (Claude, OpenAI, Gemini), your command outputs are sent to their servers for processing. For 100% privacy, use Ollama which runs entirely on your local machine.</p>
+        </div>
+      </div>
+
+      <!-- Privacy Comparison -->
+      <div class="section-card">
+        <h2>Privacy Comparison by Provider</h2>
+        <p>Not all AI providers handle data the same way. Here's what each provider sees:</p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Data Retention</th>
+              <th>Data Usage</th>
+              <th>Privacy Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ollama (Local)</strong></td>
+              <td>None - stays on your machine</td>
+              <td>Not transmitted anywhere</td>
+              <td><span style="color: #28c840; font-weight: 600;">★★★★★ Perfect</span></td>
+            </tr>
+            <tr>
+              <td><strong>Azure OpenAI</strong></td>
+              <td>Per your enterprise policy</td>
+              <td>Not used for training</td>
+              <td><span style="color: #28c840; font-weight: 600;">★★★★★ Excellent</span></td>
+            </tr>
+            <tr>
+              <td><strong>Claude</strong></td>
+              <td>30 days</td>
+              <td>Safety monitoring only</td>
+              <td><span style="color: #4a90e2; font-weight: 600;">★★★☆☆ Good</span></td>
+            </tr>
+            <tr>
+              <td><strong>OpenAI</strong></td>
+              <td>30 days</td>
+              <td>Safety monitoring only</td>
+              <td><span style="color: #4a90e2; font-weight: 600;">★★★☆☆ Good</span></td>
+            </tr>
+            <tr>
+              <td><strong>Gemini</strong></td>
+              <td>Per Google's policy</td>
+              <td>May improve services</td>
+              <td><span style="color: #4a90e2; font-weight: 600;">★★★☆☆ Good</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="success-box">
+          <p><strong>For Maximum Privacy:</strong> Use Ollama for completely local processing. Your code never leaves your machine, no API key is required, and it works offline.</p>
+        </div>
+      </div>
+
+      <!-- Proof of Security -->
+      <div class="section-card">
+        <h2>Proof of Security: Verify It Yourself</h2>
+        <p>Don't just take our word for it - verify the security claims yourself:</p>
+
+        <h3>Test 1: Check Network Activity</h3>
+        <ol>
+          <li>Open Chrome DevTools (F12)</li>
+          <li>Go to Network tab</li>
+          <li>Click "Send to AI" in the extension</li>
+          <li>Observe: You'll see ONE request to your AI provider's API only</li>
+          <li>Result: No requests to any other servers</li>
+        </ol>
+
+        <h3>Test 2: Review the Source Code</h3>
+        <p>All code is open source and unminified. Key files to review:</p>
+        <ul>
+          <li><code>background.js</code> - The ONLY file that uses API keys (line ~89)</li>
+          <li><code>popup-multi.js</code> - Where settings are saved (line ~350)</li>
+          <li><code>manifest.json</code> - Lists all permissions and allowed domains</li>
+        </ul>
+
+        <div class="code-block">// From background.js - the ONLY place keys are used
+const response = await fetch(PROVIDER_ENDPOINT, {
+  headers: {
+    'x-api-key': apiKey,  // Sent ONLY to AI provider
+    'Content-Type': 'application/json'
+  }
+});
+// No other usage of API keys in entire codebase!</div>
+
+        <h3>Test 3: Inspect Permissions</h3>
+        <p>Check <code>manifest.json</code> for extension permissions:</p>
+        <div class="code-block">{
+  "permissions": [
+    "storage",    // Store settings locally
+    "activeTab"   // Access current tab only
+  ],
+  "host_permissions": [
+    "https://api.anthropic.com/*",      // Claude API only
+    "https://api.openai.com/*",         // OpenAI API only
+    "https://generativelanguage.googleapis.com/*"  // Gemini only
+  ]
+  // NO other domains, NO "all_urls", NO broad permissions
+}</div>
+
+        <div class="info-box">
+          <p><strong>Open Source Guarantee:</strong> Every line of code is visible on GitHub. No compiled code, no minification, no obfuscation. What you see is exactly what runs.</p>
+        </div>
+      </div>
+
+      <!-- Security Best Practices -->
+      <div class="section-card">
+        <h2>Security Best Practices</h2>
+
+        <h3>For Your API Keys</h3>
+        <ul>
+          <li><strong>Use separate keys:</strong> Create a dedicated API key for this extension</li>
+          <li><strong>Set spending limits:</strong> Configure monthly caps in your provider dashboard</li>
+          <li><strong>Monitor usage:</strong> Check your provider's usage dashboard regularly</li>
+          <li><strong>Rotate regularly:</strong> Generate new keys every 30-90 days</li>
+          <li><strong>Revoke if compromised:</strong> Delete and replace keys immediately if exposed</li>
+        </ul>
+
+        <h3>For Maximum Security</h3>
+        <ul>
+          <li><strong>Use read-only keys:</strong> If your provider supports it (limits damage if leaked)</li>
+          <li><strong>Enable Chrome profile password:</strong> Adds extra layer of protection</li>
+          <li><strong>Keep Chrome updated:</strong> Security patches are critical</li>
+          <li><strong>Use Ollama for sensitive code:</strong> 100% local processing, zero network risk</li>
+          <li><strong>Load from source:</strong> Clone the repo and load unpacked for maximum control</li>
+        </ul>
+
+        <h3>For Your Privacy</h3>
+        <ul>
+          <li><strong>Choose Ollama:</strong> For completely private, local AI processing</li>
+          <li><strong>Review provider policies:</strong> Understand how each provider handles data</li>
+          <li><strong>Avoid sensitive data:</strong> Don't send credentials or private keys to cloud AI</li>
+          <li><strong>Use Azure for enterprise:</strong> Better compliance and data governance</li>
+        </ul>
+      </div>
+
+      <!-- What Can Go Wrong -->
+      <div class="section-card">
+        <h2>Potential Security Risks & Mitigations</h2>
+        <p>Being transparent about potential risks and how to mitigate them:</p>
+
+        <h3>Scenario 1: Extension Compromise</h3>
+        <div class="danger-box">
+          <p><strong>Risk:</strong> If the Chrome Web Store version gets compromised</p>
+        </div>
+        <div class="success-box">
+          <p><strong>Mitigation:</strong></p>
+          <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+            <li>Load from source (GitHub) instead of Chrome Web Store</li>
+            <li>Review code updates before installing</li>
+            <li>Chrome reviews all extensions before publishing</li>
+            <li>Use read-only API keys if available</li>
+          </ul>
+        </div>
+
+        <h3>Scenario 2: AI Provider Breach</h3>
+        <div class="danger-box">
+          <p><strong>Risk:</strong> Your chosen AI provider (Claude, OpenAI, etc.) gets hacked</p>
+        </div>
+        <div class="success-box">
+          <p><strong>Mitigation:</strong></p>
+          <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+            <li>Set rate limits in provider dashboard</li>
+            <li>Use separate keys for different tools</li>
+            <li>Monitor usage regularly</li>
+            <li>Rotate keys monthly</li>
+            <li>Use Ollama to avoid cloud providers entirely</li>
+          </ul>
+        </div>
+
+        <h3>Scenario 3: Local Computer Compromise</h3>
+        <div class="danger-box">
+          <p><strong>Risk:</strong> Malware on your computer</p>
+        </div>
+        <div class="success-box">
+          <p><strong>Mitigation:</strong></p>
+          <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+            <li>Use antivirus software</li>
+            <li>Keep OS and software updated</li>
+            <li>Use Chrome profile password</li>
+            <li>Note: No extension can protect against system-level compromise</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Security Checklist -->
+      <div class="section-card">
+        <h2>Security Checklist</h2>
+        <p>Use this checklist to ensure you're following security best practices:</p>
+        <div class="checklist">
+          <div class="checklist-item">
+            <input type="checkbox" id="check1">
+            <label for="check1">Downloaded from official source (GitHub or Chrome Web Store)</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check2">
+            <label for="check2">Reviewed permissions in manifest.json</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check3">
+            <label for="check3">Checked network activity with DevTools</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check4">
+            <label for="check4">Using dedicated API key (not shared with other tools)</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check5">
+            <label for="check5">Set spending limits in provider dashboard</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check6">
+            <label for="check6">Enabled Chrome profile password</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check7">
+            <label for="check7">Understand data goes to AI provider only</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check8">
+            <label for="check8">Considered using Ollama for maximum privacy</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check9">
+            <label for="check9">Know how to rotate and revoke API keys</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Collection -->
+      <div class="section-card">
+        <h2>What Data We Collect: NOTHING</h2>
+        <p>Complete transparency on data collection:</p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Data Type</th>
+              <th>Collected?</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>API Keys</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>Stored locally only</td>
+            </tr>
+            <tr>
+              <td>Scripts/Commands</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>Only sent to your AI provider</td>
+            </tr>
+            <tr>
+              <td>Terminal Output</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>Only sent to your AI provider</td>
+            </tr>
+            <tr>
+              <td>Usage Statistics</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>No analytics whatsoever</td>
+            </tr>
+            <tr>
+              <td>Email/Account Info</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>No accounts required</td>
+            </tr>
+            <tr>
+              <td>IP Address</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>No server to log it</td>
+            </tr>
+            <tr>
+              <td>Browser Data</td>
+              <td style="color: #f44336; font-weight: 600;">NO</td>
+              <td>Not accessed</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="success-box">
+          <p><strong>GDPR Compliant:</strong> Since we collect zero personal data, there's nothing to comply with. No cookies, no tracking, no data retention policies needed.</p>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="highlight-box">
+        <h2>Summary: Your Keys Are Safe</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 25px;">
+          <div>
+            <h3 style="color: white; margin-bottom: 15px;">Why It's Secure</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>No backend server = can't be stolen from us</li>
+              <li>Encrypted local storage = protected by Chrome</li>
+              <li>Open source = fully auditable</li>
+              <li>Minimal permissions = can't do much harm</li>
+              <li>No tracking = completely private</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: white; margin-bottom: 15px;">How to Verify</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Check network activity (DevTools)</li>
+              <li>Read the source code (GitHub)</li>
+              <li>Review permissions (manifest.json)</li>
+              <li>Use Ollama (no network needed)</li>
+              <li>Load from source (maximum control)</li>
+            </ul>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 35px;">
+          <p style="font-size: 18px; margin-bottom: 20px;"><strong>The ONLY security risk is your chosen AI provider</strong> - and that's a conscious choice you make when selecting Claude/OpenAI/etc.</p>
+          <p style="font-size: 18px;"><strong>For 100% privacy:</strong> Use Ollama (completely local, no API key, no network)</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="https://chrome.google.com/webstore" target="_blank">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
+</body>
+</html>

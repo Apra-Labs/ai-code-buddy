@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Troubleshooting Guide - AI Code Buddy</title>
+  <meta name="description" content="Quick solutions to common issues with AI Code Buddy. Get unstuck fast with our comprehensive troubleshooting guide.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+  <style>
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #fff4e6 0%, #ffffff 100%);
+      padding: 60px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+    .search-box {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 18px 50px 18px 24px;
+      font-size: 16px;
+      border: 2px solid var(--border-light);
+      border-radius: 50px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    .search-box input:focus {
+      border-color: var(--apra-green);
+      box-shadow: 0 4px 15px rgba(148, 186, 51, 0.2);
+    }
+    .search-icon {
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--text-light);
+    }
+    .content-section {
+      padding: 60px 0;
+    }
+    .quick-solutions {
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      padding: 50px;
+      border-radius: 12px;
+      margin-bottom: 50px;
+    }
+    .quick-solutions h2 {
+      font-size: 32px;
+      margin-bottom: 30px;
+      color: white;
+      text-align: center;
+    }
+    .solutions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .solution-card {
+      background: rgba(255,255,255,0.15);
+      padding: 25px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .solution-card:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    .solution-card h3 {
+      color: white;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+    .solution-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .issue-category {
+      margin-bottom: 30px;
+    }
+    .category-header {
+      background: var(--apra-green);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 12px 12px 0 0;
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .category-icon {
+      font-size: 32px;
+    }
+    .issue-list {
+      background: white;
+      border: 2px solid var(--border-light);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+    }
+    .issue-item {
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.3s;
+    }
+    .issue-item:last-child {
+      border-bottom: none;
+    }
+    .issue-item:hover {
+      background: var(--bg-light);
+    }
+    .issue-question {
+      padding: 25px 30px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .issue-question h3 {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .toggle-icon {
+      font-size: 24px;
+      color: var(--apra-green);
+      transition: transform 0.3s;
+    }
+    .toggle-icon.active {
+      transform: rotate(180deg);
+    }
+    .issue-answer {
+      padding: 0 30px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    }
+    .issue-answer.active {
+      padding: 0 30px 25px 30px;
+      max-height: 2000px;
+    }
+    .issue-answer p, .issue-answer li {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .issue-answer ul, .issue-answer ol {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+    .issue-answer code {
+      background: var(--bg-light);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+    .info-box {
+      background: #e8f4ff;
+      border-left: 4px solid #4a90e2;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+    .success-box {
+      background: #e8f8ee;
+      border-left: 4px solid #28c840;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+    .warning-box {
+      background: #fff4e6;
+      border-left: 4px solid #ffa726;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+    .contact-section {
+      background: var(--bg-light);
+      padding: 50px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .contact-section h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+    }
+    .contact-section p {
+      color: var(--text-medium);
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="api-keys.html">API Keys</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Troubleshooting</a>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="btn-primary">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>&gt;</span>
+      <span>Troubleshooting</span>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Troubleshooting Guide</h1>
+      <p>Quick solutions to common issues. Get unstuck fast!</p>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search for your issue..." onkeyup="searchIssues()">
+        <span class="search-icon">🔍</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+
+      <!-- Quick Solutions -->
+      <div class="quick-solutions">
+        <h2>Most Common Issues</h2>
+        <div class="solutions-grid">
+          <div class="solution-card">
+            <h3>Buttons Not Appearing</h3>
+            <p>Refresh the page, check browser console (F12), or configure custom selectors in settings.</p>
+          </div>
+          <div class="solution-card">
+            <h3>Connection Test Failed</h3>
+            <p>Verify API key is correct, check provider status page, or try Ollama for local testing.</p>
+          </div>
+          <div class="solution-card">
+            <h3>Invalid API Key</h3>
+            <p>Check key format matches provider (sk-ant- for Claude, sk- for OpenAI, AIza for Gemini).</p>
+          </div>
+          <div class="solution-card">
+            <h3>Ollama Not Connecting</h3>
+            <p>Ensure Ollama is running (ollama serve) and you've pulled a model (ollama pull codellama).</p>
+          </div>
+          <div class="solution-card">
+            <h3>Settings Not Saving</h3>
+            <p>Check Chrome storage permissions, reload extension, or clear browser cache.</p>
+          </div>
+          <div class="solution-card">
+            <h3>Extension Won't Load</h3>
+            <p>Check chrome://extensions/ for errors, ensure Developer mode is enabled.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extension Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🔌</span>
+          <span>Extension Installation & Loading</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue1')">
+              <h3>Extension won't load - "Service worker registration failed"</h3>
+              <span class="toggle-icon" id="issue1-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue1-answer">
+              <p><strong>Cause:</strong> JavaScript error in extension files</p>
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Go to <code>chrome://extensions/</code></li>
+                <li>Click "Errors" button on the extension card</li>
+                <li>Check which file has the error</li>
+                <li>Reload extension after fixing</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue2')">
+              <h3>Error: "window is not defined"</h3>
+              <span class="toggle-icon" id="issue2-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue2-answer">
+              <p><strong>Cause:</strong> Using browser APIs in service worker</p>
+              <div class="success-box">
+                <p><strong>Fixed in v2.0:</strong> This was resolved by updating <code>providers.js</code> to use <code>self</code> instead of <code>window</code>. Update to the latest version.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Key Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🔑</span>
+          <span>API Key & Configuration</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue3')">
+              <h3>Error: "No Provider Configured"</h3>
+              <span class="toggle-icon" id="issue3-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue3-answer">
+              <p><strong>Cause:</strong> Provider not selected or settings not saved</p>
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Click extension icon in Chrome toolbar</li>
+                <li>Select a provider from the grid</li>
+                <li>Enter your API key</li>
+                <li>Click "Save Configuration"</li>
+                <li>Wait for "Configuration saved" message</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue4')">
+              <h3>Error: "Invalid API key format"</h3>
+              <span class="toggle-icon" id="issue4-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue4-answer">
+              <p><strong>Cause:</strong> Wrong API key format or copied with extra spaces</p>
+              <p><strong>Expected Formats:</strong></p>
+              <ul>
+                <li><strong>Claude:</strong> Must start with <code>sk-ant-</code></li>
+                <li><strong>OpenAI:</strong> Must start with <code>sk-</code></li>
+                <li><strong>Gemini:</strong> Must start with <code>AIza</code></li>
+                <li><strong>HuggingFace:</strong> Must start with <code>hf_</code></li>
+                <li><strong>Ollama:</strong> No API key needed!</li>
+              </ul>
+              <p><strong>Tips:</strong></p>
+              <ul>
+                <li>Copy entire key without spaces</li>
+                <li>Don't include quotes</li>
+                <li>Generate new key if unsure</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue5')">
+              <h3>Settings not saving</h3>
+              <span class="toggle-icon" id="issue5-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue5-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Check Chrome storage in console:
+                  <div class="code-block">// Open popup, press F12, run in console:
+chrome.storage.sync.get(null, console.log)</div>
+                </li>
+                <li>If empty, try:
+                  <ul>
+                    <li>Clear browser cache</li>
+                    <li>Reload extension</li>
+                    <li>Re-enter settings</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🌐</span>
+          <span>Connection & Network Errors</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue6')">
+              <h3>Error: "CORS requests must set 'anthropic-dangerous-direct-browser-access' header"</h3>
+              <span class="toggle-icon" id="issue6-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue6-answer">
+              <p><strong>Cause:</strong> Claude API requires special header for browser requests</p>
+              <div class="success-box">
+                <p><strong>Fixed in v2.0:</strong> This header is now automatically included. Just reload the extension from <code>chrome://extensions/</code></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue7')">
+              <h3>Error: "Failed to fetch" or "Network error"</h3>
+              <span class="toggle-icon" id="issue7-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue7-answer">
+              <p><strong>Possible Causes:</strong> Invalid API key, network connectivity, API endpoint down, or CORS blocking</p>
+              <p><strong>Fix:</strong></p>
+              <h4>1. Check API Key:</h4>
+              <ul>
+                <li>Go to provider's dashboard</li>
+                <li>Verify key is active</li>
+                <li>Generate new key if needed</li>
+              </ul>
+              <h4>2. Check Network:</h4>
+              <div class="code-block"># Test if API is reachable
+curl https://api.anthropic.com/v1/messages
+# Should get a response (even if error)</div>
+              <h4>3. Check Provider Status:</h4>
+              <ul>
+                <li><a href="https://status.anthropic.com/" target="_blank" style="color: var(--apra-green);">Anthropic Status</a></li>
+                <li><a href="https://status.openai.com/" target="_blank" style="color: var(--apra-green);">OpenAI Status</a></li>
+                <li><a href="https://status.cloud.google.com/" target="_blank" style="color: var(--apra-green);">Google Status</a></li>
+              </ul>
+              <h4>4. Try Different Provider:</h4>
+              <ul>
+                <li>Switch to Gemini (has free tier)</li>
+                <li>Or use Ollama (local, no network needed)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue8')">
+              <h3>Connection test failed</h3>
+              <span class="toggle-icon" id="issue8-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue8-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Click "Test Connection" button manually</li>
+                <li>Check console for detailed error (press F12)</li>
+                <li>Verify you clicked "Save Configuration" first</li>
+                <li>Try selecting provider again</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ollama Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🦙</span>
+          <span>Ollama (Local AI)</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue9')">
+              <h3>Error: "Cannot connect to Ollama. Is it running?"</h3>
+              <span class="toggle-icon" id="issue9-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue9-answer">
+              <p><strong>Fix:</strong></p>
+              <div class="code-block"># Check if Ollama is running
+ollama list
+
+# If not running, start it
+ollama serve
+
+# Pull a model if none installed
+ollama pull codellama
+
+# Or try other models:
+ollama pull llama2
+ollama pull mistral
+ollama pull deepseek-coder</div>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue10')">
+              <h3>Error: "Model not found"</h3>
+              <span class="toggle-icon" id="issue10-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue10-answer">
+              <p><strong>Fix:</strong></p>
+              <div class="code-block"># List installed models
+ollama list
+
+# Pull the model you want
+ollama pull codellama
+ollama pull llama2
+ollama pull mistral</div>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue11')">
+              <h3>Ollama running but still not connecting</h3>
+              <span class="toggle-icon" id="issue11-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue11-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Check endpoint in extension: <code>http://localhost:11434</code></li>
+                <li>Verify Ollama port:
+                  <div class="code-block"># Windows
+netstat -an | findstr 11434
+
+# Mac/Linux
+netstat -an | grep 11434</div>
+                </li>
+                <li>Test manually:
+                  <div class="code-block">curl http://localhost:11434/api/tags
+# Should list your models</div>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UI Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🎨</span>
+          <span>User Interface Issues</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue12')">
+              <h3>"Send to AI" button appears repeatedly (infinite loop)</h3>
+              <span class="toggle-icon" id="issue12-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue12-answer">
+              <p><strong>Cause:</strong> MutationObserver triggered by own changes</p>
+              <div class="success-box">
+                <p><strong>Fixed in v2.0:</strong> Added triple protection (WeakSet tracking, data attributes, mutation filtering). Update to latest version and reload extension and page.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue13')">
+              <h3>Buttons not appearing on page</h3>
+              <span class="toggle-icon" id="issue13-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue13-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Check page uses standard elements</li>
+                <li>Try custom selectors:
+                  <ul>
+                    <li>Right-click → Inspect element</li>
+                    <li>Note the class/ID of output area</li>
+                    <li>Add in extension Settings tab</li>
+                  </ul>
+                </li>
+                <li>Refresh page after saving</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue14')">
+              <h3>"Send to AI" button does nothing when clicked</h3>
+              <span class="toggle-icon" id="issue14-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue14-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Open browser console (F12)</li>
+                <li>Click the button</li>
+                <li>Check for errors in console</li>
+              </ol>
+              <p><strong>Common issues:</strong></p>
+              <ul>
+                <li>No provider configured</li>
+                <li>API key missing</li>
+                <li>Network blocked</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue15')">
+              <h3>Improved script not inserting into terminal</h3>
+              <span class="toggle-icon" id="issue15-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue15-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Verify button shows "Insert Improved Script"</li>
+                <li>Check if input field is contenteditable or textarea</li>
+                <li>Try clicking in input field first</li>
+                <li>Check console for errors (F12)</li>
+              </ol>
+              <div class="info-box">
+                <p><strong>Note:</strong> v2.0 fixed insertion for contenteditable DIVs. Update if using older version.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue16')">
+              <h3>Popup won't open</h3>
+              <span class="toggle-icon" id="issue16-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue16-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Right-click extension icon → "Inspect popup"</li>
+                <li>Check console for errors</li>
+                <li>Reload extension from <code>chrome://extensions/</code></li>
+                <li>Try restarting Chrome</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Provider-Specific Issues -->
+      <div class="issue-category">
+        <div class="category-header">
+          <span class="category-icon">🤖</span>
+          <span>Provider-Specific Issues</span>
+        </div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue17')">
+              <h3>Claude: "Rate limit exceeded"</h3>
+              <span class="toggle-icon" id="issue17-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue17-answer">
+              <p><strong>Fix:</strong></p>
+              <ul>
+                <li>Wait 60 seconds before retrying</li>
+                <li>Upgrade to higher tier in Anthropic console</li>
+                <li>Switch to different provider temporarily</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue18')">
+              <h3>OpenAI: "You exceeded your current quota"</h3>
+              <span class="toggle-icon" id="issue18-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue18-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Go to <a href="https://platform.openai.com/account/billing" target="_blank" style="color: var(--apra-green);">OpenAI Billing</a></li>
+                <li>Add payment method</li>
+                <li>Add credits to your account</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue19')">
+              <h3>Gemini: "API key not valid or API is not enabled"</h3>
+              <span class="toggle-icon" id="issue19-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue19-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Go to <a href="https://console.cloud.google.com" target="_blank" style="color: var(--apra-green);">Google Cloud Console</a></li>
+                <li>Enable "Generative Language API"</li>
+                <li>Wait 5 minutes for propagation</li>
+                <li>Try again</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="issue-item">
+            <div class="issue-question" onclick="toggleIssue('issue20')">
+              <h3>Azure: "The API deployment for this resource does not exist"</h3>
+              <span class="toggle-icon" id="issue20-icon">▼</span>
+            </div>
+            <div class="issue-answer" id="issue20-answer">
+              <p><strong>Fix:</strong></p>
+              <ol>
+                <li>Go to Azure Portal</li>
+                <li>Check your deployment name (case-sensitive!)</li>
+                <li>Update in extension settings</li>
+                <li>Verify endpoint URL format:
+                  <div class="code-block">https://YOUR-RESOURCE.openai.azure.com</div>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Section -->
+      <div class="contact-section">
+        <h2>Still Having Issues?</h2>
+        <p>We're here to help! Here's how to get support:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 30px; text-align: left;">
+          <div style="background: white; padding: 30px; border-radius: 12px;">
+            <h3 style="color: var(--text-dark); margin-bottom: 15px;">1. Check Console</h3>
+            <ul style="color: var(--text-medium); margin: 0; padding-left: 20px;">
+              <li>Press F12 to open DevTools</li>
+              <li>Look for errors in red</li>
+              <li>Copy full error message</li>
+            </ul>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 12px;">
+            <h3 style="color: var(--text-dark); margin-bottom: 15px;">2. Check Extension Errors</h3>
+            <ul style="color: var(--text-medium); margin: 0; padding-left: 20px;">
+              <li>Go to chrome://extensions/</li>
+              <li>Click "Errors" button</li>
+              <li>Copy error details</li>
+            </ul>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 12px;">
+            <h3 style="color: var(--text-dark); margin-bottom: 15px;">3. Report on GitHub</h3>
+            <ul style="color: var(--text-medium); margin: 0; padding-left: 20px;">
+              <li>Chrome version</li>
+              <li>Extension version</li>
+              <li>Provider being used</li>
+              <li>Exact error message</li>
+              <li>Steps to reproduce</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 40px;">
+          <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank" class="btn-large" style="background: var(--apra-green); color: white;">Report Issue on GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="https://chrome.google.com/webstore" target="_blank">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
+
+  <script>
+    function toggleIssue(id) {
+      const answer = document.getElementById(id + '-answer');
+      const icon = document.getElementById(id + '-icon');
+
+      if (answer.classList.contains('active')) {
+        answer.classList.remove('active');
+        icon.classList.remove('active');
+      } else {
+        answer.classList.add('active');
+        icon.classList.add('active');
+      }
+    }
+
+    function searchIssues() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const issues = document.querySelectorAll('.issue-item');
+
+      issues.forEach(issue => {
+        const text = issue.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          issue.style.display = '';
+        } else {
+          issue.style.display = 'none';
+        }
+      });
+
+      // Hide categories with no visible issues
+      const categories = document.querySelectorAll('.issue-category');
+      categories.forEach(category => {
+        const visibleIssues = category.querySelectorAll('.issue-item:not([style*="display: none"])');
+        if (visibleIssues.length === 0) {
+          category.style.display = 'none';
+        } else {
+          category.style.display = '';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

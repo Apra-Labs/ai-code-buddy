@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Keys Guide - AI Code Buddy</title>
+  <meta name="description" content="Complete guide to getting API keys for all supported AI providers. Compare pricing, features, and setup instructions.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+  <style>
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);
+      padding: 60px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .content-section {
+      padding: 60px 0;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .comparison-table th {
+      background: var(--apra-green);
+      color: white;
+      padding: 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .comparison-table td {
+      padding: 18px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-medium);
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    .comparison-table tr:hover {
+      background: var(--bg-light);
+    }
+    .star-rating {
+      color: #ffd700;
+      font-size: 18px;
+    }
+    .provider-section {
+      background: white;
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .provider-section:hover {
+      border-color: var(--apra-green);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .provider-header {
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      padding: 25px 30px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .provider-header h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+    .provider-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      background: rgba(255,255,255,0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .tag.free { background: #28c840; }
+    .tag.best { background: #ffd700; color: #333; }
+    .tag.popular { background: #4a90e2; }
+    .provider-content {
+      padding: 30px;
+      display: none;
+    }
+    .provider-content.active {
+      display: block;
+    }
+    .provider-content h3 {
+      color: var(--text-dark);
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .provider-content ol, .provider-content ul {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+    .provider-content li {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .provider-content code {
+      background: var(--bg-light);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+    .info-box {
+      background: #e8f4ff;
+      border-left: 4px solid #4a90e2;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .success-box {
+      background: #e8f8ee;
+      border-left: 4px solid #28c840;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .warning-box {
+      background: #fff4e6;
+      border-left: 4px solid #ffa726;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .pricing-card {
+      background: var(--bg-light);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .pricing-card strong {
+      color: var(--apra-green);
+      font-size: 24px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+    .toggle-icon {
+      font-size: 24px;
+      transition: transform 0.3s;
+    }
+    .toggle-icon.active {
+      transform: rotate(180deg);
+    }
+    .recommendation-badge {
+      display: inline-block;
+      background: #ffd700;
+      color: #333;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-left: 15px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="api-keys.html">API Keys</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Troubleshooting</a>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="btn-primary">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>&gt;</span>
+      <span>API Keys Guide</span>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>API Keys Guide</h1>
+      <p>Everything you need to get API keys for all 9+ supported AI providers</p>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+
+      <!-- Quick Comparison -->
+      <h2 style="font-size: 36px; margin-bottom: 30px; text-align: center; color: var(--text-dark);">Provider Comparison</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Free Tier</th>
+            <th>Speed</th>
+            <th>Quality</th>
+            <th>Privacy</th>
+            <th>Setup Difficulty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ollama</strong></td>
+            <td><span style="color: #28c840; font-weight: 600;">Yes (100%)</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td><span class="star-rating">★★★★☆</span></td>
+            <td><span class="star-rating">★★★★★</span></td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><strong>Gemini</strong></td>
+            <td><span style="color: #28c840; font-weight: 600;">Yes</span></td>
+            <td><span class="star-rating">★★★★☆</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td>Easy</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-3.5</strong></td>
+            <td><span style="color: #ffa726; font-weight: 600;">$5 Trial</span></td>
+            <td><span class="star-rating">★★★★★</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td>Easy</td>
+          </tr>
+          <tr>
+            <td><strong>Claude</strong></td>
+            <td><span style="color: #f44336; font-weight: 600;">No</span></td>
+            <td><span class="star-rating">★★★★☆</span></td>
+            <td><span class="star-rating">★★★★★</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td>Easy</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-4</strong></td>
+            <td><span style="color: #ffa726; font-weight: 600;">$5 Trial</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td><span class="star-rating">★★★★★</span></td>
+            <td><span class="star-rating">★★★☆☆</span></td>
+            <td>Easy</td>
+          </tr>
+          <tr>
+            <td><strong>Azure OpenAI</strong></td>
+            <td><span style="color: #f44336; font-weight: 600;">No</span></td>
+            <td><span class="star-rating">★★★★☆</span></td>
+            <td><span class="star-rating">★★★★☆</span></td>
+            <td><span class="star-rating">★★★★★</span></td>
+            <td>Hard</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Recommendations -->
+      <div style="background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%); padding: 40px; border-radius: 12px; margin: 40px 0; color: white;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: white;">Quick Recommendations</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+          <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 8px;">
+            <h3 style="color: white; margin-bottom: 10px;">For Getting Started</h3>
+            <p style="margin-bottom: 10px;">1. <strong>Gemini</strong> - Free cloud option</p>
+            <p>2. <strong>Ollama</strong> - Free & local</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 8px;">
+            <h3 style="color: white; margin-bottom: 10px;">For Best Quality</h3>
+            <p style="margin-bottom: 10px;">1. <strong>Claude Sonnet</strong> - Best balance</p>
+            <p>2. <strong>GPT-4</strong> - Maximum quality</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 8px;">
+            <h3 style="color: white; margin-bottom: 10px;">For Privacy</h3>
+            <p style="margin-bottom: 10px;">1. <strong>Ollama</strong> - 100% local</p>
+            <p>2. <strong>Azure</strong> - Enterprise compliance</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 8px;">
+            <h3 style="color: white; margin-bottom: 10px;">For Budget</h3>
+            <p style="margin-bottom: 10px;">1. <strong>Gemini</strong> - Free tier</p>
+            <p>2. <strong>GPT-3.5</strong> - $0.50/M tokens</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Provider Details (Collapsible) -->
+      <h2 style="font-size: 36px; margin-bottom: 30px; text-align: center; color: var(--text-dark);">Detailed Setup Guides</h2>
+
+      <!-- Gemini -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('gemini')">
+          <div>
+            <h2>Google Gemini <span class="recommendation-badge">Recommended for Beginners</span></h2>
+            <div class="provider-tags">
+              <span class="tag free">FREE Tier</span>
+              <span class="tag">No Credit Card</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="gemini-icon">▼</span>
+        </div>
+        <div class="provider-content" id="gemini-content">
+          <h3>Get Your API Key</h3>
+          <ol>
+            <li>Go to <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: var(--apra-green); text-decoration: none;">Google AI Studio</a></li>
+            <li>Sign in with your Google account</li>
+            <li>Click <strong>"Create API Key"</strong></li>
+            <li>Select or create a Google Cloud project</li>
+            <li>Copy the key (starts with <code>AIza</code>)</li>
+          </ol>
+
+          <h3>Pricing</h3>
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <strong>FREE</strong>
+              <span>60 requests/minute</span>
+            </div>
+            <div class="pricing-card">
+              <strong>$0.50</strong>
+              <span>Per million tokens (paid)</span>
+            </div>
+          </div>
+          <div class="success-box">
+            <p><strong>Why Gemini?</strong> Perfect for testing and learning. No credit card required for the free tier. Good quality responses with generous rate limits.</p>
+          </div>
+
+          <h3>Cost Example</h3>
+          <p>100 script improvements: <strong>FREE</strong> (typical usage stays within free tier)</p>
+        </div>
+      </div>
+
+      <!-- Ollama -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('ollama')">
+          <div>
+            <h2>Ollama (Local AI) <span class="recommendation-badge">100% Private</span></h2>
+            <div class="provider-tags">
+              <span class="tag free">100% FREE</span>
+              <span class="tag">No API Key</span>
+              <span class="tag">Offline</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="ollama-icon">▼</span>
+        </div>
+        <div class="provider-content" id="ollama-content">
+          <h3>Setup (Windows)</h3>
+          <ol>
+            <li>Download from <a href="https://ollama.ai/download" target="_blank" style="color: var(--apra-green); text-decoration: none;">ollama.ai/download</a></li>
+            <li>Run the installer</li>
+            <li>Open PowerShell or Command Prompt</li>
+            <li>Pull a model: <code>ollama pull codellama</code></li>
+            <li>Verify: <code>ollama list</code></li>
+          </ol>
+
+          <h3>Setup (Mac/Linux)</h3>
+          <ol>
+            <li>Install: <code>curl -fsSL https://ollama.ai/install.sh | sh</code></li>
+            <li>Pull a model: <code>ollama pull codellama</code></li>
+            <li>Verify: <code>ollama list</code></li>
+          </ol>
+
+          <h3>Extension Configuration</h3>
+          <ul>
+            <li>Endpoint: <code>http://localhost:11434</code></li>
+            <li>Model: Choose from your pulled models (e.g., codellama)</li>
+            <li>API Key: <strong>Not needed!</strong></li>
+          </ul>
+
+          <div class="success-box">
+            <p><strong>Why Ollama?</strong> Your data never leaves your machine. Completely free and private. Perfect for sensitive code and environments without internet access.</p>
+          </div>
+
+          <h3>Recommended Models</h3>
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <strong>CodeLlama</strong>
+              <span>Best for code (~4GB)</span>
+            </div>
+            <div class="pricing-card">
+              <strong>Llama 2</strong>
+              <span>General purpose (~4GB)</span>
+            </div>
+            <div class="pricing-card">
+              <strong>Mistral</strong>
+              <span>Fast & efficient (~4GB)</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <p><strong>System Requirements:</strong> 8GB RAM minimum (16GB recommended), 10GB+ free disk space per model</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Claude -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('claude')">
+          <div>
+            <h2>Claude (Anthropic) <span class="recommendation-badge">Best Quality</span></h2>
+            <div class="provider-tags">
+              <span class="tag best">Best for Code</span>
+              <span class="tag">Pay-as-you-go</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="claude-icon">▼</span>
+        </div>
+        <div class="provider-content" id="claude-content">
+          <h3>Get Your API Key</h3>
+          <ol>
+            <li>Go to <a href="https://console.anthropic.com" target="_blank" style="color: var(--apra-green); text-decoration: none;">console.anthropic.com</a></li>
+            <li>Sign up or log in</li>
+            <li>Click <strong>"API Keys"</strong> in the sidebar</li>
+            <li>Click <strong>"Create Key"</strong></li>
+            <li>Name your key (e.g., "AI Code Buddy")</li>
+            <li>Copy the key (starts with <code>sk-ant-</code>)</li>
+          </ol>
+
+          <h3>Pricing</h3>
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <strong>$0.25</strong>
+              <span>Claude 3 Haiku (fast)</span>
+            </div>
+            <div class="pricing-card">
+              <strong>$3</strong>
+              <span>Claude 3 Sonnet (balanced)</span>
+            </div>
+            <div class="pricing-card">
+              <strong>$15</strong>
+              <span>Claude 3 Opus (best)</span>
+            </div>
+          </div>
+          <p style="text-align: center; color: var(--text-light); font-size: 14px;">Prices per million tokens</p>
+
+          <h3>Cost Example</h3>
+          <p>100 script improvements with Sonnet: <strong>~$0.15</strong></p>
+
+          <div class="warning-box">
+            <p><strong>Note:</strong> Claude API is different from Claude.ai subscription. Requires payment method, but you only pay for what you use.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenAI -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('openai')">
+          <div>
+            <h2>OpenAI (GPT-4 / GPT-3.5)</h2>
+            <div class="provider-tags">
+              <span class="tag popular">Most Popular</span>
+              <span class="tag">$5 Trial Credit</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="openai-icon">▼</span>
+        </div>
+        <div class="provider-content" id="openai-content">
+          <h3>Get Your API Key</h3>
+          <ol>
+            <li>Go to <a href="https://platform.openai.com" target="_blank" style="color: var(--apra-green); text-decoration: none;">platform.openai.com</a></li>
+            <li>Sign up or log in</li>
+            <li>Click your profile → <strong>"View API keys"</strong></li>
+            <li>Click <strong>"Create new secret key"</strong></li>
+            <li>Name your key</li>
+            <li>Copy the key (starts with <code>sk-</code>)</li>
+          </ol>
+
+          <h3>Organization ID (Optional)</h3>
+          <ol>
+            <li>Go to <a href="https://platform.openai.com/account/organization" target="_blank" style="color: var(--apra-green); text-decoration: none;">Organization Settings</a></li>
+            <li>Copy your Organization ID (starts with <code>org-</code>)</li>
+            <li>Paste in extension settings if needed</li>
+          </ol>
+
+          <h3>Pricing</h3>
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <strong>$0.50</strong>
+              <span>GPT-3.5 Turbo</span>
+            </div>
+            <div class="pricing-card">
+              <strong>$10</strong>
+              <span>GPT-4 Turbo</span>
+            </div>
+            <div class="pricing-card">
+              <strong>$30</strong>
+              <span>GPT-4</span>
+            </div>
+          </div>
+          <p style="text-align: center; color: var(--text-light); font-size: 14px;">Prices per million tokens</p>
+
+          <h3>Cost Example</h3>
+          <p>100 script improvements with GPT-3.5: <strong>~$0.05</strong></p>
+          <p>100 script improvements with GPT-4: <strong>~$1.50</strong></p>
+
+          <div class="success-box">
+            <p><strong>New Users:</strong> Get $5 in free trial credits to test the service!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Azure OpenAI -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('azure')">
+          <div>
+            <h2>Azure OpenAI</h2>
+            <div class="provider-tags">
+              <span class="tag">Enterprise</span>
+              <span class="tag">Requires Approval</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="azure-icon">▼</span>
+        </div>
+        <div class="provider-content" id="azure-content">
+          <h3>Prerequisites</h3>
+          <ul>
+            <li>Azure account with active subscription</li>
+            <li>Access to Azure OpenAI Service (requires approval)</li>
+          </ul>
+
+          <h3>Get Access</h3>
+          <ol>
+            <li>Request access at <a href="https://aka.ms/oai/access" target="_blank" style="color: var(--apra-green); text-decoration: none;">aka.ms/oai/access</a></li>
+            <li>Fill out the form with your use case</li>
+            <li>Wait for approval (can take several days)</li>
+          </ol>
+
+          <h3>Setup After Approval</h3>
+          <ol>
+            <li>Go to <a href="https://portal.azure.com" target="_blank" style="color: var(--apra-green); text-decoration: none;">Azure Portal</a></li>
+            <li>Create "Azure OpenAI" resource</li>
+            <li>Note your resource name</li>
+            <li>Deploy a model (e.g., gpt-35-turbo)</li>
+            <li>Go to "Keys and Endpoint"</li>
+            <li>Copy KEY 1 and Endpoint URL</li>
+          </ol>
+
+          <h3>Extension Configuration</h3>
+          <ul>
+            <li>API Key: Your 32-character Azure key</li>
+            <li>Endpoint: <code>https://YOUR-RESOURCE.openai.azure.com</code></li>
+            <li>Deployment Name: Your model deployment name</li>
+            <li>API Version: <code>2023-05-15</code></li>
+          </ul>
+
+          <div class="info-box">
+            <p><strong>Why Azure?</strong> Enterprise-grade security, compliance, and SLA. Best for corporate environments with strict data governance requirements.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Providers -->
+      <div class="provider-section">
+        <div class="provider-header" onclick="toggleProvider('others')">
+          <div>
+            <h2>Other Providers</h2>
+            <div class="provider-tags">
+              <span class="tag">Cohere</span>
+              <span class="tag">HuggingFace</span>
+              <span class="tag">Replicate</span>
+            </div>
+          </div>
+          <span class="toggle-icon" id="others-icon">▼</span>
+        </div>
+        <div class="provider-content" id="others-content">
+          <h3>Cohere</h3>
+          <ol>
+            <li>Go to <a href="https://dashboard.cohere.ai" target="_blank" style="color: var(--apra-green); text-decoration: none;">dashboard.cohere.ai</a></li>
+            <li>Sign up or log in</li>
+            <li>Click "API Keys" in sidebar</li>
+            <li>Copy your trial key or create a production key</li>
+          </ol>
+          <p><strong>Pricing:</strong> Free trial, then $1-2 per million tokens</p>
+
+          <h3>HuggingFace</h3>
+          <ol>
+            <li>Go to <a href="https://huggingface.co" target="_blank" style="color: var(--apra-green); text-decoration: none;">huggingface.co</a></li>
+            <li>Sign up or log in</li>
+            <li>Go to Settings → Access Tokens</li>
+            <li>Create new token with "Read" permission</li>
+            <li>Copy token (starts with <code>hf_</code>)</li>
+          </ol>
+          <p><strong>Pricing:</strong> Free tier available, rate limits apply</p>
+
+          <h3>Replicate</h3>
+          <ol>
+            <li>Go to <a href="https://replicate.com" target="_blank" style="color: var(--apra-green); text-decoration: none;">replicate.com</a></li>
+            <li>Sign up or log in</li>
+            <li>Go to Account → API Tokens</li>
+            <li>Copy your token (starts with <code>r8_</code>)</li>
+          </ol>
+          <p><strong>Pricing:</strong> Pay per second of compute (~$0.0005/second)</p>
+        </div>
+      </div>
+
+      <!-- Security Tips -->
+      <div style="background: #fff4e6; border: 2px solid #ffa726; border-radius: 12px; padding: 40px; margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 25px; color: var(--text-dark);">Security Best Practices</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+          <div>
+            <h3 style="color: #28c840; margin-bottom: 15px;">DO:</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Keep API keys private</li>
+              <li>Rotate keys regularly</li>
+              <li>Use environment-specific keys</li>
+              <li>Monitor usage in provider dashboards</li>
+              <li>Set spending limits</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: #f44336; margin-bottom: 15px;">DON'T:</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Share keys in code or screenshots</li>
+              <li>Commit keys to Git repositories</li>
+              <li>Use the same key everywhere</li>
+              <li>Share keys with others</li>
+              <li>Post keys in public forums</li>
+            </ul>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 25px;">
+          <a href="security.html" class="btn-large" style="background: var(--apra-green); color: white;">Read Full Security Guide</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="https://chrome.google.com/webstore" target="_blank">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
+
+  <script>
+    function toggleProvider(id) {
+      const content = document.getElementById(id + '-content');
+      const icon = document.getElementById(id + '-icon');
+
+      if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        icon.classList.remove('active');
+      } else {
+        content.classList.add('active');
+        icon.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -106,9 +106,14 @@ const AI_PROVIDERS = {
       { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro (Free - Best)' },
       { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite (Free - Lightest)' },
       { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash (Free)' },
-      { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite (Free)' }
+      { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite (Free)' },
+      { id: 'gemini-2.0-flash-001', name: 'Gemini 2.0 Flash 001 (Free)' }
     ],
-    endpoint: (config) => `https://generativelanguage.googleapis.com/v1/models/${config.model || 'gemini-2.5-flash'}:generateContent?key=${config.apiKey}`,
+    endpoint: (config) => {
+      // Ensure model name doesn't have 'models/' prefix
+      const model = (config.model || 'gemini-2.5-flash').replace(/^models\//, '');
+      return `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${config.apiKey}`;
+    },
     headers: () => ({
       'Content-Type': 'application/json'
     }),
@@ -124,11 +129,36 @@ const AI_PROVIDERS = {
       }
     }),
     parseResponse: (data) => {
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      // Check for safety blocks or other stop reasons
+      const candidate = data.candidates?.[0];
+
+      if (!candidate) {
+        throw new Error('No response candidates returned');
+      }
+
+      // Check finish reason
+      if (candidate.finishReason === 'SAFETY') {
+        throw new Error('Content blocked by safety filters');
+      }
+
+      if (candidate.finishReason && candidate.finishReason !== 'STOP') {
+        throw new Error(`Generation stopped: ${candidate.finishReason}`);
+      }
+
+      const content = candidate.content?.parts?.[0]?.text;
+
+      if (!content) {
+        throw new Error('No content in response');
+      }
+
+      return content;
     },
     handleError: (response, data) => {
       if (response.status === 429) {
         return { retry: true, error: 'Rate limit exceeded, will retry...' };
+      }
+      if (response.status === 404) {
+        return { retry: false, error: `Model not found: ${data.error?.message || 'Check model name'}` };
       }
       return { retry: false, error: data.error?.message || `API error: ${response.status}` };
     }

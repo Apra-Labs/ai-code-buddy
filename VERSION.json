@@ -1,5 +1,7 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
+  "git_commit": "d1bfb7c1ea3daa228c3e2c762ebefa09620d7329",
+  "git_commit_short": "d1bfb7c",
   "name": "AI Code Buddy",
   "description": "Turn any web terminal into an AI-powered command center",
   "release_date": "2025-10-11",

@@ -46,10 +46,70 @@
   let conversationHistory = []; // Array of {script, output, improved} objects
   const MAX_HISTORY = 5; // Keep last 5 interactions
 
+  // Show keyboard shortcuts banner (first-time only)
+  async function showKeyboardShortcutsBanner() {
+    try {
+      const result = await chrome.storage.local.get('shortcutsBannerShown');
+
+      // Only show if not shown before
+      if (!result.shortcutsBannerShown) {
+        // Wait a bit for the page to settle
+        setTimeout(() => {
+          const banner = document.createElement('div');
+          banner.className = 'claude-shortcuts-banner';
+          banner.setAttribute('data-claude-extension', 'true');
+          banner.innerHTML = `
+            <div class="claude-shortcuts-banner-header">
+              <div class="claude-shortcuts-banner-title">
+                💡 Keyboard Shortcuts Available
+              </div>
+              <button class="claude-shortcuts-banner-close" title="Close">×</button>
+            </div>
+            <div class="claude-shortcuts-banner-content">
+              <p style="margin: 0 0 8px 0;">Work faster with these shortcuts:</p>
+              <ul class="claude-shortcuts-list">
+                <li>
+                  <span class="claude-shortcuts-key">Alt+Shift+A</span>
+                  <span>Send to AI</span>
+                </li>
+                <li>
+                  <span class="claude-shortcuts-key">Alt+Shift+I</span>
+                  <span>Insert Script</span>
+                </li>
+              </ul>
+            </div>
+          `;
+
+          document.body.appendChild(banner);
+
+          // Close button handler
+          const closeBtn = banner.querySelector('.claude-shortcuts-banner-close');
+          closeBtn.addEventListener('click', () => {
+            banner.style.animation = 'slide-in 0.3s ease reverse';
+            setTimeout(() => banner.remove(), 300);
+          });
+
+          // Auto-dismiss after 8 seconds
+          setTimeout(() => {
+            if (banner.parentElement) {
+              banner.style.animation = 'slide-in 0.3s ease reverse';
+              setTimeout(() => banner.remove(), 300);
+            }
+          }, 8000);
+
+          // Mark as shown
+          chrome.storage.local.set({ shortcutsBannerShown: true });
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error showing shortcuts banner:', error);
+    }
+  }
+
   // Initialize extension
   async function init() {
     console.log('RPort Claude Assistant initialized');
-    
+
     // Load custom selectors if configured
     const settings = await chrome.storage.sync.get('customSelectors');
     if (settings.customSelectors) {
@@ -59,6 +119,9 @@
     // Set up observers and inject buttons
     observePageChanges();
     injectButtons();
+
+    // Show keyboard shortcuts banner (first-time only)
+    showKeyboardShortcutsBanner();
   }
 
   // Observe DOM changes for dynamic content
@@ -149,6 +212,8 @@
       customSelectors?.commandOutput
     );
 
+    console.log(`[Button Injection] Found ${outputElements.length} output elements`);
+
     outputElements.forEach(element => {
       // Check if we've already processed this element
       if (processedElements.has(element)) {
@@ -184,6 +249,33 @@
     });
   }
 
+  // Detect if output contains error patterns
+  function detectError(outputText) {
+    const errorPatterns = [
+      /error:/i,
+      /exception:/i,
+      /failed/i,
+      /failure/i,
+      /not found/i,
+      /permission denied/i,
+      /access denied/i,
+      /cannot/i,
+      /unable to/i,
+      /invalid/i,
+      /syntax error/i,
+      /fatal:/i,
+      /critical:/i,
+      /exit code: [1-9]/i,
+      /exit status [1-9]/i,
+      /\[ERROR\]/i,
+      /\[FATAL\]/i,
+      /traceback/i,
+      /stack trace/i
+    ];
+
+    return errorPatterns.some(pattern => pattern.test(outputText));
+  }
+
   // Add "Send to Claude" button to output element
   function addSendToClaudeButton(outputElement) {
     // Mark element as processed
@@ -195,7 +287,17 @@
       <span class="claude-btn-icon">✨</span>
       <span class="claude-btn-text">Send to AI</span>
     `;
-    button.title = 'Analyze this output with AI';
+
+    // Check if output contains errors
+    const outputText = outputElement.textContent || outputElement.innerText || '';
+    const hasError = detectError(outputText);
+
+    if (hasError) {
+      button.classList.add('error-detected');
+      button.title = '⚠️ Error detected! Click to get AI help (Alt+Shift+A)';
+    } else {
+      button.title = '✨ Send to AI (Alt+Shift+A)';
+    }
 
     button.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -228,7 +330,7 @@
       <span class="claude-btn-icon">📝</span>
       <span class="claude-btn-text">Insert Improved Script</span>
     `;
-    button.title = 'Insert the improved script';
+    button.title = '📝 Insert improved script (Alt+Shift+I)';
     button.style.display = 'none'; // Initially hidden
     button.disabled = true;
 
@@ -433,7 +535,7 @@
   // Reset button state
   function resetButton(button) {
     button.classList.remove('loading');
-    button.querySelector('.claude-btn-text').textContent = 'Send to Claude';
+    button.querySelector('.claude-btn-text').textContent = 'Send to AI';
     button.disabled = false;
   }
 
@@ -540,6 +642,33 @@
         });
       } else {
         showNotification('Please select some text first', 'warning');
+      }
+    }
+  });
+
+  // Keyboard shortcuts handler
+  document.addEventListener('keydown', async (e) => {
+    // Alt+Shift+A: Send to AI (trigger first visible Send button)
+    if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+      e.preventDefault();
+      const sendButton = document.querySelector('.claude-send-btn:not(:disabled)');
+      if (sendButton) {
+        sendButton.click();
+        showNotification('⌨️ Shortcut used: Alt+Shift+A', 'info');
+      } else {
+        showNotification('No output to analyze. Run a command first.', 'warning');
+      }
+    }
+
+    // Alt+Shift+I: Insert improved script (trigger first visible Insert button)
+    if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'i') {
+      e.preventDefault();
+      const insertButton = document.querySelector('.claude-insert-btn:not(:disabled):not([style*="display: none"])');
+      if (insertButton) {
+        insertButton.click();
+        showNotification('⌨️ Shortcut used: Alt+Shift+I', 'info');
+      } else {
+        showNotification('No improved script available. Analyze output first.', 'warning');
       }
     }
   });

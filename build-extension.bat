@@ -23,6 +23,23 @@ mkdir "%BUILD_DIR%\docs"
 
 echo Copying extension files...
 
+REM Get current git commit info
+for /f %%i in ('git rev-parse HEAD 2^>nul') do set GIT_COMMIT=%%i
+for /f %%i in ('git rev-parse --short HEAD 2^>nul') do set GIT_COMMIT_SHORT=%%i
+
+REM Set default values if git is not available
+if not defined GIT_COMMIT set GIT_COMMIT=unknown
+if not defined GIT_COMMIT_SHORT set GIT_COMMIT_SHORT=unknown
+
+echo Updating VERSION.json with git commit: %GIT_COMMIT_SHORT%
+
+REM Copy and update VERSION.json with current git commit
+if exist VERSION.json (
+  powershell -command "(Get-Content VERSION.json) -replace '\"git_commit\": \"[^\"]*\"', '\"git_commit\": \"%GIT_COMMIT%\"' -replace '\"git_commit_short\": \"[^\"]*\"', '\"git_commit_short\": \"%GIT_COMMIT_SHORT%\"' -replace '\"version\": \"[^\"]*\"', '\"version\": \"%VERSION%\"' | Set-Content '%BUILD_DIR%\VERSION.json'"
+) else (
+  echo Warning: VERSION.json not found, skipping
+)
+
 REM Copy essential extension files
 copy manifest.json "%BUILD_DIR%\" >nul
 copy content.js "%BUILD_DIR%\" >nul

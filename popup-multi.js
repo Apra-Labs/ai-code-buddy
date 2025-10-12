@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     importFile: document.getElementById('importFile'),
     
     // Settings
-    autoImprove: document.getElementById('autoImprove'),
     outputSelector: document.getElementById('outputSelector'),
     inputSelector: document.getElementById('inputSelector'),
     
@@ -48,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
   setupEventListeners();
   setupProviderScrollButtons();
+  displayVersionInfo();
 
   // Load saved settings
   async function loadSettings() {
@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         'deploymentName',
         'apiVersion',
         'organization',
-        'autoImprove',
         'customSelectors',
         'customPrompt',
         'maxTokens',
@@ -89,10 +88,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Load other settings
-      if (settings.autoImprove !== undefined) {
-        elements.autoImprove.checked = settings.autoImprove;
-      }
-
       if (settings.customSelectors) {
         elements.outputSelector.value = settings.customSelectors.commandOutput || '';
         elements.inputSelector.value = settings.customSelectors.commandInput || '';
@@ -135,12 +130,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     elements.exportConfig.addEventListener('click', exportConfiguration);
     elements.importConfig.addEventListener('click', () => elements.importFile.click());
     elements.importFile.addEventListener('change', importConfiguration);
-    
-    // Auto-save checkboxes
-    elements.autoImprove.addEventListener('change', async () => {
-      await chrome.storage.sync.set({ autoImprove: elements.autoImprove.checked });
-      showNotification('Auto-improve setting saved', 'success');
-    });
   }
 
   // Switch tabs
@@ -532,7 +521,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       elements.providerCards.forEach(card => card.classList.remove('selected'));
       currentProvider = null;
       elements.configFields.innerHTML = '';
-      elements.autoImprove.checked = false;
       elements.outputSelector.value = '';
       elements.inputSelector.value = '';
       
@@ -661,5 +649,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initial update
     setTimeout(updateScrollButtons, 100);
+  }
+
+  // Display version information
+  async function displayVersionInfo() {
+    const versionElement = document.getElementById('extension-version');
+    if (!versionElement) return;
+
+    try {
+      // Get version from manifest
+      const manifest = chrome.runtime.getManifest();
+      const version = manifest.version;
+
+      // Try to fetch VERSION.json for git commit info
+      try {
+        const response = await fetch(chrome.runtime.getURL('VERSION.json'));
+        const versionData = await response.json();
+
+        if (versionData.git_commit_short) {
+          versionElement.textContent = `v${version} (${versionData.git_commit_short})`;
+        } else {
+          versionElement.textContent = `v${version}`;
+        }
+      } catch (error) {
+        // If VERSION.json doesn't exist, just show manifest version
+        versionElement.textContent = `v${version}`;
+      }
+    } catch (error) {
+      console.error('Error displaying version:', error);
+      versionElement.textContent = 'Version info unavailable';
+    }
   }
 });

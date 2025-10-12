@@ -22,6 +22,8 @@ run-tests.bat
 npm test                        # All unit tests
 npm run test:model-migration    # Model migration only
 npm run test:conversation       # Conversation context only
+npm run test:error-detection    # Error detection only
+npm run test:version-display    # Version display only
 ```
 
 ### Validation Tests (Slower - 30-60 seconds)
@@ -42,7 +44,7 @@ npm run test:all              # Unit + validation tests
 
 ## What's Tested
 
-### Unit Tests (17 tests)
+### Unit Tests (50 tests)
 
 **Model Migration** (`popup-multi.test.js`) - 7 tests
 - Legacy models auto-migrate to current defaults
@@ -53,6 +55,19 @@ npm run test:all              # Unit + validation tests
 - Builds context from previous attempts
 - Emphasizes "try DIFFERENT approach" after failures
 - Handles 1, 2, 3+ attempts correctly
+
+**Error Detection** (`error-detection.test.js`) - 18 tests
+- Detects common error patterns (error:, exception:, failed, etc.)
+- Case-insensitive pattern matching
+- No false positives on success messages
+- Real-world error scenarios (bash, Python, Docker, Git, npm, SQL, HTTP, Kubernetes)
+
+**Version Display** (`version-display.test.js`) - 15 tests
+- Version string formatting with/without git commit
+- Semver validation
+- Git hash validation (short and full)
+- VERSION.json data extraction
+- Integration scenarios
 
 ### Validation Tests
 
@@ -131,6 +146,8 @@ if (require.main === module) {
 **Already Covered (100%)**
 - ✅ Model migration logic
 - ✅ Conversation context management
+- ✅ Error pattern detection
+- ✅ Version display formatting
 
 **High Priority (Not Yet Covered)**
 - ⏳ Provider configuration validation
@@ -141,7 +158,7 @@ if (require.main === module) {
 **Medium Priority**
 - ⏳ UI state management
 - ⏳ Build process validation
-- ⏳ Terminal integration
+- ⏳ Keyboard shortcuts functionality
 
 ---
 
@@ -181,7 +198,7 @@ Add URL to `BOT_PROTECTED_URLS` array in `test/link-validator.js`.
 
 Before committing:
 1. ✅ Run `./run-tests.bat` or `./run-tests.sh`
-2. ✅ All 17 unit tests pass
+2. ✅ All 50 unit tests pass
 3. ✅ No new console errors
 
 Before pushing to main:
@@ -198,12 +215,14 @@ test/
 ├── README.md                      # This file
 ├── popup-multi.test.js            # Model migration (7 tests)
 ├── conversation-context.test.js   # Conversation context (10 tests)
+├── error-detection.test.js        # Error detection (18 tests)
+├── version-display.test.js        # Version display (15 tests)
 ├── image-validator.js             # Image validation
 ├── link-validator.js              # Link validation
 └── test-scripts.js                # Legacy utilities
 ```
 
-**Total: 17 unit tests + 2 validators**
+**Total: 50 unit tests + 2 validators**
 
 ---
 
@@ -230,13 +249,13 @@ Test `background.js` integration:
 ### Terminal Integration (Medium Priority)
 
 Test `content.js`:
-- Error pattern detection
 - Command extraction
-- Auto-improvement triggers
+- Button injection logic
+- Keyboard shortcut handlers
 - Rate limiting
 
 ---
 
 **Last Updated:** 2025-10-11
-**Test Count:** 17 unit tests + 2 validators
+**Test Count:** 50 unit tests + 2 validators
 **Status:** All passing ✓

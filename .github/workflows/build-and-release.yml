@@ -192,27 +192,9 @@ jobs:
           echo "Creating tag v${VERSION} for commit ${GIT_COMMIT}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${VERSION}" -m "Release v${VERSION} - Chrome Web Store submission"
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
           git push origin "v${VERSION}"
           echo "Tag v${VERSION} created and pushed"
-
-      - name: Chrome Web Store Submission Ready
-        if: steps.check_tag.outputs.exists == 'false'
-        run: |
-          echo "============================================"
-          echo "   CHROME WEB STORE SUBMISSION READY"
-          echo "============================================"
-          echo "Version: ${VERSION}"
-          echo "Commit Hash: ${GIT_COMMIT}"
-          echo "GitHub Release: https://github.com/${GITHUB_REPOSITORY}/releases/tag/v${VERSION}"
-          echo "Download from: https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
-          echo ""
-          echo "Next steps:"
-          echo "1. Download the ZIP from the GitHub Release"
-          echo "2. Go to Chrome Web Store Developer Console"
-          echo "3. Upload the ZIP file"
-          echo "4. Update VERSION.json with store URL after publication"
-          echo "============================================"
 
       - name: Create GitHub Release
         if: steps.check_tag.outputs.exists == 'false'
@@ -223,31 +205,16 @@ jobs:
           body: |
             ## AI Code Buddy v${{ env.VERSION }}
 
-            ### 🎯 Chrome Web Store Submission Ready
-
-            This release is ready for Chrome Web Store submission!
-
             **Download Package**: `ai-code-buddy-v${{ env.VERSION }}-${{ env.GIT_COMMIT }}.zip`
 
-            #### Submission Steps:
-            1. Download the ZIP file from the assets below
-            2. Go to [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
-            3. Upload the ZIP file
-            4. Update VERSION.json with store URL after publication
+            ### 📥 Installation
 
-            ---
-
-            ### 📥 Developer Installation
-
-            For testing before submission:
             1. Download the ZIP file from the assets below
             2. Extract the ZIP file
             3. Open Chrome and navigate to `chrome://extensions/`
             4. Enable "Developer mode"
             5. Click "Load unpacked"
             6. Select the extracted folder
-
-            ---
 
             ### 📊 Build Information
             - **Version**: ${{ env.VERSION }}

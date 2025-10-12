@@ -6,10 +6,8 @@
   "description": "Turn any web terminal into an AI-powered command center",
   "release_date": "2025-10-11",
   "repositories": {
-    "bitbucket_source": "https://bitbucket.org/kumaakh/ai-code-buddy",
-    "bitbucket_pipelines": "https://bitbucket.org/kumaakh/ai-code-buddy/addon/pipelines/home",
-    "github_docs": "https://github.com/Apra-Labs/ai-code-buddy",
-    "github_pages": "https://apra-labs.github.io/ai-code-buddy/",
+    "github_repo": "https://github.com/Apra-Labs/ai-code-buddy",
+    "github_docs": "https://apra-labs.github.io/ai-code-buddy/",
     "github_issues": "https://github.com/Apra-Labs/ai-code-buddy/issues"
   },
   "chrome_web_store": {
@@ -20,7 +18,7 @@
     "version_published": null
   },
   "build_info": {
-    "note": "Builds are automated via Bitbucket Pipelines",
+    "note": "Builds are automated via GitHub Actions",
     "artifact_format": "ai-code-buddy-v{version}-{git_hash}.zip",
     "contains_build_metadata": true,
     "build_metadata_file": "build-info.json"
@@ -41,7 +39,7 @@
       "company": "Apra Labs"
     }
   ],
-  "license": "Proprietary",
+  "license": "MIT",
   "support": {
     "documentation": "https://apra-labs.github.io/ai-code-buddy/",
     "issues": "https://github.com/Apra-Labs/ai-code-buddy/issues",

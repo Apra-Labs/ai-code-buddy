@@ -277,6 +277,106 @@ async function testChromeStoreAssets() {
 }
 
 /**
+ * Test config.js and install link configuration
+ */
+async function testInstallLinkConfig() {
+  console.log(`\n${colors.cyan}=== Testing Install Link Configuration ===${colors.reset}\n`);
+
+  // Check config.js exists
+  const configPath = path.join(BASE_DIR, 'docs-site/config.js');
+  if (!fileExists(configPath)) {
+    results.failed.push('✗ docs-site/config.js not found');
+    console.log(`${colors.red}✗${colors.reset} config.js not found`);
+    return;
+  }
+
+  const configContent = readFile(configPath);
+
+  // Verify INSTALL_SOURCE is defined
+  if (configContent.includes('const INSTALL_SOURCE')) {
+    results.passed.push('✓ config.js: INSTALL_SOURCE constant defined');
+    console.log(`${colors.green}✓${colors.reset} INSTALL_SOURCE constant defined`);
+  } else {
+    results.failed.push('✗ config.js: INSTALL_SOURCE constant not found');
+    console.log(`${colors.red}✗${colors.reset} INSTALL_SOURCE constant not found`);
+  }
+
+  // Verify both github and chrome-web-store configs exist
+  if (configContent.includes("github:") && configContent.includes("'chrome-web-store':")) {
+    results.passed.push('✓ config.js: Both install modes configured');
+    console.log(`${colors.green}✓${colors.reset} Both github and chrome-web-store modes configured`);
+  } else {
+    results.failed.push('✗ config.js: Missing install mode configuration');
+    console.log(`${colors.red}✗${colors.reset} Missing install mode configuration`);
+  }
+
+  // Check install-links.js exists
+  const installLinksPath = path.join(BASE_DIR, 'docs-site/install-links.js');
+  if (fileExists(installLinksPath)) {
+    results.passed.push('✓ docs-site/install-links.js exists');
+    console.log(`${colors.green}✓${colors.reset} install-links.js exists`);
+  } else {
+    results.failed.push('✗ docs-site/install-links.js not found');
+    console.log(`${colors.red}✗${colors.reset} install-links.js not found`);
+  }
+
+  // Test HTML files for proper install link implementation
+  const htmlFiles = [
+    'docs-site/index.html',
+    'docs-site/quick-start.html',
+    'docs-site/api-keys.html',
+    'docs-site/security.html',
+    'docs-site/troubleshooting.html',
+    'docs-site/privacy.html'
+  ];
+
+  for (const file of htmlFiles) {
+    const filePath = path.join(BASE_DIR, file);
+    if (!fileExists(filePath)) continue;
+
+    const content = readFile(filePath);
+
+    // Check that config.js is included
+    if (content.includes('config.js')) {
+      results.passed.push(`✓ ${file}: config.js included`);
+      console.log(`${colors.green}✓${colors.reset} ${file}: config.js included`);
+    } else {
+      results.failed.push(`✗ ${file}: config.js not included`);
+      console.log(`${colors.red}✗${colors.reset} ${file}: config.js not included`);
+    }
+
+    // Check that install-links.js is included
+    if (content.includes('install-links.js')) {
+      results.passed.push(`✓ ${file}: install-links.js included`);
+      console.log(`${colors.green}✓${colors.reset} ${file}: install-links.js included`);
+    } else {
+      results.failed.push(`✗ ${file}: install-links.js not included`);
+      console.log(`${colors.red}✗${colors.reset} ${file}: install-links.js not included`);
+    }
+
+    // Check for hardcoded Chrome Web Store URLs (should not exist)
+    const chromeStoreRegex = /href=["']https:\/\/chrome\.google\.com\/webstore["']/g;
+    const hardcodedMatches = content.match(chromeStoreRegex);
+    if (hardcodedMatches && hardcodedMatches.length > 0) {
+      results.failed.push(`✗ ${file}: Found ${hardcodedMatches.length} hardcoded Chrome Web Store URL(s)`);
+      console.log(`${colors.red}✗${colors.reset} ${file}: ${hardcodedMatches.length} hardcoded Chrome Web Store URLs found`);
+    } else {
+      results.passed.push(`✓ ${file}: No hardcoded Chrome Web Store URLs`);
+      console.log(`${colors.green}✓${colors.reset} ${file}: No hardcoded Chrome Web Store URLs`);
+    }
+
+    // Check for install-link class usage
+    if (content.includes('class="install-link"') || content.includes("class='install-link'") || content.includes('class="btn-primary install-link"')) {
+      results.passed.push(`✓ ${file}: Uses install-link class`);
+      console.log(`${colors.green}✓${colors.reset} ${file}: Uses install-link class`);
+    } else {
+      results.warnings.push(`⚠ ${file}: No install-link class found (may not have install buttons)`);
+      console.log(`${colors.yellow}⚠${colors.reset} ${file}: No install-link class found`);
+    }
+  }
+}
+
+/**
  * Test links in HTML files
  */
 async function testHtmlLinks() {
@@ -542,6 +642,7 @@ async function runTests() {
   await testDocumentationFiles();
   await testChromeStoreAssets();
   await testManifest();
+  await testInstallLinkConfig();
   await testHtmlLinks();
   await testMarkdownLinks();
   await testGitHubPagesUrls();

@@ -8,13 +8,12 @@ Chrome extension that integrates AI (Claude, OpenAI, Gemini, Ollama) into web-ba
 ## Repositories
 - **GitHub (primary):** https://github.com/Apra-Labs/ai-code-buddy
 - **GitHub Pages:** https://apra-labs.github.io/ai-code-buddy/
-- **Bitbucket (legacy):** https://bitbucket.org/kumaakh/ai-code-buddy (migrating to GitHub)
 
-## Current Status - GitHub Migration & Open Source
+## Current Status - Open Source on GitHub
 
 ### ✅ Completed (v2.1.0)
 - Extension code with modern { } branding
-- **GitHub Actions CI/CD** replacing Bitbucket Pipelines
+- **GitHub Actions CI/CD**
 - **MIT License** for source code
 - **Creative Commons CC BY 4.0** for documentation
 - **Open Source Release** on GitHub
@@ -24,12 +23,6 @@ Chrome extension that integrates AI (Claude, OpenAI, Gemini, Ollama) into web-ba
 - Promotional images (440x280, 1400x560)
 - Privacy policy (GDPR/CCPA compliant)
 - Icon (128x128 PNG)
-
-### ⏳ Next Steps
-- Push code to GitHub
-- Test GitHub Actions workflow
-- Archive Bitbucket repository
-- Announce open source release
 
 ### 📁 Key Files
 - `manifest.json` - Extension manifest
@@ -64,24 +57,6 @@ Build artifacts:
 
 ---
 
-## Migration Instructions
-
-See [MIGRATION-TO-GITHUB.md](../MIGRATION-TO-GITHUB.md) for complete migration steps.
-
-**Quick Start:**
-```bash
-# Add GitHub remote
-git remote add github https://github.com/Apra-Labs/ai-code-buddy.git
-
-# Push to GitHub
-git push github main --tags
-
-# Trigger first build
-# Go to GitHub Actions and run the workflow manually
-```
-
----
-
 **Last Updated:** 2025-10-12
 **Version:** 2.1.0
-**Status:** Open Source - Migrating to GitHub
+**Status:** Open Source on GitHub

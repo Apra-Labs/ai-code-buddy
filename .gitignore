@@ -41,9 +41,7 @@ nul
 chrome-store/*-temp-*.png
 chrome-store/01-*.png
 
-# Bitbucket-specific files (not needed on GitHub)
-.pipeline/
-bitbucket-pipelines.yml
+# Legacy migration files
 DEPLOYMENT.md
 PRE-LAUNCH-CHECKLIST.md
 MIGRATION-TO-GITHUB.md

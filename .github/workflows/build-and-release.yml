@@ -1,0 +1,251 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results/
+            coverage/
+
+  validate:
+    name: Validate Extension
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install icon dependencies
+        working-directory: icons
+        run: npm install
+
+      - name: Run image validator
+        run: node test/image-validator.js
+
+      - name: Run link validator
+        run: timeout 60 node test/link-validator.js || true
+
+  build:
+    name: Build Chrome Extension
+    runs-on: ubuntu-latest
+    needs: [test, validate]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set build environment variables
+        run: |
+          echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "GIT_COMMIT_FULL=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
+          echo "VERSION=$(node -p "require('./manifest.json').version")" >> $GITHUB_ENV
+          echo "GIT_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+
+      - name: Create build-info.json
+        run: |
+          cat > build-info.json << EOF
+          {
+            "version": "${VERSION}",
+            "git_commit": "${GIT_COMMIT}",
+            "git_commit_full": "${GIT_COMMIT_FULL}",
+            "git_branch": "${GIT_BRANCH}",
+            "git_tag": "${GIT_TAG}",
+            "build_date": "${BUILD_DATE}",
+            "build_number": "${GITHUB_RUN_NUMBER}",
+            "github_repo": "${GITHUB_REPOSITORY}",
+            "github_commit_url": "https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}",
+            "github_docs": "https://github.com/Apra-Labs/ai-code-buddy",
+            "github_pages": "https://apra-labs.github.io/ai-code-buddy/"
+          }
+          EOF
+          cat build-info.json
+
+      - name: Build extension package
+        run: |
+          chmod +x build-extension.sh
+          ./build-extension.sh
+
+      - name: Add build-info.json to package
+        run: |
+          zip -u ai-code-buddy-v${VERSION}.zip build-info.json
+
+      - name: Rename package with commit hash
+        run: |
+          mv "ai-code-buddy-v${VERSION}.zip" "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+
+      - name: Verify package contents
+        run: |
+          ls -lh ai-code-buddy-*.zip
+          unzip -l "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" | head -30
+          unzip -p "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" build-info.json
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: ai-code-buddy-*.zip
+          retention-days: 90
+
+      - name: Upload build-info
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: build-info.json
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension
+
+      - name: Download build-info
+        uses: actions/download-artifact@v4
+        with:
+          name: build-info
+
+      - name: Set environment variables
+        run: |
+          echo "VERSION=$(node -p "require('./manifest.json').version")" >> $GITHUB_ENV
+          echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${VERSION} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${VERSION} does not exist"
+          fi
+
+      - name: Create and push tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${VERSION}" -m "Release v${VERSION} - Chrome Web Store submission"
+          git push origin "v${VERSION}"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          body: |
+            ## AI Code Buddy v${{ env.VERSION }}
+
+            ### Download
+            - **Chrome Extension Package**: `ai-code-buddy-v${{ env.VERSION }}-${{ env.GIT_COMMIT }}.zip`
+
+            ### Installation
+            1. Download the ZIP file from the assets below
+            2. Extract the ZIP file
+            3. Open Chrome and navigate to `chrome://extensions/`
+            4. Enable "Developer mode"
+            5. Click "Load unpacked"
+            6. Select the extracted folder
+
+            ### Chrome Web Store
+            This release is ready for Chrome Web Store submission.
+
+            ### Build Information
+            - **Version**: ${{ env.VERSION }}
+            - **Commit**: ${{ env.GIT_COMMIT }}
+            - **Build Date**: ${{ env.BUILD_DATE }}
+            - **Build Number**: ${{ github.run_number }}
+
+            ### Documentation
+            - [Full Documentation](https://apra-labs.github.io/ai-code-buddy/)
+            - [Security Policy](docs/SECURITY.md)
+            - [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
+
+            ### License
+            - **Source Code**: MIT License
+            - **Documentation**: CC BY 4.0
+          files: |
+            ai-code-buddy-*.zip
+            build-info.json
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-docs:
+    name: Publish Documentation Site
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs-site
+          publish_branch: gh-pages
+          enable_jekyll: true
+          cname: false

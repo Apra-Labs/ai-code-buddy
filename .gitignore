@@ -41,9 +41,19 @@ nul
 chrome-store/*-temp-*.png
 chrome-store/01-*.png
 
+# Bitbucket-specific files (not needed on GitHub)
+.pipeline/
+bitbucket-pipelines.yml
+DEPLOYMENT.md
+PRE-LAUNCH-CHECKLIST.md
+MIGRATION-TO-GITHUB.md
+
+# Internal directories (legacy/reference only)
+github-repo/
+
 # Pipeline credentials and artifacts
 .env.pipeline
-logs/pipeline-*
+logs/
 temp/
 pipeline-status.json
 pipelines.json

@@ -87,4 +87,8 @@ The site is fully responsive with breakpoints at:
 
 ---
 
+## 📄 License
+
+Documentation licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+
 Built by [Apra Labs](https://www.apralabs.com)

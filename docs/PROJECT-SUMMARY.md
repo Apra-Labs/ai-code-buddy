@@ -3,60 +3,85 @@
 ## Overview
 Chrome extension that integrates AI (Claude, OpenAI, Gemini, Ollama) into web-based terminals (RPort, Cloud Shell, GitPod) to help developers debug scripts and fix errors.
 
+**🎉 Now Open Source!** - MIT License for code, CC BY 4.0 for documentation
+
 ## Repositories
-- **Bitbucket (source):** https://bitbucket.org/kumaakh/ai-code-buddy
-- **GitHub (docs):** https://github.com/Apra-Labs/ai-code-buddy
+- **GitHub (primary):** https://github.com/Apra-Labs/ai-code-buddy
 - **GitHub Pages:** https://apra-labs.github.io/ai-code-buddy/
+- **Bitbucket (legacy):** https://bitbucket.org/kumaakh/ai-code-buddy (migrating to GitHub)
 
-## Current Status - Chrome Web Store Submission
+## Current Status - GitHub Migration & Open Source
 
-### ✅ Completed
-- Extension code (v2.0.0) with modern { } branding
-- Bitbucket Pipelines CI/CD with git traceability
-- Build package: ai-code-buddy-v2.0.0.zip
+### ✅ Completed (v2.1.0)
+- Extension code with modern { } branding
+- **GitHub Actions CI/CD** replacing Bitbucket Pipelines
+- **MIT License** for source code
+- **Creative Commons CC BY 4.0** for documentation
+- **Open Source Release** on GitHub
+- Build automation with GitHub Releases
+- Documentation site on GitHub Pages
+- CONTRIBUTING.md and PR/Issue templates
 - Promotional images (440x280, 1400x560)
-- Store listing copy with privacy justifications
 - Privacy policy (GDPR/CCPA compliant)
 - Icon (128x128 PNG)
-- Documentation microsite (GitHub Pages)
 
-### ⏳ In Progress
-- **Screenshots** (1-5 needed, dimensions: 640x800 for popup, 1280x800 for web pages)
-- **Promo video** (optional)
+### ⏳ Next Steps
+- Push code to GitHub
+- Test GitHub Actions workflow
+- Archive Bitbucket repository
+- Announce open source release
 
 ### 📁 Key Files
-- `manifest.json` - Extension manifest (v2.0.0)
+- `manifest.json` - Extension manifest
+- `LICENSE` - MIT License for source code
+- `docs/LICENSE` - CC BY 4.0 for documentation
+- `.github/workflows/build-and-release.yml` - GitHub Actions CI/CD
+- `CONTRIBUTING.md` - Contribution guidelines
+- `MIGRATION-TO-GITHUB.md` - Migration guide
 - `popup-multi.html` - Main popup UI
 - `content.js` - Content script for terminals
-- `chrome-store/store-listing.md` - Complete submission guide
-- `bitbucket-pipelines.yml` - CI/CD configuration
 - `VERSION.json` - Release tracking
 
----
+## GitHub Actions Workflow
 
-## 🎯 Current Task: Redesign Popup UI
+The project now uses GitHub Actions for CI/CD:
 
-**Problem:**
-The popup window is not user-friendly:
-- Provider tiles take too much space
-- Save button is hidden below fold
-- Requires scrolling (scroll bar appears)
-- Not clean/simple appearance
+1. **Test Job**: Runs all unit tests
+2. **Validate Job**: Validates images and links
+3. **Build Job**: Creates release package with build-info.json
+4. **Create Release Job**: Automatically creates GitHub releases
+5. **Publish Docs Job**: Deploys documentation to GitHub Pages
 
-**Goal:**
-Redesign `popup-multi.html` for better UX:
-- Simpler, cleaner layout
-- All essential controls visible without scrolling
-- Save button easily accessible
-- More compact provider selection
+Workflow triggers:
+- Every push to `main` branch (runs all jobs + creates release)
+- Every pull request (runs test, validate, build only)
+- Manual workflow dispatch
 
-**Files to modify:**
-- `popup-multi.html` (main UI)
-- `popup-multi.js` (if layout changes affect logic)
-- `styles.css` (styling)
+Build artifacts:
+- Chrome extension ZIP with commit hash
+- Build info JSON with metadata
+- Automatic GitHub Release creation
 
 ---
 
-**Last Updated:** 2025-10-11
-**Version:** 2.0.0
-**Status:** Preparing for Chrome Web Store submission
+## Migration Instructions
+
+See [MIGRATION-TO-GITHUB.md](../MIGRATION-TO-GITHUB.md) for complete migration steps.
+
+**Quick Start:**
+```bash
+# Add GitHub remote
+git remote add github https://github.com/Apra-Labs/ai-code-buddy.git
+
+# Push to GitHub
+git push github main --tags
+
+# Trigger first build
+# Go to GitHub Actions and run the workflow manually
+```
+
+---
+
+**Last Updated:** 2025-10-12
+**Version:** 2.1.0
+**Status:** Open Source - Migrating to GitHub

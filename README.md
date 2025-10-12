@@ -2,9 +2,16 @@
 
 **by [Apra Labs](https://www.apralabs.com)**
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Documentation: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-green.svg)](docs/LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/Apra-Labs/ai-code-buddy)](https://github.com/Apra-Labs/ai-code-buddy/releases)
+[![Build Status](https://github.com/Apra-Labs/ai-code-buddy/workflows/Build%20and%20Release/badge.svg)](https://github.com/Apra-Labs/ai-code-buddy/actions)
+
 > *Turn any web terminal into an AI-powered command center*
 
 A Chrome extension that integrates **multiple AI providers** (Claude, OpenAI, Gemini, Ollama, and more) directly into any web-based terminal, command interface, or code editor. Eliminate copy-paste between your terminal and AI tools!
+
+**🎉 This project is now open source!** Feel free to use, modify, and contribute.
 
 ## Features
 
@@ -299,17 +306,42 @@ The build script will:
 - **Extension Version**: 2.0.0
 - **Tested with**: RPort, Google Cloud Shell, GitPod, VS Code Web, CodeSandbox, Replit, and more!
 
-## Contributing
-
-Contributions welcome! Areas for improvement:
-- Additional AI provider integrations
-- Support for more web-based terminals and IDEs
-- UI/UX enhancements
-- Documentation improvements
-
 ## License
 
-This extension is provided as-is for use with RPort and supported AI services.
+This project is open source and available under two licenses:
+
+- **Source Code**: [MIT License](LICENSE) - Free to use, modify, and distribute
+- **Documentation**: [Creative Commons Attribution 4.0 International](docs/LICENSE) (CC BY 4.0)
+
+You are free to:
+- Use this extension for personal or commercial purposes
+- Modify and customize it for your needs
+- Distribute your modified versions
+- Contribute improvements back to the project
+
+See the [LICENSE](LICENSE) file for full details.
+
+## Contributing
+
+We welcome contributions! This is an open source project and we'd love your help.
+
+**Ways to contribute:**
+- Report bugs and request features via [GitHub Issues](https://github.com/Apra-Labs/ai-code-buddy/issues)
+- Submit pull requests for bug fixes or new features
+- Improve documentation
+- Add support for new AI providers
+- Add support for more web-based terminals and IDEs
+- Share your use cases and success stories
+
+**Getting started:**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and test thoroughly
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to your branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
 ## Credits
 

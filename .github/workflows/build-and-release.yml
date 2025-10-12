@@ -24,7 +24,10 @@ jobs:
           node-version: '20'
 
       - name: Run unit tests
-        run: npm test
+        run: |
+          echo "Running unit tests..."
+          npm test
+          echo "✅ All tests passed!"
 
       - name: Upload test results
         if: always()
@@ -54,10 +57,14 @@ jobs:
         run: npm install
 
       - name: Run image validator
-        run: node test/image-validator.js
+        run: |
+          echo "Running image validator..."
+          node test/image-validator.js
 
       - name: Run link validator
-        run: timeout 60 node test/link-validator.js || true
+        run: |
+          echo "Running link validator..."
+          timeout 60 node test/link-validator.js || true
 
   build:
     name: Build Chrome Extension
@@ -86,6 +93,7 @@ jobs:
 
       - name: Create build-info.json
         run: |
+          echo "Creating build-info.json with git metadata..."
           cat > build-info.json << EOF
           {
             "version": "${VERSION}",
@@ -105,22 +113,29 @@ jobs:
 
       - name: Build extension package
         run: |
+          echo "Running build-extension.sh to create production package..."
           chmod +x build-extension.sh
           ./build-extension.sh
 
       - name: Add build-info.json to package
         run: |
+          echo "Adding build-info.json to the package..."
           zip -u ai-code-buddy-v${VERSION}.zip build-info.json
 
       - name: Rename package with commit hash
         run: |
+          echo "Renaming to include git commit hash..."
           mv "ai-code-buddy-v${VERSION}.zip" "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
 
       - name: Verify package contents
         run: |
+          echo "Verifying package contents..."
           ls -lh ai-code-buddy-*.zip
           unzip -l "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" | head -30
+          echo "Verifying build-info.json in package..."
           unzip -p "ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip" build-info.json
+          echo "✅ Build artifacts created successfully!"
+          echo "📦 ZIP file: ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -178,10 +193,30 @@ jobs:
       - name: Create and push tag
         if: steps.check_tag.outputs.exists == 'false'
         run: |
+          echo "Creating tag v${VERSION} for commit ${GIT_COMMIT}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "v${VERSION}" -m "Release v${VERSION} - Chrome Web Store submission"
           git push origin "v${VERSION}"
+          echo "Tag v${VERSION} created and pushed"
+
+      - name: Chrome Web Store Submission Ready
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          echo "============================================"
+          echo "   CHROME WEB STORE SUBMISSION READY"
+          echo "============================================"
+          echo "Version: ${VERSION}"
+          echo "Commit Hash: ${GIT_COMMIT}"
+          echo "GitHub Release: https://github.com/${GITHUB_REPOSITORY}/releases/tag/v${VERSION}"
+          echo "Download from: https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/ai-code-buddy-v${VERSION}-${GIT_COMMIT}.zip"
+          echo ""
+          echo "Next steps:"
+          echo "1. Download the ZIP from the GitHub Release"
+          echo "2. Go to Chrome Web Store Developer Console"
+          echo "3. Upload the ZIP file"
+          echo "4. Update VERSION.json with store URL after publication"
+          echo "============================================"
 
       - name: Create GitHub Release
         if: steps.check_tag.outputs.exists == 'false'
@@ -192,10 +227,23 @@ jobs:
           body: |
             ## AI Code Buddy v${{ env.VERSION }}
 
-            ### Download
-            - **Chrome Extension Package**: `ai-code-buddy-v${{ env.VERSION }}-${{ env.GIT_COMMIT }}.zip`
+            ### 🎯 Chrome Web Store Submission Ready
 
-            ### Installation
+            This release is ready for Chrome Web Store submission!
+
+            **Download Package**: `ai-code-buddy-v${{ env.VERSION }}-${{ env.GIT_COMMIT }}.zip`
+
+            #### Submission Steps:
+            1. Download the ZIP file from the assets below
+            2. Go to [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+            3. Upload the ZIP file
+            4. Update VERSION.json with store URL after publication
+
+            ---
+
+            ### 📥 Developer Installation
+
+            For testing before submission:
             1. Download the ZIP file from the assets below
             2. Extract the ZIP file
             3. Open Chrome and navigate to `chrome://extensions/`
@@ -203,21 +251,20 @@ jobs:
             5. Click "Load unpacked"
             6. Select the extracted folder
 
-            ### Chrome Web Store
-            This release is ready for Chrome Web Store submission.
+            ---
 
-            ### Build Information
+            ### 📊 Build Information
             - **Version**: ${{ env.VERSION }}
             - **Commit**: ${{ env.GIT_COMMIT }}
-            - **Build Date**: ${{ env.BUILD_DATE }}
             - **Build Number**: ${{ github.run_number }}
+            - **Commit URL**: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
-            ### Documentation
+            ### 📚 Documentation
             - [Full Documentation](https://apra-labs.github.io/ai-code-buddy/)
-            - [Security Policy](docs/SECURITY.md)
-            - [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
+            - [Security Policy](https://github.com/${{ github.repository }}/blob/main/docs/SECURITY.md)
+            - [Troubleshooting Guide](https://github.com/${{ github.repository }}/blob/main/docs/TROUBLESHOOTING.md)
 
-            ### License
+            ### 📜 License
             - **Source Code**: MIT License
             - **Documentation**: CC BY 4.0
           files: |

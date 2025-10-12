@@ -1,4 +1,4 @@
-# 🔑 API Keys Guide - RPort AI Assistant
+# 🔑 API Keys Guide - AI Code Buddy
 
 Quick guide to getting API keys for all supported providers.
 
@@ -315,7 +315,7 @@ API Version: 2023-05-15
 
 1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
 2. Click **"Generate new token (classic)"**
-3. Name: "RPort AI Assistant"
+3. Name: "AI Code Buddy"
 4. Select scopes: (basic read access)
 5. Click **"Generate token"**
 6. Copy token (starts with `ghp_`)

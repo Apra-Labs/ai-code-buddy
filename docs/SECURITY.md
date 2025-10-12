@@ -1,4 +1,4 @@
-# 🔒 Security & Privacy - RPort AI Assistant
+# 🔒 Security & Privacy - AI Code Buddy
 
 **by [Apra Labs](https://www.apralabs.com)**
 

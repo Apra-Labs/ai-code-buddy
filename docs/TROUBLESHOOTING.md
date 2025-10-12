@@ -1,6 +1,6 @@
 # 🔧 Troubleshooting Guide
 
-Quick fixes for common issues with the RPort AI Assistant extension.
+Quick fixes for common issues with the AI Code Buddy extension.
 
 ---
 

@@ -1,4 +1,4 @@
-// RPort AI Assistant - Multi-Provider Popup Script
+// AI Code Buddy - Multi-Provider Popup Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   // State

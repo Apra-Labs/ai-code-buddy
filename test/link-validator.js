@@ -14,7 +14,7 @@ const http = require('http');
 // Configuration
 const BASE_DIR = path.join(__dirname, '..');
 const GITHUB_PAGES_BASE = 'https://apra-labs.github.io/ai-code-buddy';
-const BITBUCKET_REPO = 'https://bitbucket.org/kumaakh/ai-code-buddy';
+const GITHUB_REPO = 'https://github.com/Apra-Labs/ai-code-buddy';
 
 // URLs that block automated requests (bot protection) - skip HTTP check
 const BOT_PROTECTED_URLS = [
@@ -466,11 +466,10 @@ async function testManifest() {
 }
 
 /**
- * Test GitHub Pages URLs (these won't work until site is published)
+ * Test GitHub Pages URLs (live deployment)
  */
 async function testGitHubPagesUrls() {
-  console.log(`\n${colors.cyan}=== Testing GitHub Pages URLs (Preview) ===${colors.reset}\n`);
-  console.log(`${colors.yellow}Note: These URLs will only work after GitHub Pages is published${colors.reset}\n`);
+  console.log(`\n${colors.cyan}=== Testing GitHub Pages URLs (Live) ===${colors.reset}\n`);
 
   const expectedUrls = [
     `${GITHUB_PAGES_BASE}/`,
@@ -482,9 +481,17 @@ async function testGitHubPagesUrls() {
   ];
 
   for (const url of expectedUrls) {
-    // Just log expected URLs for now
-    results.warnings.push(`⚠ GitHub Pages URL (not yet published): ${url}`);
-    console.log(`  ${colors.yellow}⚠${colors.reset} ${url} (pending publication)`);
+    const result = await checkUrl(url);
+    if (result.success) {
+      results.passed.push(`✓ GitHub Pages: ${url}`);
+      console.log(`  ${colors.green}✓${colors.reset} ${url}`);
+    } else {
+      results.failed.push(`✗ GitHub Pages: ${url} (${result.message})`);
+      console.log(`  ${colors.red}✗${colors.reset} ${url} (${result.message})`);
+    }
+
+    // Add delay to avoid rate limiting
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 }
 

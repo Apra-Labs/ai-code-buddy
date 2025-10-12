@@ -38,8 +38,8 @@ jobs:
             test-results/
             coverage/
 
-  validate:
-    name: Validate Extension
+  validate-images:
+    name: Validate Images
     runs-on: ubuntu-latest
     needs: test
 
@@ -60,16 +60,12 @@ jobs:
         run: |
           echo "Running image validator..."
           node test/image-validator.js
-
-      - name: Run link validator
-        run: |
-          echo "Running link validator..."
-          timeout 60 node test/link-validator.js || true
+          echo "✅ All images validated!"
 
   build:
     name: Build Chrome Extension
     runs-on: ubuntu-latest
-    needs: [test, validate]
+    needs: [test, validate-images]
 
     steps:
       - name: Checkout code
@@ -295,3 +291,40 @@ jobs:
           publish_branch: gh-pages
           enable_jekyll: true
           cname: false
+
+  validate-links:
+    name: Validate Links Post-Deployment
+    runs-on: ubuntu-latest
+    needs: [build, publish-docs]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension
+
+      - name: Extract extension for testing
+        run: |
+          echo "Extracting extension package..."
+          mkdir -p extension-test
+          unzip -q ai-code-buddy-*.zip -d extension-test
+
+      - name: Wait for GitHub Pages deployment
+        run: |
+          echo "Waiting 30 seconds for GitHub Pages to deploy..."
+          sleep 30
+
+      - name: Run link validator on deployed site and extension
+        run: |
+          echo "Running link validator on deployed documentation and extension..."
+          timeout 120 node test/link-validator.js || true
+          echo "✅ Link validation complete!"

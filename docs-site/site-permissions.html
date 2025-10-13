@@ -1,458 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Managing Site Permissions - AI Code Buddy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #94BA33;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 1.2em;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #94BA33;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            color: #94BA33;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #94BA33;
-        }
-
-        h3 {
-            color: #555;
-            font-size: 1.4em;
-            margin-top: 25px;
-            margin-bottom: 15px;
-        }
-
-        .step {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 4px solid #94BA33;
-        }
-
-        .step-number {
-            display: inline-block;
-            background: #94BA33;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .step-title {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .step-content {
-            margin-left: 40px;
-            color: #555;
-        }
-
-        .screenshot {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-style: italic;
-            color: #666;
-            text-align: center;
-        }
-
-        .code {
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #d63384;
-        }
-
-        .note {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-
-        .note strong {
-            color: #856404;
-        }
-
-        .tip {
-            background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-
-        .tip strong {
-            color: #0c5460;
-        }
-
-        .warning {
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-
-        .warning strong {
-            color: #721c24;
-        }
-
-        ul, ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-
-        .example {
-            background: #e7f3ff;
-            border: 1px solid #b3d9ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .example-title {
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px 10px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .section {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managing Site Permissions - AI Code Buddy</title>
+  <meta name="description" content="Control where AI Code Buddy runs. Learn how to allow specific sites, block sites, or temporarily disable the extension.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+  <style>
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);
+      padding: 60px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .content-section {
+      padding: 60px 0;
+    }
+  </style>
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
     <div class="container">
-        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
-
-        <header>
-            <h1><i class="fas fa-shield-alt"></i> Managing Site Permissions</h1>
-            <p class="subtitle">Control where AI Code Buddy runs</p>
-        </header>
-
-        <div class="section">
-            <h2><i class="fas fa-info-circle"></i> Overview</h2>
-            <p>
-                By default, AI Code Buddy runs on <strong>all websites</strong> to detect text inputs and command outputs wherever you need them.
-                However, Chrome's built-in extension permissions system lets you control exactly which sites can use the extension.
-            </p>
-            <p style="margin-top: 15px;">
-                This guide shows you how to:
-            </p>
-            <ul>
-                <li><strong>Allow only specific sites</strong> (e.g., only your RPort servers)</li>
-                <li><strong>Block specific sites</strong> (e.g., social media, Gmail)</li>
-                <li><strong>Temporarily disable</strong> the extension on certain pages</li>
-            </ul>
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
         </div>
-
-        <div class="section">
-            <h2><i class="fas fa-check-circle"></i> Option 1: Allow Only Specific Sites</h2>
-            <p>Perfect if you only want AI Code Buddy on your RPort server(s) or specific work tools.</p>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">1</span>
-                    Open Chrome Extensions
-                </div>
-                <div class="step-content">
-                    <ul>
-                        <li>Navigate to <span class="code">chrome://extensions/</span> in Chrome</li>
-                        <li>Or click <strong>⋮ (three dots)</strong> → <strong>Extensions</strong> → <strong>Manage Extensions</strong></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">2</span>
-                    Find AI Code Buddy
-                </div>
-                <div class="step-content">
-                    <p>Locate "AI Code Buddy by Apra Labs" in your extensions list</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">3</span>
-                    Click "Details"
-                </div>
-                <div class="step-content">
-                    <p>Click the <strong>"Details"</strong> button under the extension</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">4</span>
-                    Change Site Access
-                </div>
-                <div class="step-content">
-                    <p>Scroll down to <strong>"Site access"</strong> section</p>
-                    <p>Click on the dropdown and select: <span class="code">On specific sites</span></p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">5</span>
-                    Add Your Sites
-                </div>
-                <div class="step-content">
-                    <p>Click <strong>"Add a new page"</strong> and enter your site URLs:</p>
-                </div>
-            </div>
-
-            <div class="example">
-                <div class="example-title"><i class="fas fa-lightbulb"></i> Example: Allow Only RPort Servers</div>
-                <p>If your RPort servers are at:</p>
-                <ul>
-                    <li><span class="code">https://rport.company.com</span></li>
-                    <li><span class="code">https://rport-prod.company.com</span></li>
-                </ul>
-                <p>Add these exact URLs to the allowed sites list.</p>
-            </div>
-
-            <div class="tip">
-                <strong><i class="fas fa-info-circle"></i> Tip:</strong> You can use wildcards like <span class="code">https://*.company.com/*</span> to allow all subdomains.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-ban"></i> Option 2: Block Specific Sites</h2>
-            <p>If you want the extension on most sites but want to exclude a few (like Gmail, social media, etc.):</p>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">1</span>
-                    Visit the Site You Want to Block
-                </div>
-                <div class="step-content">
-                    <p>Go to the website where you don't want AI Code Buddy to run (e.g., Gmail, Facebook)</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">2</span>
-                    Click the Extension Icon
-                </div>
-                <div class="step-content">
-                    <p>Click the AI Code Buddy icon in your Chrome toolbar (top-right)</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">3</span>
-                    Right-Click for Options
-                </div>
-                <div class="step-content">
-                    <p><strong>Right-click</strong> on the extension icon and select:</p>
-                    <p><span class="code">This can't read or change site data</span></p>
-                    <p style="margin-top: 10px;">Or choose:</p>
-                    <ul>
-                        <li><strong>"When you click the extension"</strong> - Only works when you manually activate it</li>
-                        <li><strong>"On this site"</strong> - Always works on this specific site</li>
-                        <li><strong>"On all sites"</strong> - Works everywhere (default)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="note">
-                <strong><i class="fas fa-exclamation-circle"></i> Note:</strong> This setting is per-site. You need to do this for each site you want to block.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-pause-circle"></i> Option 3: Temporarily Disable</h2>
-            <p>Need to disable the extension temporarily without uninstalling?</p>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">1</span>
-                    Open Extensions
-                </div>
-                <div class="step-content">
-                    <p>Go to <span class="code">chrome://extensions/</span></p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-title">
-                    <span class="step-number">2</span>
-                    Toggle Off
-                </div>
-                <div class="step-content">
-                    <p>Find AI Code Buddy and toggle the switch to <strong>OFF</strong></p>
-                    <p>The extension will be completely disabled on all sites</p>
-                </div>
-            </div>
-
-            <div class="tip">
-                <strong><i class="fas fa-undo"></i> Re-enable:</strong> Just toggle the switch back to <strong>ON</strong> when you need it again.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-question-circle"></i> Common Scenarios</h2>
-
-            <h3><i class="fas fa-briefcase"></i> Scenario 1: Work Only (RPort + Azure DevOps)</h3>
-            <div class="example">
-                <p><strong>Goal:</strong> Only run on work-related sites</p>
-                <p><strong>Solution:</strong> Use "On specific sites" and add:</p>
-                <ul>
-                    <li><span class="code">https://rport.yourcompany.com/*</span></li>
-                    <li><span class="code">https://dev.azure.com/yourorg/*</span></li>
-                    <li><span class="code">https://*.visualstudio.com/*</span></li>
-                </ul>
-            </div>
-
-            <h3><i class="fas fa-code"></i> Scenario 2: Development Tools Only</h3>
-            <div class="example">
-                <p><strong>Goal:</strong> Use on GitHub, GitLab, and local dev servers</p>
-                <p><strong>Solution:</strong> Use "On specific sites" and add:</p>
-                <ul>
-                    <li><span class="code">https://github.com/*</span></li>
-                    <li><span class="code">https://gitlab.com/*</span></li>
-                    <li><span class="code">http://localhost/*</span></li>
-                    <li><span class="code">http://127.0.0.1/*</span></li>
-                </ul>
-            </div>
-
-            <h3><i class="fas fa-globe"></i> Scenario 3: Everywhere Except Social Media</h3>
-            <div class="example">
-                <p><strong>Goal:</strong> Run everywhere except Facebook, Twitter, Instagram</p>
-                <p><strong>Solution:</strong> Keep "On all sites", then block specific sites:</p>
-                <ol>
-                    <li>Visit <span class="code">facebook.com</span></li>
-                    <li>Right-click extension icon → "This can't read or change site data"</li>
-                    <li>Repeat for Twitter, Instagram, etc.</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-tools"></i> Troubleshooting</h2>
-
-            <h3>Extension Not Working on a Site?</h3>
-            <ol>
-                <li>Check <span class="code">chrome://extensions/</span></li>
-                <li>Click "Details" on AI Code Buddy</li>
-                <li>Verify "Site access" includes the site</li>
-                <li>Add the site if it's missing</li>
-                <li>Refresh the page</li>
-            </ol>
-
-            <h3>Buttons Still Appearing on Blocked Sites?</h3>
-            <ol>
-                <li>Refresh the page (Ctrl+R or Cmd+R)</li>
-                <li>Clear browser cache if needed</li>
-                <li>Verify site access settings are correct</li>
-            </ol>
-
-            <h3>Can't Find "Site Access" Option?</h3>
-            <div class="warning">
-                <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> The "Site access" setting only appears if you installed the extension as a Chrome Web Store extension. If you loaded it as an "unpacked extension" (developer mode), you won't see this option.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-book"></i> Additional Resources</h2>
-            <ul>
-                <li><a href="quick-start.html">Quick Start Guide</a></li>
-                <li><a href="api-keys.html">Setting Up API Keys</a></li>
-                <li><a href="troubleshooting.html">Troubleshooting Guide</a></li>
-                <li><a href="index.html">Back to Documentation Home</a></li>
-            </ul>
-        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="api-keys.html">API Keys</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Troubleshooting</a>
+        <a href="#" target="_blank" class="btn-primary install-link">Install Extension</a>
+      </nav>
     </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>→</span>
+      <span>Site Permissions</span>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="container">
+      <h1>Managing Site Permissions</h1>
+      <p>Control where AI Code Buddy runs</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <section class="content-section">
+    <div class="container" style="max-width: 900px;">
+      <section>
+        <h2>Overview</h2>
+        <p>
+          By default, AI Code Buddy runs on <strong>all websites</strong> to detect text inputs and command outputs wherever you need them.
+          However, Chrome's built-in extension permissions system lets you control exactly which sites can use the extension.
+        </p>
+        <p style="margin-top: 15px;">
+          This guide shows you how to:
+        </p>
+        <ul>
+          <li><strong>Allow only specific sites</strong> (e.g., only your RPort servers)</li>
+          <li><strong>Block specific sites</strong> (e.g., social media, Gmail)</li>
+          <li><strong>Temporarily disable</strong> the extension on certain pages</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Option 1: Allow Only Specific Sites</h2>
+        <p>Perfect if you only want AI Code Buddy on your RPort server(s) or specific work tools.</p>
+
+        <div class="step-card">
+          <h3>Step 1: Open Chrome Extensions</h3>
+          <ul>
+            <li>Navigate to <code>chrome://extensions/</code> in Chrome</li>
+            <li>Or click <strong>⋮ (three dots)</strong> → <strong>Extensions</strong> → <strong>Manage Extensions</strong></li>
+          </ul>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 2: Find AI Code Buddy</h3>
+          <p>Locate "AI Code Buddy by Apra Labs" in your extensions list</p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 3: Click "Details"</h3>
+          <p>Click the <strong>"Details"</strong> button under the extension</p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 4: Change Site Access</h3>
+          <p>Scroll down to <strong>"Site access"</strong> section</p>
+          <p>Click on the dropdown and select: <code>On specific sites</code></p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 5: Add Your Sites</h3>
+          <p>Click <strong>"Add a new page"</strong> and enter your site URLs:</p>
+        </div>
+
+        <div class="example">
+          <h4>Example: Allow Only RPort Servers</h4>
+          <p>If your RPort servers are at:</p>
+          <ul>
+            <li><code>https://rport.company.com</code></li>
+            <li><code>https://rport-prod.company.com</code></li>
+          </ul>
+          <p>Add these exact URLs to the allowed sites list.</p>
+        </div>
+
+        <div class="note">
+          <strong>💡 Tip:</strong> You can use wildcards like <code>https://*.company.com/*</code> to allow all subdomains.
+        </div>
+      </section>
+
+      <section>
+        <h2>Option 2: Block Specific Sites</h2>
+        <p>If you want the extension on most sites but want to exclude a few (like Gmail, social media, etc.):</p>
+
+        <div class="step-card">
+          <h3>Step 1: Visit the Site You Want to Block</h3>
+          <p>Go to the website where you don't want AI Code Buddy to run (e.g., Gmail, Facebook)</p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 2: Click the Extension Icon</h3>
+          <p>Click the AI Code Buddy icon in your Chrome toolbar (top-right)</p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 3: Right-Click for Options</h3>
+          <p><strong>Right-click</strong> on the extension icon and select:</p>
+          <p><code>This can't read or change site data</code></p>
+          <p style="margin-top: 10px;">Or choose:</p>
+          <ul>
+            <li><strong>"When you click the extension"</strong> - Only works when you manually activate it</li>
+            <li><strong>"On this site"</strong> - Always works on this specific site</li>
+            <li><strong>"On all sites"</strong> - Works everywhere (default)</li>
+          </ul>
+        </div>
+
+        <div class="note">
+          <strong>⚠️ Note:</strong> This setting is per-site. You need to do this for each site you want to block.
+        </div>
+      </section>
+
+      <section>
+        <h2>Option 3: Temporarily Disable</h2>
+        <p>Need to disable the extension temporarily without uninstalling?</p>
+
+        <div class="step-card">
+          <h3>Step 1: Open Extensions</h3>
+          <p>Go to <code>chrome://extensions/</code></p>
+        </div>
+
+        <div class="step-card">
+          <h3>Step 2: Toggle Off</h3>
+          <p>Find AI Code Buddy and toggle the switch to <strong>OFF</strong></p>
+          <p>The extension will be completely disabled on all sites</p>
+        </div>
+
+        <div class="note">
+          <strong>🔄 Re-enable:</strong> Just toggle the switch back to <strong>ON</strong> when you need it again.
+        </div>
+      </section>
+
+      <section>
+        <h2>Common Scenarios</h2>
+
+        <h3>Scenario 1: Work Only (RPort + Azure DevOps)</h3>
+        <div class="example">
+          <p><strong>Goal:</strong> Only run on work-related sites</p>
+          <p><strong>Solution:</strong> Use "On specific sites" and add:</p>
+          <ul>
+            <li><code>https://rport.yourcompany.com/*</code></li>
+            <li><code>https://dev.azure.com/yourorg/*</code></li>
+            <li><code>https://*.visualstudio.com/*</code></li>
+          </ul>
+        </div>
+
+        <h3>Scenario 2: Development Tools Only</h3>
+        <div class="example">
+          <p><strong>Goal:</strong> Use on GitHub, GitLab, and local dev servers</p>
+          <p><strong>Solution:</strong> Use "On specific sites" and add:</p>
+          <ul>
+            <li><code>https://github.com/*</code></li>
+            <li><code>https://gitlab.com/*</code></li>
+            <li><code>http://localhost/*</code></li>
+            <li><code>http://127.0.0.1/*</code></li>
+          </ul>
+        </div>
+
+        <h3>Scenario 3: Everywhere Except Social Media</h3>
+        <div class="example">
+          <p><strong>Goal:</strong> Run everywhere except Facebook, Twitter, Instagram</p>
+          <p><strong>Solution:</strong> Keep "On all sites", then block specific sites:</p>
+          <ol>
+            <li>Visit <code>facebook.com</code></li>
+            <li>Right-click extension icon → "This can't read or change site data"</li>
+            <li>Repeat for Twitter, Instagram, etc.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>Troubleshooting</h2>
+
+        <h3>Extension Not Working on a Site?</h3>
+        <ol>
+          <li>Check <code>chrome://extensions/</code></li>
+          <li>Click "Details" on AI Code Buddy</li>
+          <li>Verify "Site access" includes the site</li>
+          <li>Add the site if it's missing</li>
+          <li>Refresh the page</li>
+        </ol>
+
+        <h3>Buttons Still Appearing on Blocked Sites?</h3>
+        <ol>
+          <li>Refresh the page (Ctrl+R or Cmd+R)</li>
+          <li>Clear browser cache if needed</li>
+          <li>Verify site access settings are correct</li>
+        </ol>
+
+        <h3>Can't Find "Site Access" Option?</h3>
+        <div class="warning">
+          <strong>⚠️ Important:</strong> The "Site access" setting only appears if you installed the extension as a Chrome Web Store extension. If you loaded it as an "unpacked extension" (developer mode), you won't see this option.
+        </div>
+      </section>
+
+      <section>
+        <h2>Additional Resources</h2>
+        <ul>
+          <li><a href="quick-start.html">Quick Start Guide</a></li>
+          <li><a href="api-keys.html">Setting Up API Keys</a></li>
+          <li><a href="security.html">Security & Privacy</a></li>
+          <li><a href="troubleshooting.html">Troubleshooting Guide</a></li>
+          <li><a href="index.html">Back to Documentation Home</a></li>
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="#" target="_blank" class="install-link">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="site-specific-prompts.html">Site-Specific Prompts</a>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="install-links.js"></script>
 </body>
 </html>

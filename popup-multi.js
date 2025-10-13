@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function improveSelectedText() {
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      
+
       if (!tab) {
         showNotification('No active tab found', 'error');
         return;
@@ -477,13 +477,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      await chrome.tabs.sendMessage(tab.id, { action: 'improveSelected' });
-      showNotification('Check the page for improved script', 'success');
-      
-      setTimeout(() => window.close(), 1500);
+      // Send message to content script (fire and forget - don't wait for response)
+      chrome.tabs.sendMessage(tab.id, { action: 'improveSelected' }).catch(err => {
+        console.warn('Content script may not be ready:', err);
+        // This is expected if content script hasn't loaded yet
+      });
+
+      showNotification('Processing selected text...', 'info');
+
+      // Close popup after a short delay
+      setTimeout(() => window.close(), 800);
     } catch (error) {
       console.error('Error improving selected text:', error);
-      showNotification('Failed to improve text', 'error');
+      showNotification('Failed to send request. Try again.', 'error');
     }
   }
 

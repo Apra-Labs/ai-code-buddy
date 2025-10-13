@@ -724,9 +724,8 @@
     });
 
     // "Improve Further" button - sends current prompt back to AI for iteration
-
-    if (sourceOutputElement && sourceButton) {
-      iterateButton.addEventListener('click', async () => {
+    // Always enable this button - it works with or without source context
+    iterateButton.addEventListener('click', async () => {
         // Get current values from textareas
         const currentPrompt = promptTextarea.value;
         const currentScript = scriptTextarea.value;
@@ -793,11 +792,7 @@
           // Reset button state
           iterateButton.disabled = false;
         }
-      });
-    } else {
-      // Hide iterate button if we don't have source context
-      iterateButton.style.display = 'none';
-    }
+    });
   }
 
   // Escape HTML for display
@@ -816,31 +811,51 @@
       console.log('  - Stack trace:', new Error().stack);
 
       // Handle text selection improvement
-      const selectedText = window.getSelection().toString();
+      const selectedText = window.getSelection().toString().trim();
       console.log('  - Selected text length:', selectedText.length);
 
       if (selectedText) {
+        // Show loading notification
+        showNotification('Analyzing selected text...', 'info');
+
+        // Send to background for AI processing
         chrome.runtime.sendMessage({
           action: 'improveScript',
           data: {
             script: selectedText
           }
         }).then(response => {
-          if (response.success) {
+          if (response && response.success) {
             improvedScript = response.improvedScript;
-            showNotification('Script improved! Click "Insert Improved Script" to use it.', 'success');
-            
-            // Show insert buttons
-            document.querySelectorAll('.claude-insert-btn').forEach(btn => {
-              btn.style.display = 'inline-flex';
-              btn.disabled = false;
-              btn.classList.add('ready');
-            });
+            originalScript = selectedText;
+            lastCommandOutput = 'Selected text improvement';
+
+            console.log('✓ Received improved script from selected text');
+
+            // Try to find the closest input field for insertion
+            const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
+            lastTriggeredInputElement = possibleInputs.length > 0 ? possibleInputs[0] : null;
+
+            // Show the modal with the improved script
+            showImprovedScriptModal(improvedScript);
+
+            showNotification('Text improved! Check the modal.', 'success');
+          } else {
+            const errorMsg = response?.error || 'Failed to improve text';
+            showNotification(errorMsg, 'error');
+            console.error('improveSelected error:', errorMsg);
           }
+        }).catch(error => {
+          console.error('Error improving selected text:', error);
+          showNotification('Error: ' + error.message, 'error');
         });
       } else {
         showNotification('Please select some text first', 'warning');
+        console.warn('No text selected');
       }
+
+      // Return true to indicate async response
+      return true;
     }
   });
 

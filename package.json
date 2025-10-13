@@ -4,8 +4,8 @@
   "description": "Turn any web terminal into an AI-powered command center",
   "main": "background.js",
   "scripts": {
-    "test": "node test/popup-multi.test.js && node test/conversation-context.test.js && node test/error-detection.test.js && node test/version-display.test.js && node test/install-config.test.js && node test/clear-settings-modal.test.js && node test/export-import-config.test.js",
-    "test:unit": "node test/popup-multi.test.js && node test/conversation-context.test.js && node test/error-detection.test.js && node test/version-display.test.js && node test/clear-settings-modal.test.js && node test/export-import-config.test.js",
+    "test": "node test/popup-multi.test.js && node test/conversation-context.test.js && node test/error-detection.test.js && node test/version-display.test.js && node test/install-config.test.js && node test/clear-settings-modal.test.js && node test/export-import-config.test.js && node test/site-prompts.test.js",
+    "test:unit": "node test/popup-multi.test.js && node test/conversation-context.test.js && node test/error-detection.test.js && node test/version-display.test.js && node test/clear-settings-modal.test.js && node test/export-import-config.test.js && node test/site-prompts.test.js",
     "test:model-migration": "node test/popup-multi.test.js",
     "test:conversation": "node test/conversation-context.test.js",
     "test:error-detection": "node test/error-detection.test.js",
@@ -13,6 +13,7 @@
     "test:install-config": "node test/install-config.test.js",
     "test:modal": "node test/clear-settings-modal.test.js",
     "test:export-import": "node test/export-import-config.test.js",
+    "test:site-prompts": "node test/site-prompts.test.js",
     "test:validate": "cd icons && npm install && cd .. && node test/image-validator.js && node test/link-validator.js",
     "test:images": "cd icons && npm install && cd .. && node test/image-validator.js",
     "test:links": "node test/link-validator.js",

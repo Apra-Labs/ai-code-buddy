@@ -1,8 +1,8 @@
 // AI Code Buddy - Background Script
 // Handles multiple AI provider integrations and message passing
 
-// Import provider configuration
-importScripts('providers.js');
+// Import provider configuration and site-prompts utilities
+importScripts('providers.js', 'site-prompts.js');
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -22,9 +22,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Handle output analysis request
 async function handleAnalyzeOutput(data) {
   try {
-    const { output, script, conversationHistory = [] } = data;
+    const { output, script, conversationHistory = [], url } = data;
 
-    // Get settings including provider type
+    // Get settings including provider type and site prompts
     const settings = await chrome.storage.sync.get([
       'provider',
       'apiKey',
@@ -34,7 +34,9 @@ async function handleAnalyzeOutput(data) {
       'apiVersion',
       'organization',
       'customHeaders',
-      'requestTemplate'
+      'requestTemplate',
+      'sitePrompts',
+      'customPrompt'
     ]);
 
     // Default to Claude if no provider set
@@ -43,6 +45,17 @@ async function handleAnalyzeOutput(data) {
     // Check if API key is configured (unless using local providers)
     if (!settings.apiKey && providerType !== 'ollama') {
       return { success: false, error: 'API key not configured' };
+    }
+
+    // Get site-specific or default system prompt
+    const sitePrompts = settings.sitePrompts || {};
+    const defaultPrompt = settings.customPrompt || '';
+    let systemPrompt = '';
+
+    if (url) {
+      systemPrompt = getPromptForUrl(url, sitePrompts, defaultPrompt);
+    } else {
+      systemPrompt = defaultPrompt;
     }
 
     // Build conversation context if there's history
@@ -59,8 +72,9 @@ async function handleAnalyzeOutput(data) {
       contextSection += '\nThe script is STILL failing. Learn from previous attempts and try a DIFFERENT approach.\n';
     }
 
-    // Construct the analysis prompt with conversation awareness
-    const prompt = `You are helping debug a command or script that ${conversationHistory.length > 0 ? 'is STILL failing after ' + conversationHistory.length + ' attempts' : 'may have failed or produced unexpected output'}.
+    // Construct the analysis prompt with system prompt and conversation awareness
+    const systemContext = systemPrompt ? `${systemPrompt}\n\n` : '';
+    const prompt = `${systemContext}You are helping debug a command or script that ${conversationHistory.length > 0 ? 'is STILL failing after ' + conversationHistory.length + ' attempts' : 'may have failed or produced unexpected output'}.
 ${contextSection}
 
 ## Current Attempt:
@@ -132,9 +146,9 @@ Return only the executable script code, nothing else.`;
 // Handle script improvement request
 async function handleImproveScript(data) {
   try {
-    const { script } = data;
-    
-    // Get settings including provider type
+    const { script, url } = data;
+
+    // Get settings including provider type and site prompts
     const settings = await chrome.storage.sync.get([
       'provider',
       'apiKey',
@@ -144,7 +158,9 @@ async function handleImproveScript(data) {
       'apiVersion',
       'organization',
       'customHeaders',
-      'requestTemplate'
+      'requestTemplate',
+      'sitePrompts',
+      'customPrompt'
     ]);
     
     // Default to Claude if no provider set
@@ -155,8 +171,20 @@ async function handleImproveScript(data) {
       return { success: false, error: 'API key not configured' };
     }
 
-    // Construct the improvement prompt
-    const prompt = `Improve the following command or script for better error handling, efficiency, and reliability:
+    // Get site-specific or default system prompt
+    const sitePrompts = settings.sitePrompts || {};
+    const defaultPrompt = settings.customPrompt || '';
+    let systemPrompt = '';
+
+    if (url) {
+      systemPrompt = getPromptForUrl(url, sitePrompts, defaultPrompt);
+    } else {
+      systemPrompt = defaultPrompt;
+    }
+
+    // Construct the improvement prompt with system context
+    const systemContext = systemPrompt ? `${systemPrompt}\n\n` : '';
+    const prompt = `${systemContext}Improve the following command or script for better error handling, efficiency, and reliability:
 
 ${script}
 

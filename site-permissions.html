@@ -8,26 +8,42 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <style>
-    .hero-section {
-      background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
-      color: white;
-      padding: 60px 20px;
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);
+      padding: 60px 0;
       text-align: center;
-      margin: -20px -20px 40px -20px;
+      border-bottom: 1px solid var(--border-light);
     }
-
-    .hero-section h1 {
-      font-size: 2.5em;
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
       margin-bottom: 15px;
-      font-weight: 700;
+      color: var(--text-dark);
     }
-
-    .hero-section .tagline {
-      font-size: 1.2em;
-      opacity: 0.95;
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
       max-width: 700px;
       margin: 0 auto;
-      line-height: 1.5;
+    }
+    .content-section {
+      padding: 60px 0;
     }
 
     .options-grid {
@@ -256,15 +272,17 @@
     </div>
   </div>
 
-  <div class="container" style="max-width: 1000px; margin-top: 40px;">
-    <div class="hero-section">
-      <h1>🔐 Site Permissions</h1>
-      <p class="tagline">
-        Control where AI Code Buddy runs. Simple, powerful, and secure.
-      </p>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Site Permissions</h1>
+      <p>Control where AI Code Buddy runs. Simple, powerful, and secure.</p>
     </div>
+  </section>
 
-    <section>
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container" style="max-width: 1000px;">
       <h2>Choose Your Approach</h2>
       <p style="text-align: center; color: #666; margin-bottom: 30px;">
         Pick the permission strategy that works best for you
@@ -416,7 +434,8 @@
         <a href="troubleshooting.html" style="color: #94BA33; text-decoration: none; font-weight: 600;">Troubleshooting →</a>
       </div>
     </section>
-  </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">

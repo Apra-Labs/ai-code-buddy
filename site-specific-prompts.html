@@ -9,36 +9,52 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <style>
-    .hero-section {
-      background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
-      color: white;
-      padding: 60px 20px;
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);
+      padding: 60px 0;
       text-align: center;
-      margin: -20px -20px 40px -20px;
+      border-bottom: 1px solid var(--border-light);
     }
-
-    .hero-section h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      font-weight: 700;
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
     }
-
-    .hero-section .tagline {
-      font-size: 1.3em;
-      opacity: 0.95;
-      max-width: 800px;
-      margin: 0 auto 30px;
-      line-height: 1.6;
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto;
     }
-
     .feature-badge {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--apra-green);
+      color: white;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 0.9em;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+    }
+    .content-section {
+      padding: 60px 0;
     }
 
     .use-case-grid {
@@ -173,87 +189,54 @@
       line-height: 1.6;
     }
 
-    .setup-steps {
+    .section-card {
       background: white;
-      border: 2px solid #94BA33;
+      border: 2px solid var(--border-light);
       border-radius: 12px;
-      padding: 30px 50px;
-      margin: 40px auto;
-      max-width: 700px;
+      padding: 40px;
+      margin-bottom: 30px;
     }
-
-    .setup-steps h2 {
-      color: #94BA33;
-      margin-bottom: 35px;
+    .section-card h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+    }
+    .section-card h3 {
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .section-card p, .section-card li {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .section-card code {
+      background: var(--bg-light);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+    .flow-diagram {
+      background: var(--bg-light);
+      padding: 30px;
+      border-radius: 12px;
+      margin: 25px 0;
       text-align: center;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 2;
     }
-
-    .step-wrapper {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 10px;
-    }
-
-    .step-wrapper:last-child {
-      margin-bottom: 0;
-    }
-
-    .setup-steps .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 15px;
-    }
-
-    .setup-steps .step::after {
-      content: none !important;
-      display: none !important;
-    }
-
-    .step-arrow {
-      text-align: center;
-      margin: 5px 0 5px 0;
-      padding-left: 12px;
-    }
-
-    .step-arrow::before {
-      content: '↓';
-      font-size: 26px;
-      color: #94BA33;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    .step-number {
-      background: #94BA33;
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.2em;
-      flex-shrink: 0;
-    }
-
-    .step-content {
-      flex: 1;
-      max-width: 550px;
-    }
-
-    .step-content h3 {
-      margin-top: 8px;
-      margin-bottom: 8px;
-      color: #333;
-      line-height: 1.3;
-      font-size: 1.15em;
-    }
-
-    .step-content p {
-      color: #666;
-      line-height: 1.65;
-      margin: 0;
+    .flow-step {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px auto;
+      max-width: 600px;
+      border-left: 4px solid var(--apra-green);
     }
 
     .pattern-examples {
@@ -369,24 +352,28 @@
   </header>
 
   <!-- Breadcrumb -->
-  <div style="padding: 20px 0; background: var(--bg-light);">
-    <div class="container" style="max-width: 1000px;">
-      <a href="index.html" style="color: var(--apra-green); text-decoration: none; font-weight: 500;">Home</a>
-      <span style="color: var(--text-medium); margin: 0 10px;">&gt;</span>
-      <a href="index.html#docs" style="color: var(--apra-green); text-decoration: none; font-weight: 500;">Docs</a>
-      <span style="color: var(--text-medium); margin: 0 10px;">&gt;</span>
-      <span style="color: var(--text-medium);">Site-Specific Prompts</span>
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>&gt;</span>
+      <a href="index.html#docs">Docs</a>
+      <span>&gt;</span>
+      <span>Site-Specific Prompts</span>
     </div>
   </div>
 
-  <div class="container" style="max-width: 1000px; margin-top: 40px;">
-    <div class="hero-section">
-      <div class="feature-badge">✨ NEW IN v2.2.0</div>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="feature-badge">NEW IN v2.2.0</div>
       <h1>Site-Specific System Prompts</h1>
-      <p class="tagline">
-        One AI. Multiple Personalities. Tailored expertise for every website you visit.
-      </p>
+      <p>One AI. Multiple Personalities. Tailored expertise for every website you visit.</p>
     </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container" style="max-width: 1000px;">
 
     <section>
       <h2>What Are Site-Specific Prompts?</h2>
@@ -553,82 +540,44 @@
       </div>
     </div>
 
-    <div class="setup-steps">
-      <h2>🚀 How to Set Up Site-Specific Prompts</h2>
+    <div class="section-card">
+      <h2>How to Set Up Site-Specific Prompts</h2>
+      <p>Follow these steps to configure context-aware AI behavior for different websites:</p>
 
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Open Extension Settings</h3>
-            <p>Click the AI Code Buddy extension icon and navigate to the <strong>Advanced</strong> tab.</p>
-          </div>
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <strong>1. Open Extension Settings</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Click the AI Code Buddy extension icon and navigate to the <strong>Advanced</strong> tab</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Find Site-Specific Prompts Section</h3>
-            <p>Scroll down to the "Site-Specific System Prompts" section.</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>2. Find Site-Specific Prompts Section</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Scroll down to the "Site-Specific System Prompts" section</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Click "Add Site-Specific Prompt"</h3>
-            <p>A modal will open with three fields to configure.</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>3. Click "Add Site-Specific Prompt"</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">A modal will open with three fields to configure</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Enter Pattern</h3>
-            <p>Specify which websites this prompt applies to using exact domain or wildcards (e.g., <code>*github.com</code> or <code>*.azure.com</code>).</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>4. Enter Pattern</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Specify which websites this prompt applies to using exact domain or wildcards (e.g., *github.com or *.azure.com)</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">5</div>
-          <div class="step-content">
-            <h3>Add Name (Optional)</h3>
-            <p>Give it a friendly name like "DevOps Build Logs" or "Linux Administration".</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>5. Add Name (Optional)</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Give it a friendly name like "DevOps Build Logs" or "Linux Administration"</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">6</div>
-          <div class="step-content">
-            <h3>Write Your System Prompt</h3>
-            <p>Describe the AI's role, expertise, and how it should respond. Be specific about what you want it to focus on.</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>6. Write Your System Prompt</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Describe the AI's role, expertise, and how it should respond. Be specific about what you want it to focus on</span>
         </div>
-        <div class="step-arrow"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step">
-          <div class="step-number">7</div>
-          <div class="step-content">
-            <h3>Save and Test</h3>
-            <p>Click Save, visit a matching website, and use the AI. It will automatically apply your custom prompt!</p>
-          </div>
+        <div style="font-size: 20px; margin: 15px 0;">↓</div>
+        <div class="flow-step">
+          <strong>7. Save and Test</strong><br>
+          <span style="font-size: 12px; color: var(--text-light);">Click Save, visit a matching website, and use the AI. It will automatically apply your custom prompt!</span>
         </div>
       </div>
     </div>
@@ -707,7 +656,8 @@
       <a href="quick-start.html" class="cta-button">Get Started →</a>
     </div>
 
-  </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">

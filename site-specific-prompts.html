@@ -7,7 +7,7 @@
   <meta name="description" content="Configure different AI behavior for different websites. Tailored expertise automatically based on which site you're using.">
   <meta name="ai-code-buddy-ignore" content="true">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <style>
     .hero-section {
       background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
@@ -177,24 +177,50 @@
       background: white;
       border: 2px solid #94BA33;
       border-radius: 12px;
-      padding: 30px;
-      margin: 40px 0;
+      padding: 30px 50px;
+      margin: 40px auto;
+      max-width: 700px;
     }
 
     .setup-steps h2 {
       color: #94BA33;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
+      text-align: center;
     }
 
-    .step {
+    .step-wrapper {
       display: flex;
-      gap: 20px;
-      margin-bottom: 25px;
-      align-items: flex-start;
+      flex-direction: column;
+      margin-bottom: 10px;
     }
 
-    .step:last-child {
+    .step-wrapper:last-child {
       margin-bottom: 0;
+    }
+
+    .setup-steps .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .setup-steps .step::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .step-arrow {
+      text-align: center;
+      margin: 5px 0 5px 0;
+      padding-left: 12px;
+    }
+
+    .step-arrow::before {
+      content: '↓';
+      font-size: 26px;
+      color: #94BA33;
+      font-weight: bold;
+      line-height: 1;
     }
 
     .step-number {
@@ -209,18 +235,25 @@
       font-weight: 700;
       font-size: 1.2em;
       flex-shrink: 0;
-      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+      max-width: 550px;
     }
 
     .step-content h3 {
-      margin-top: 0;
+      margin-top: 8px;
       margin-bottom: 8px;
       color: #333;
+      line-height: 1.3;
+      font-size: 1.15em;
     }
 
     .step-content p {
       color: #666;
-      line-height: 1.6;
+      line-height: 1.65;
+      margin: 0;
     }
 
     .pattern-examples {
@@ -511,68 +544,79 @@
     <div class="setup-steps">
       <h2>🚀 How to Set Up Site-Specific Prompts</h2>
 
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3>Open Extension Settings</h3>
-          <p>Click the AI Code Buddy extension icon and navigate to the <strong>Advanced</strong> tab.</p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Open Extension Settings</h3>
+            <p>Click the AI Code Buddy extension icon and navigate to the <strong>Advanced</strong> tab.</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3>Find Site-Specific Prompts Section</h3>
-          <p>Scroll down to the "Site-Specific System Prompts" section.</p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Find Site-Specific Prompts Section</h3>
+            <p>Scroll down to the "Site-Specific System Prompts" section.</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3>Click "Add Site-Specific Prompt"</h3>
-          <p>A modal will open with three fields to configure.</p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Click "Add Site-Specific Prompt"</h3>
+            <p>A modal will open with three fields to configure.</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3>Enter Pattern</h3>
-          <p>
-            Specify which websites this prompt applies to using exact domain or wildcards
-            (e.g., <code>*github.com</code> or <code>*.azure.com</code>).
-          </p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Enter Pattern</h3>
+            <p>Specify which websites this prompt applies to using exact domain or wildcards (e.g., <code>*github.com</code> or <code>*.azure.com</code>).</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <h3>Add Name (Optional)</h3>
-          <p>Give it a friendly name like "DevOps Build Logs" or "Linux Administration".</p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h3>Add Name (Optional)</h3>
+            <p>Give it a friendly name like "DevOps Build Logs" or "Linux Administration".</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">6</div>
-        <div class="step-content">
-          <h3>Write Your System Prompt</h3>
-          <p>
-            Describe the AI's role, expertise, and how it should respond. Be specific about
-            what you want it to focus on.
-          </p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h3>Write Your System Prompt</h3>
+            <p>Describe the AI's role, expertise, and how it should respond. Be specific about what you want it to focus on.</p>
+          </div>
         </div>
+        <div class="step-arrow"></div>
       </div>
 
-      <div class="step">
-        <div class="step-number">7</div>
-        <div class="step-content">
-          <h3>Save and Test</h3>
-          <p>
-            Click Save, visit a matching website, and use the AI. It will automatically
-            apply your custom prompt!
-          </p>
+      <div class="step-wrapper">
+        <div class="step">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <h3>Save and Test</h3>
+            <p>Click Save, visit a matching website, and use the AI. It will automatically apply your custom prompt!</p>
+          </div>
         </div>
       </div>
     </div>

@@ -40,7 +40,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     customPrompt: document.getElementById('customPrompt'),
     maxTokens: document.getElementById('maxTokens'),
     temperature: document.getElementById('temperature'),
-    timeout: document.getElementById('timeout')
+    timeout: document.getElementById('timeout'),
+
+    // Site-specific prompts
+    sitePromptsList: document.getElementById('site-prompts-list'),
+    addSitePrompt: document.getElementById('addSitePrompt')
   };
 
   // Initialize
@@ -64,7 +68,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         'customPrompt',
         'maxTokens',
         'temperature',
-        'timeout'
+        'timeout',
+        'sitePrompts'
       ]);
 
       // Load provider selection
@@ -99,6 +104,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (settings.temperature) elements.temperature.value = settings.temperature;
       if (settings.timeout) elements.timeout.value = settings.timeout;
 
+      // Load site-specific prompts
+      if (settings.sitePrompts) {
+        renderSitePrompts(settings.sitePrompts);
+      }
+
     } catch (error) {
       console.error('Error loading settings:', error);
       showNotification('Error loading settings', 'error');
@@ -130,6 +140,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     elements.exportConfig.addEventListener('click', exportConfiguration);
     elements.importConfig.addEventListener('click', () => elements.importFile.click());
     elements.importFile.addEventListener('change', importConfiguration);
+
+    // Site-specific prompts
+    elements.addSitePrompt.addEventListener('click', () => showSitePromptModal());
   }
 
   // Switch tabs
@@ -727,5 +740,193 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error displaying version:', error);
       versionElement.textContent = 'Version info unavailable';
     }
+  }
+
+  // Site-specific prompts functions
+  function renderSitePrompts(sitePrompts) {
+    if (!elements.sitePromptsList) return;
+
+    const entries = Object.entries(sitePrompts || {});
+    if (entries.length === 0) {
+      elements.sitePromptsList.innerHTML = '<div style="font-size: 10px; color: #888; padding: 8px; text-align: center;">No site-specific prompts configured</div>';
+      return;
+    }
+
+    elements.sitePromptsList.innerHTML = entries.map(([pattern, config]) => `
+      <div class="site-prompt-card ${config.enabled ? '' : 'disabled'}" data-pattern="${pattern}">
+        <div class="site-prompt-header">
+          <div class="site-prompt-pattern">${pattern}</div>
+          <div class="site-prompt-controls">
+            <div class="site-prompt-toggle ${config.enabled ? 'enabled' : ''}" data-pattern="${pattern}"></div>
+            <button class="site-prompt-delete" data-pattern="${pattern}">Delete</button>
+          </div>
+        </div>
+        ${config.name ? `<div class="site-prompt-name">${config.name}</div>` : ''}
+        <div class="site-prompt-text">${config.prompt || ''}</div>
+      </div>
+    `).join('');
+
+    // Add event listeners
+    elements.sitePromptsList.querySelectorAll('.site-prompt-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        const pattern = e.target.dataset.pattern;
+        toggleSitePrompt(pattern);
+      });
+    });
+
+    elements.sitePromptsList.querySelectorAll('.site-prompt-delete').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const pattern = e.target.dataset.pattern;
+        const confirmed = await showConfirmDialog(
+          'Delete Site Prompt',
+          `Delete prompt for "${pattern}"?`
+        );
+        if (confirmed) {
+          deleteSitePrompt(pattern);
+        }
+      });
+    });
+
+    elements.sitePromptsList.querySelectorAll('.site-prompt-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Only open modal if not clicking on controls
+        if (!e.target.classList.contains('site-prompt-toggle') &&
+            !e.target.classList.contains('site-prompt-delete')) {
+          const pattern = card.dataset.pattern;
+          editSitePrompt(pattern);
+        }
+      });
+      card.style.cursor = 'pointer';
+    });
+  }
+
+  async function toggleSitePrompt(pattern) {
+    try {
+      const settings = await chrome.storage.sync.get('sitePrompts');
+      const sitePrompts = settings.sitePrompts || {};
+
+      if (sitePrompts[pattern]) {
+        sitePrompts[pattern].enabled = !sitePrompts[pattern].enabled;
+        await chrome.storage.sync.set({ sitePrompts });
+        renderSitePrompts(sitePrompts);
+      }
+    } catch (error) {
+      console.error('Error toggling site prompt:', error);
+      showNotification('Failed to toggle prompt', 'error');
+    }
+  }
+
+  async function deleteSitePrompt(pattern) {
+    try {
+      const settings = await chrome.storage.sync.get('sitePrompts');
+      const sitePrompts = settings.sitePrompts || {};
+
+      delete sitePrompts[pattern];
+      await chrome.storage.sync.set({ sitePrompts });
+      renderSitePrompts(sitePrompts);
+      showNotification('Site prompt deleted', 'success');
+    } catch (error) {
+      console.error('Error deleting site prompt:', error);
+      showNotification('Failed to delete prompt', 'error');
+    }
+  }
+
+  function editSitePrompt(pattern) {
+    chrome.storage.sync.get('sitePrompts').then(settings => {
+      const sitePrompts = settings.sitePrompts || {};
+      const config = sitePrompts[pattern];
+      if (config) {
+        showSitePromptModal(pattern, config);
+      }
+    });
+  }
+
+  function showSitePromptModal(existingPattern = null, existingConfig = null) {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'site-prompt-modal';
+    modal.innerHTML = `
+      <div class="site-prompt-modal-overlay"></div>
+      <div class="site-prompt-modal-content">
+        <div class="site-prompt-modal-header">
+          <h3>${existingPattern ? 'Edit' : 'Add'} Site-Specific Prompt</h3>
+        </div>
+        <div class="site-prompt-modal-body">
+          <div class="form-group">
+            <label>Site Pattern</label>
+            <input type="text" id="modal-pattern" placeholder="e.g., *.rport.io or *github.com" value="${existingPattern || ''}" ${existingPattern ? 'readonly' : ''}>
+            <div class="site-prompt-example">Examples: rport.io, *.example.com, *github.com</div>
+          </div>
+          <div class="form-group">
+            <label>Name (optional)</label>
+            <input type="text" id="modal-name" placeholder="e.g., RPort Terminal" value="${existingConfig?.name || ''}">
+          </div>
+          <div class="form-group">
+            <label>System Prompt</label>
+            <textarea id="modal-prompt" placeholder="Describe AI behavior for this site...">${existingConfig?.prompt || ''}</textarea>
+            <div class="site-prompt-example">E.g., "You are a Linux expert. Focus on bash commands."</div>
+          </div>
+        </div>
+        <div class="site-prompt-modal-footer">
+          <button class="btn btn-secondary modal-cancel">Cancel</button>
+          <button class="btn btn-primary modal-save">Save</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Event listeners
+    const overlay = modal.querySelector('.site-prompt-modal-overlay');
+    const cancelBtn = modal.querySelector('.modal-cancel');
+    const saveBtn = modal.querySelector('.modal-save');
+    const patternInput = modal.querySelector('#modal-pattern');
+    const nameInput = modal.querySelector('#modal-name');
+    const promptTextarea = modal.querySelector('#modal-prompt');
+
+    const closeModal = () => modal.remove();
+
+    overlay.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    saveBtn.addEventListener('click', async () => {
+      const pattern = patternInput.value.trim();
+      const name = nameInput.value.trim();
+      const prompt = promptTextarea.value.trim();
+
+      if (!pattern) {
+        showNotification('Pattern is required', 'error');
+        return;
+      }
+
+      if (!prompt) {
+        showNotification('Prompt is required', 'error');
+        return;
+      }
+
+      try {
+        const settings = await chrome.storage.sync.get('sitePrompts');
+        const sitePrompts = settings.sitePrompts || {};
+
+        // If editing and pattern changed, delete old one
+        if (existingPattern && existingPattern !== pattern) {
+          delete sitePrompts[existingPattern];
+        }
+
+        sitePrompts[pattern] = {
+          name,
+          prompt,
+          enabled: existingConfig?.enabled !== false
+        };
+
+        await chrome.storage.sync.set({ sitePrompts });
+        renderSitePrompts(sitePrompts);
+        showNotification('Site prompt saved', 'success');
+        closeModal();
+      } catch (error) {
+        console.error('Error saving site prompt:', error);
+        showNotification('Failed to save prompt', 'error');
+      }
+    });
   }
 });

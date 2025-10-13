@@ -421,7 +421,8 @@
         data: {
           output: lastCommandOutput,
           script: originalScript,
-          conversationHistory: conversationHistory // Include previous attempts
+          conversationHistory: conversationHistory, // Include previous attempts
+          url: window.location.href // Include current page URL for site-specific prompts
         }
       });
 
@@ -755,7 +756,8 @@
             data: {
               output: lastCommandOutput,
               script: currentPrompt, // Use the user's edited prompt
-              conversationHistory: conversationHistory
+              conversationHistory: conversationHistory,
+              url: window.location.href // Include current page URL for site-specific prompts
             }
           });
 
@@ -822,7 +824,8 @@
         chrome.runtime.sendMessage({
           action: 'improveScript',
           data: {
-            script: selectedText
+            script: selectedText,
+            url: window.location.href // Include current page URL for site-specific prompts
           }
         }).then(response => {
           if (response && response.success) {

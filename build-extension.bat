@@ -45,6 +45,7 @@ copy manifest.json "%BUILD_DIR%\" >nul
 copy content.js "%BUILD_DIR%\" >nul
 copy background.js "%BUILD_DIR%\" >nul
 copy providers.js "%BUILD_DIR%\" >nul
+copy site-prompts.js "%BUILD_DIR%\" >nul
 copy popup-multi.html "%BUILD_DIR%\" >nul
 copy popup-multi.js "%BUILD_DIR%\" >nul
 copy styles.css "%BUILD_DIR%\" >nul

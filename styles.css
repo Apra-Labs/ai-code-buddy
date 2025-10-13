@@ -129,10 +129,31 @@
 /* Insert button specific */
 .claude-insert-btn {
   background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  display: none !important; /* Hidden by default, only shown when script is ready */
 }
 
 .claude-insert-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #1e9db3 0%, #117a8b 100%);
+}
+
+/* Show insert button on hover of wrapper or when in ready state */
+.claude-insert-wrapper:hover .claude-insert-btn:not(.ready),
+.claude-insert-btn.ready {
+  display: inline-flex !important;
+}
+
+/* Hide send buttons initially, show on hover */
+.claude-button-wrapper:not(:hover) .claude-send-btn:not(.loading) {
+  opacity: 0.3;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+.claude-button-wrapper:hover .claude-send-btn,
+.claude-send-btn.loading {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 /* Notification styles */
@@ -267,8 +288,8 @@
 }
 
 /* Override potential conflicts with host page styles */
+/* Only reset styles for our button children, not the wrapper itself */
 .claude-assist-btn *,
-.claude-button-wrapper *,
 .claude-notification * {
   all: unset;
   font-family: inherit;
@@ -282,7 +303,7 @@
 }
 
 .claude-notification {
-  z-index: 10000 !important;
+  z-index: 10002 !important; /* Above modal overlay (10001) */
 }
 
 /* Tooltip for disabled state */
@@ -464,6 +485,17 @@
   background: #e0e0e0;
 }
 
+.claude-modal-iterate {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+}
+
+.claude-modal-iterate:hover {
+  background: linear-gradient(135deg, #1e9db3 0%, #117a8b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
 /* Keyboard shortcuts banner */
 .claude-shortcuts-banner {
   position: fixed;
@@ -592,5 +624,278 @@
 
   .claude-modal-close-btn:hover {
     background: #4d4d4d;
+  }
+/* Modal loading states */
+.claude-modal-iterate:disabled {
+  opacity: 0.9;
+  cursor: wait;
+}
+
+.claude-modal-iterate.loading {
+  position: relative;
+}
+
+/* AI-inspired spinner with Apra Labs branding - Orbital design */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Two counter-rotating orbits (like electrons around nucleus) */
+.spinner::before,
+.spinner::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: orbit 1.5s linear infinite;
+}
+
+/* Outer orbit - Apra Labs green (#94BA33) */
+.spinner::before {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: rgba(148, 186, 51, 0.9);
+  border-right-color: rgba(148, 186, 51, 0.6);
+}
+
+/* Inner orbit - lighter green (#b5d957) rotating opposite direction */
+.spinner::after {
+  width: 10px;
+  height: 10px;
+  border: 2px solid transparent;
+  border-top-color: rgba(181, 217, 87, 0.9);
+  border-right-color: rgba(181, 217, 87, 0.6);
+  top: 3px;
+  left: 3px;
+  animation: orbit 1s linear infinite reverse;
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Modal sections and textareas */
+.claude-modal-section {
+  margin-bottom: 20px;
+}
+
+.claude-modal-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.claude-modal-prompt,
+.claude-modal-script {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  background: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.claude-modal-prompt:focus,
+.claude-modal-script:focus {
+  outline: none;
+  border-color: #94BA33;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(148, 186, 51, 0.1);
+}
+
+/* Button styles */
+.claude-modal-footer .btn-primary {
+  background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.claude-modal-footer .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7a9b2a 0%, #5d7a1f 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(148, 186, 51, 0.4);
+}
+
+.claude-modal-footer .btn-secondary {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.claude-modal-footer .btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1e9db3 0%, #117a8b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+.claude-modal-footer .btn-tertiary {
+  background: #f0f0f0;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.claude-modal-footer .btn-tertiary:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.claude-modal-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading overlay for script section */
+.claude-modal-section.loading {
+  position: relative;
+}
+
+.claude-modal-section.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 6px;
+  backdrop-filter: blur(2px);
+}
+
+.claude-modal-section.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  z-index: 11;
+}
+
+/* Big bold AI spinner for loading overlay */
+.claude-modal-section.loading .claude-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  z-index: 12;
+}
+
+.claude-loading-spinner::before,
+.claude-loading-spinner::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Outer orbit - large and bold */
+.claude-loading-spinner::before {
+  width: 80px;
+  height: 80px;
+  border: 4px solid transparent;
+  border-top-color: rgba(148, 186, 51, 0.9);
+  border-right-color: rgba(148, 186, 51, 0.6);
+  border-bottom-color: rgba(148, 186, 51, 0.3);
+  animation: orbit 1.5s linear infinite;
+}
+
+/* Inner orbit - counter-rotating */
+.claude-loading-spinner::after {
+  width: 50px;
+  height: 50px;
+  border: 4px solid transparent;
+  border-top-color: rgba(181, 217, 87, 0.9);
+  border-right-color: rgba(181, 217, 87, 0.6);
+  border-bottom-color: rgba(181, 217, 87, 0.3);
+  top: 15px;
+  left: 15px;
+  animation: orbit 1s linear infinite reverse;
+}
+
+.claude-loading-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 60px));
+  font-size: 16px;
+  font-weight: 600;
+  color: #94BA33;
+  z-index: 12;
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Dark mode adjustments for textareas */
+@media (prefers-color-scheme: dark) {
+  .claude-modal-prompt,
+  .claude-modal-script {
+    background: #2d2d2d;
+    border-color: #444;
+    color: #d4d4d4;
+  }
+
+  .claude-modal-prompt:focus,
+  .claude-modal-script:focus {
+    background: #333;
+    border-color: #94BA33;
+  }
+
+  .claude-modal-label {
+    color: #ccc;
+  }
+
+  .claude-modal-section.loading::before {
+    background: rgba(45, 45, 45, 0.95);
+  }
+
+  .claude-loading-text {
+    color: #b5d957;
   }
 }

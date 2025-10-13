@@ -8,10 +8,10 @@
   const SELECTORS = {
     // Common selectors for command output areas
     commandOutput: [
-      'pre', 
-      'code', 
-      '.terminal', 
-      '.output', 
+      'pre',
+      'code',
+      '.terminal',
+      '.output',
       '.console',
       '.command-output',
       '.terminal-output',
@@ -33,7 +33,7 @@
       '[id*="command"]',
       '[id*="input"]'
     ]
-  };
+  }
 
   // State management
   let improvedScript = null;
@@ -41,6 +41,7 @@
   let lastCommandOutput = null;
   let customSelectors = null;
   let processedElements = new WeakSet(); // Track which elements already have buttons
+  let lastTriggeredInputElement = null; // Track which input element triggered the AI
 
   // Conversation history for context
   let conversationHistory = []; // Array of {script, output, improved} objects
@@ -108,12 +109,13 @@
 
   // Initialize extension
   async function init() {
-    console.log('RPort Claude Assistant initialized');
+    console.log('AI Code Buddy initialized');
 
     // Load custom selectors if configured
     const settings = await chrome.storage.sync.get('customSelectors');
     if (settings.customSelectors) {
       customSelectors = settings.customSelectors;
+      console.log('✓ Custom selectors loaded');
     }
 
     // Set up observers and inject buttons
@@ -178,21 +180,39 @@
       try {
         const found = document.querySelectorAll(selector);
         for (const element of found) {
+          // Check if it's an input-like element
+          const isInputLike = element.tagName === 'TEXTAREA' ||
+                              element.tagName === 'INPUT' ||
+                              element.isContentEditable ||
+                              element.contentEditable === 'true';
+
           // Skip if:
           // - Already in the list
-          // - Already processed (has our marker attribute)
-          // - Already has our button
           // - Is part of our extension UI
+          // - Is inside our modal
+          // For INPUT elements: Don't skip just because they're processed - we need to find them!
           if (elements.includes(element) ||
-              element.hasAttribute('data-claude-processed') ||
               element.hasAttribute('data-claude-extension') ||
               element.querySelector('.claude-assist-btn') ||
-              element.closest('[data-claude-extension]')) {
+              element.closest('[data-claude-extension]') ||
+              element.closest('.claude-script-modal') ||
+              element.classList.contains('claude-modal-script')) {
+            continue;
+          }
+
+          // For OUTPUT elements: Skip if processed
+          // For INPUT elements: Allow even if processed (we need to find them for "Use Script")
+          if (!isInputLike && element.hasAttribute('data-claude-processed')) {
             continue;
           }
 
           // Additional validation - check if element has content
-          if (element.textContent && element.textContent.trim().length > 0) {
+          // For input elements, we don't require text content (they could be empty)
+          if (isInputLike) {
+            // Input elements are valid even if empty
+            elements.push(element);
+          } else if (element.textContent && element.textContent.trim().length > 0) {
+            // Other elements need content
             elements.push(element);
           }
         }
@@ -228,25 +248,9 @@
       }
     });
 
-    // Find and process command input areas
-    const inputElements = findElements(
-      SELECTORS.commandInput,
-      customSelectors?.commandInput
-    );
-
-    inputElements.forEach(element => {
-      // Check if we've already processed this element
-      if (processedElements.has(element)) {
-        return;
-      }
-
-      // Double-check it doesn't have our button
-      if (!element.parentElement?.querySelector('.claude-insert-btn') &&
-          !element.nextElementSibling?.querySelector('.claude-insert-btn')) {
-        addInsertButton(element);
-        processedElements.add(element);
-      }
-    });
+    // Note: Insert buttons are no longer created since we always show the modal
+    // The modal provides better UX with editable textareas and "Use Script" button
+    // Keeping the input element detection code for future use if needed
   }
 
   // Detect if output contains error patterns
@@ -356,6 +360,12 @@
 
   // Handle sending output to Claude
   async function handleSendToClaide(outputElement, button) {
+    // Log the trigger source for debugging
+    console.log('🔵 handleSendToClaide triggered');
+    console.log('  - Output element:', outputElement);
+    console.log('  - Button:', button);
+    console.log('  - Stack trace:', new Error().stack);
+
     // Update button state
     button.classList.add('loading');
     button.querySelector('.claude-btn-text').textContent = 'Analyzing...';
@@ -364,23 +374,43 @@
     try {
       // Capture the output text
       lastCommandOutput = outputElement.textContent || outputElement.innerText || '';
-      
+
       // Try to find associated script/command (look for input field above)
       const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
       originalScript = '';
-      
-      // Find the closest input element (usually above the output)
-      for (const input of possibleInputs) {
-        if (input.value || input.textContent) {
-          originalScript = input.value || input.textContent;
-          break;
+
+      // Find the closest input element (usually above the output) and STORE IT
+      let closestInputToOutput = null;
+      if (possibleInputs.length > 0) {
+        closestInputToOutput = possibleInputs[0];
+        let minDistance = Math.abs(outputElement.compareDocumentPosition(possibleInputs[0]));
+
+        for (const input of possibleInputs) {
+          const distance = Math.abs(outputElement.compareDocumentPosition(input));
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestInputToOutput = input;
+          }
+          // Also try to get the original script from any input with content
+          if (!originalScript && (input.value || input.textContent)) {
+            originalScript = input.value || input.textContent;
+          }
         }
       }
 
+      // STORE THIS NOW - before the AI responds!
+      lastTriggeredInputElement = closestInputToOutput;
+
       // Check if API key is configured
-      const settings = await chrome.storage.sync.get('apiKey');
-      if (!settings.apiKey) {
-        showNotification('Please configure your Claude API key in the extension popup', 'error');
+      const settings = await chrome.storage.sync.get(['apiKey', 'provider']);
+
+      // Get provider display name from AI_PROVIDERS (defined in providers.js)
+      const providerName = settings.provider ?
+        (AI_PROVIDERS[settings.provider]?.name || settings.provider) :
+        'your AI provider';
+
+      if (!settings.apiKey && settings.provider !== 'ollama') {
+        showNotification(`Please configure credentials for ${providerName} in the extension popup`, 'error');
         resetButton(button);
         return;
       }
@@ -423,23 +453,32 @@
 
         console.log(`📜 Updated conversation history (${conversationHistory.length} items)`);
 
-        showNotification('Script improved successfully! Click "Insert Improved Script" to use it.', 'success');
+        showNotification('Script improved successfully!', 'success');
 
-        // Show all insert buttons
-        const insertButtons = document.querySelectorAll('.claude-insert-btn');
-        console.log(`Found ${insertButtons.length} insert buttons to show`);
+        // Find and show ONLY the insert button closest to this output element
+        const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
 
-        insertButtons.forEach(btn => {
-          btn.style.display = 'inline-flex';
-          btn.disabled = false;
-          btn.classList.add('ready');
-          console.log('Showing insert button:', btn);
-        });
+        // Find the closest input element FIRST, before deciding what to do
+        let closestInput = null;
+        if (possibleInputs.length > 0) {
+          closestInput = possibleInputs[0];
+          let minDistance = Math.abs(outputElement.compareDocumentPosition(possibleInputs[0]));
 
-        if (insertButtons.length === 0) {
-          // No insert buttons found - show the script directly
-          showImprovedScriptModal(improvedScript);
+          for (const input of possibleInputs) {
+            const distance = Math.abs(outputElement.compareDocumentPosition(input));
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestInput = input;
+            }
+          }
         }
+
+        // ALWAYS store the closest input (even if we're showing modal)
+        lastTriggeredInputElement = closestInput;
+
+        // ALWAYS show the modal - it provides better UX with editable textareas
+        // The modal will use lastTriggeredInputElement for the "Use Script" button
+        showImprovedScriptModal(improvedScript, outputElement, button);
       } else {
         showNotification(response.error || 'Failed to analyze output', 'error');
         console.error('API error:', response.error);
@@ -561,11 +600,31 @@
   }
 
   // Show improved script in a modal when no input fields found
-  function showImprovedScriptModal(script) {
+  function showImprovedScriptModal(script, sourceOutputElement = null, sourceButton = null) {
     // Remove existing modal if any
     const existing = document.querySelector('.claude-script-modal');
     if (existing) {
       existing.remove();
+    }
+
+    // Use the lastTriggeredInputElement that we stored when "Send to AI" was clicked
+    // This is the textarea/input the user was working in!
+    let targetInput = lastTriggeredInputElement;
+
+    // Fallback: if no lastTriggeredInputElement, try to find closest input
+    if (!targetInput && sourceOutputElement) {
+      const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
+      if (possibleInputs.length > 0) {
+        // Find closest input to the output element
+        let minDistance = Infinity;
+        for (const input of possibleInputs) {
+          const distance = Math.abs(sourceOutputElement.compareDocumentPosition(input));
+          if (distance < minDistance) {
+            minDistance = distance;
+            targetInput = input;
+          }
+        }
+      }
     }
 
     const modal = document.createElement('div');
@@ -574,39 +633,171 @@
       <div class="claude-modal-overlay"></div>
       <div class="claude-modal-content">
         <div class="claude-modal-header">
-          <h3>✨ Improved Script</h3>
+          <h3>{+} AI Code Buddy</h3>
           <button class="claude-modal-close" title="Close">&times;</button>
         </div>
         <div class="claude-modal-body">
-          <pre class="claude-modal-script">${escapeHtml(script)}</pre>
+          <div class="claude-modal-section">
+            <label class="claude-modal-label">Your Prompt (editable):</label>
+            <textarea class="claude-modal-prompt" rows="4" placeholder="Describe what you want to achieve...">${escapeHtml(originalScript || lastCommandOutput || '')}</textarea>
+          </div>
+          <div class="claude-modal-section">
+            <label class="claude-modal-label">Generated Script (editable):</label>
+            <textarea class="claude-modal-script" rows="12">${escapeHtml(script)}</textarea>
+          </div>
         </div>
         <div class="claude-modal-footer">
-          <button class="claude-modal-copy btn">📋 Copy to Clipboard</button>
-          <button class="claude-modal-close-btn btn">Close</button>
+          <button class="claude-modal-use btn-primary">✓ Use Script</button>
+          <button class="claude-modal-iterate btn-secondary">🔄 Improve Further</button>
+          <button class="claude-modal-copy btn-tertiary">📋 Copy</button>
         </div>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    // Event listeners
-    const closeButtons = modal.querySelectorAll('.claude-modal-close, .claude-modal-close-btn, .claude-modal-overlay');
+    // Event listeners for closing modal
+    const closeButtons = modal.querySelectorAll('.claude-modal-close, .claude-modal-overlay');
     closeButtons.forEach(btn => {
       btn.addEventListener('click', () => modal.remove());
     });
 
+    // Esc key to close modal
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+
+    // Get modal elements
+    const promptTextarea = modal.querySelector('.claude-modal-prompt');
+    const scriptTextarea = modal.querySelector('.claude-modal-script');
+    const useButton = modal.querySelector('.claude-modal-use');
     const copyButton = modal.querySelector('.claude-modal-copy');
+    const iterateButton = modal.querySelector('.claude-modal-iterate');
+
+    // "Use Script" button - inserts script into target input and closes modal
+    if (targetInput) {
+      useButton.addEventListener('click', () => {
+        const scriptToInsert = scriptTextarea.value;
+
+        // Insert into the target input field
+        if (targetInput.tagName === 'TEXTAREA' || targetInput.tagName === 'INPUT') {
+          targetInput.value = scriptToInsert;
+          targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+          targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (targetInput.isContentEditable || targetInput.contentEditable === 'true') {
+          targetInput.innerText = scriptToInsert;
+          targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // Focus the input
+        targetInput.focus();
+
+        // Flash success
+        showNotification('Script inserted successfully!', 'success');
+
+        // Close modal
+        modal.remove();
+      });
+    } else {
+      // No target input found, disable the button
+      useButton.disabled = true;
+      useButton.title = 'No input field found to insert script';
+      useButton.style.opacity = '0.5';
+    }
+
+    // "Copy" button - copies script to clipboard and closes modal
     copyButton.addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(script);
-        copyButton.textContent = '✓ Copied!';
-        setTimeout(() => {
-          copyButton.textContent = '📋 Copy to Clipboard';
-        }, 2000);
+        const scriptToCopy = scriptTextarea.value;
+        await navigator.clipboard.writeText(scriptToCopy);
+        showNotification('Copied to clipboard', 'success');
+        // Close modal after copying
+        modal.remove();
+        document.removeEventListener('keydown', handleEscape);
       } catch (error) {
         showNotification('Failed to copy to clipboard', 'error');
       }
     });
+
+    // "Improve Further" button - sends current prompt back to AI for iteration
+
+    if (sourceOutputElement && sourceButton) {
+      iterateButton.addEventListener('click', async () => {
+        // Get current values from textareas
+        const currentPrompt = promptTextarea.value;
+        const currentScript = scriptTextarea.value;
+
+        // Show big loading overlay on script section
+        const scriptSection = scriptTextarea.closest('.claude-modal-section');
+        scriptSection.classList.add('loading');
+
+        // Create loading spinner and text
+        const loadingSpinner = document.createElement('div');
+        loadingSpinner.className = 'claude-loading-spinner';
+        scriptSection.appendChild(loadingSpinner);
+
+        const loadingText = document.createElement('div');
+        loadingText.className = 'claude-loading-text';
+        loadingText.textContent = 'AI is thinking...';
+        scriptSection.appendChild(loadingText);
+
+        // Disable button
+        iterateButton.disabled = true;
+
+        try {
+          // Make the AI call with the user's edited prompt
+          const settings = await chrome.storage.sync.get(['apiKey', 'provider']);
+          const response = await chrome.runtime.sendMessage({
+            action: 'analyzeOutput',
+            data: {
+              output: lastCommandOutput,
+              script: currentPrompt, // Use the user's edited prompt
+              conversationHistory: conversationHistory
+            }
+          });
+
+          if (response.success && response.improvedScript) {
+            // Update the modal with new improved script
+            improvedScript = response.improvedScript;
+            scriptTextarea.value = improvedScript;
+
+            // Update conversation history
+            conversationHistory.push({
+              script: currentPrompt,
+              output: lastCommandOutput,
+              improved: improvedScript,
+              timestamp: Date.now()
+            });
+
+            if (conversationHistory.length > MAX_HISTORY) {
+              conversationHistory = conversationHistory.slice(-MAX_HISTORY);
+            }
+
+            showNotification('Script improved! Edit further or use it.', 'success');
+          } else {
+            showNotification(response.error || 'Failed to improve script', 'error');
+          }
+        } catch (error) {
+          console.error('Error improving script:', error);
+          showNotification('Error: ' + error.message, 'error');
+        } finally {
+          // Remove loading overlay
+          scriptSection.classList.remove('loading');
+          loadingSpinner.remove();
+          loadingText.remove();
+
+          // Reset button state
+          iterateButton.disabled = false;
+        }
+      });
+    } else {
+      // Hide iterate button if we don't have source context
+      iterateButton.style.display = 'none';
+    }
   }
 
   // Escape HTML for display
@@ -619,8 +810,15 @@
   // Listen for messages from popup/background
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'improveSelected') {
+      console.log('🔵 improveSelected action received');
+      console.log('  - Request:', request);
+      console.log('  - Sender:', sender);
+      console.log('  - Stack trace:', new Error().stack);
+
       // Handle text selection improvement
       const selectedText = window.getSelection().toString();
+      console.log('  - Selected text length:', selectedText.length);
+
       if (selectedText) {
         chrome.runtime.sendMessage({
           action: 'improveScript',

@@ -167,11 +167,18 @@ const AI_PROVIDERS = {
   // Azure OpenAI
   azure: {
     name: 'Azure OpenAI',
-    apiKeyPattern: /^[a-f0-9]{32}$/,
-    apiKeyPlaceholder: '32-character key',
+    apiKeyPattern: /^[a-f0-9]{32}$/i,
+    apiKeyPlaceholder: '32-character hex key',
     configFields: ['apiKey', 'endpoint', 'deploymentName', 'apiVersion'],
     models: [], // Models are deployment-specific in Azure
-    endpoint: (config) => `${config.endpoint}/openai/deployments/${config.deploymentName}/chat/completions?api-version=${config.apiVersion || '2023-05-15'}`,
+    endpoint: (config) => {
+      // Clean up endpoint URL - remove trailing slashes
+      const cleanEndpoint = (config.endpoint || '').replace(/\/$/, '');
+      const deploymentName = config.deploymentName || '';
+      const apiVersion = config.apiVersion || '2024-02-01';
+
+      return `${cleanEndpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`;
+    },
     headers: (config) => ({
       'Content-Type': 'application/json',
       'api-key': config.apiKey
@@ -191,13 +198,40 @@ const AI_PROVIDERS = {
       max_tokens: 2000
     }),
     parseResponse: (data) => {
-      return data.choices?.[0]?.message?.content || '';
+      // Azure OpenAI uses same response format as OpenAI
+      const choice = data.choices?.[0];
+
+      if (!choice) {
+        throw new Error('No response choices returned from Azure');
+      }
+
+      const content = choice.message?.content;
+
+      if (!content) {
+        // Check for finish_reason to provide better error message
+        if (choice.finish_reason === 'content_filter') {
+          throw new Error('Content blocked by Azure content filter');
+        }
+        throw new Error(`No content in response (finish_reason: ${choice.finish_reason || 'unknown'})`);
+      }
+
+      return content;
     },
     handleError: (response, data) => {
       if (response.status === 429) {
         return { retry: true, error: 'Rate limit exceeded, will retry...' };
       }
-      return { retry: false, error: data.error?.message || `API error: ${response.status}` };
+      if (response.status === 401) {
+        return { retry: false, error: 'Invalid API key - check your Azure OpenAI credentials' };
+      }
+      if (response.status === 404) {
+        return { retry: false, error: 'Deployment not found - check endpoint URL and deployment name in Azure Portal' };
+      }
+      if (response.status === 400) {
+        const errorMsg = data.error?.message || 'Bad request';
+        return { retry: false, error: `Invalid request: ${errorMsg}. Check API version and deployment settings.` };
+      }
+      return { retry: false, error: data.error?.message || `Azure API error: ${response.status}` };
     }
   },
 
@@ -437,7 +471,7 @@ class AIProvider {
   // Validate configuration
   validateConfig() {
     const errors = [];
-    
+
     // Check required fields
     for (const field of this.provider.configFields) {
       if (field === 'apiKey' && this.provider.apiKeyPattern) {
@@ -448,9 +482,18 @@ class AIProvider {
         }
       } else if (field === 'endpoint' && !this.config.endpoint) {
         errors.push(`Endpoint URL is required`);
+      } else if (field === 'deploymentName' && !this.config.deploymentName) {
+        errors.push(`Deployment name is required for Azure OpenAI`);
       }
     }
-    
+
+    // Azure-specific validation
+    if (this.type === 'azure') {
+      if (this.config.endpoint && !this.config.endpoint.includes('.openai.azure.com')) {
+        errors.push(`Azure endpoint should contain '.openai.azure.com'`);
+      }
+    }
+
     return errors;
   }
 

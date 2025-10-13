@@ -1,11 +1,21 @@
 # AI Code Buddy - Chrome Extension
 
+<div align="center">
+
 **by [Apra Labs](https://www.apralabs.com)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-green.svg)](docs/LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/Apra-Labs/ai-code-buddy)](https://github.com/Apra-Labs/ai-code-buddy/releases)
 [![Build Status](https://github.com/Apra-Labs/ai-code-buddy/workflows/Build%20and%20Release/badge.svg)](https://github.com/Apra-Labs/ai-code-buddy/actions)
+
+### 📚 [**Visit Full Documentation Site →**](https://apra-labs.github.io/ai-code-buddy/)
+
+*Complete guides, tutorials, API keys setup, and more*
+
+---
+
+</div>
 
 > *Turn any web terminal into an AI-powered command center*
 
@@ -165,11 +175,15 @@ Access via the extension popup:
 
 ## Documentation
 
-Comprehensive guides available:
+📚 **[Full Documentation Site](https://apra-labs.github.io/ai-code-buddy/)** - Complete guides, tutorials, and examples
 
-- **[API Keys Guide](docs/API-KEYS-GUIDE.md)** - How to get API keys, provider comparisons, and setup guides
-- **[Security Policy](docs/SECURITY.md)** - Complete security & privacy transparency
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+**Key Documentation:**
+
+- **[Site-Specific Prompts](https://apra-labs.github.io/ai-code-buddy/site-specific-prompts.html)** ✨ **NEW!** - Configure different AI behavior per website
+- **[Quick Start Guide](https://apra-labs.github.io/ai-code-buddy/quick-start.html)** - Get up and running in 5 minutes
+- **[API Keys Guide](https://apra-labs.github.io/ai-code-buddy/api-keys.html)** - How to get API keys for all providers
+- **[Security Policy](https://apra-labs.github.io/ai-code-buddy/security.html)** - Complete security & privacy transparency
+- **[Troubleshooting](https://apra-labs.github.io/ai-code-buddy/troubleshooting.html)** - Common issues and solutions
 
 ## Troubleshooting
 

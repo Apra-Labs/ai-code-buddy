@@ -216,6 +216,26 @@
       color: #666;
       line-height: 1.7;
     }
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
   </style>
 </head>
 <body>
@@ -474,6 +494,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
 
   <script src="header.js"></script>
   <script src="config.js"></script>

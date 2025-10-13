@@ -516,9 +516,106 @@
       padding-left: 10px;
       margin-left: 5px;
     }
+
+    /* Confirmation Modal Styles */
+    .confirm-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .confirm-modal-content {
+      position: relative;
+      background: white;
+      border-radius: 8px;
+      width: 340px;
+      max-width: 90%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.2s ease;
+      z-index: 10001;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .confirm-modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .confirm-modal-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .confirm-modal-body {
+      padding: 20px;
+    }
+
+    .confirm-modal-body p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #555;
+    }
+
+    .confirm-modal-footer {
+      padding: 12px 20px;
+      border-top: 1px solid #e5e5e5;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .confirm-modal-footer .btn {
+      min-width: 80px;
+    }
   </style>
 </head>
 <body>
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-modal-overlay"></div>
+    <div class="confirm-modal-content">
+      <div class="confirm-modal-header">
+        <h3 id="confirmModalTitle">Confirm Action</h3>
+      </div>
+      <div class="confirm-modal-body">
+        <p id="confirmModalMessage">Are you sure?</p>
+      </div>
+      <div class="confirm-modal-footer">
+        <button id="confirmModalCancel" class="btn btn-secondary">Cancel</button>
+        <button id="confirmModalOk" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="header">
       <h1>{ } AI Code Buddy</h1>

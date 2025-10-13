@@ -508,22 +508,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // Custom confirm dialog
+  function showConfirmDialog(title, message) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('confirmModal');
+      const titleEl = document.getElementById('confirmModalTitle');
+      const messageEl = document.getElementById('confirmModalMessage');
+      const okBtn = document.getElementById('confirmModalOk');
+      const cancelBtn = document.getElementById('confirmModalCancel');
+      const overlay = modal.querySelector('.confirm-modal-overlay');
+
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      modal.style.display = 'flex';
+
+      const handleOk = () => {
+        cleanup();
+        resolve(true);
+      };
+
+      const handleCancel = () => {
+        cleanup();
+        resolve(false);
+      };
+
+      const cleanup = () => {
+        modal.style.display = 'none';
+        okBtn.removeEventListener('click', handleOk);
+        cancelBtn.removeEventListener('click', handleCancel);
+        overlay.removeEventListener('click', handleCancel);
+      };
+
+      okBtn.addEventListener('click', handleOk);
+      cancelBtn.addEventListener('click', handleCancel);
+      overlay.addEventListener('click', handleCancel);
+    });
+  }
+
   // Clear all settings
   async function clearAllSettings() {
-    if (!confirm('Are you sure you want to clear all settings?')) {
+    const confirmed = await showConfirmDialog(
+      'Clear All Settings',
+      'Are you sure you want to clear all settings? This action cannot be undone.'
+    );
+
+    if (!confirmed) {
       return;
     }
 
     try {
       await chrome.storage.sync.clear();
-      
+
       // Reset UI
       elements.providerCards.forEach(card => card.classList.remove('selected'));
       currentProvider = null;
       elements.configFields.innerHTML = '';
       elements.outputSelector.value = '';
       elements.inputSelector.value = '';
-      
+
       updateStatus(false);
       showNotification('All settings cleared', 'success');
     } catch (error) {
@@ -546,7 +588,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'rport-ai-config.json';
+      a.download = 'apralabs-ai-code-buddy.json';
       a.click();
       
       URL.revokeObjectURL(url);

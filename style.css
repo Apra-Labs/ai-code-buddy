@@ -669,3 +669,111 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Feature Highlight Section */
+.feature-highlight {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #f0f7e6 0%, #ffffff 100%);
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.feature-highlight-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(148, 186, 51, 0.3);
+}
+
+.feature-highlight-title {
+  font-size: 44px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.feature-highlight-subtitle {
+  font-size: 22px;
+  color: var(--text-medium);
+  margin-bottom: 50px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.feature-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 50px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.highlight-card {
+  background: white;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  padding: 30px 25px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.highlight-card:hover {
+  border-color: var(--apra-green);
+  box-shadow: 0 8px 24px rgba(148, 186, 51, 0.15);
+  transform: translateY(-4px);
+}
+
+.highlight-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.highlight-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.highlight-card p {
+  color: var(--text-medium);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.highlight-pattern {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--apra-green);
+  font-weight: 600;
+  display: inline-block;
+}
+
+@media (max-width: 968px) {
+  .feature-highlight-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .feature-highlight-title {
+    font-size: 36px;
+  }
+
+  .feature-highlight-subtitle {
+    font-size: 18px;
+  }
+}

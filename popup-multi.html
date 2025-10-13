@@ -451,23 +451,52 @@
     }
 
     .footer {
-      padding: 8px 20px;
+      padding: 6px 16px;
       background: #f8f9fa;
       border-top: 1px solid #e5e5e5;
       text-align: center;
-      font-size: 8px;
+      font-size: 9px;
       color: #888;
       flex-shrink: 0;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .footer a {
       color: #94BA33;
       text-decoration: none;
+      font-weight: 500;
     }
 
     .footer a:hover {
       text-decoration: underline;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .footer-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-separator {
+      color: #ccc;
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      background: #e8f5e9;
+      border-radius: 3px;
+      font-weight: 500;
+      color: #2e7d32;
+      font-size: 8px;
     }
 
     .advanced-toggle {
@@ -1007,23 +1036,18 @@
     </div>
 
     <div class="footer">
-      <div style="margin-bottom: 4px;">
-        <span style="color: #28a745; font-weight: 600;">🔒 Your keys are safe</span>
-        <span style="font-size: 7px; display: block; margin-top: 1px;">
-          Stored locally • Never sent to us • Open source
-        </span>
+      <div class="footer-row">
+        <span class="footer-badge">🔒 Keys stored locally</span>
+        <span class="footer-separator">•</span>
+        <span id="extension-version">v2.2.0</span>
       </div>
-      <div style="margin-bottom: 3px; font-size: 8px; color: #94BA33; font-weight: 600;">
-        Powered by <a href="https://www.apralabs.com" target="_blank" style="color: #94BA33; text-decoration: none; font-weight: 700;">Apra Labs</a>
-      </div>
-      <div style="margin-bottom: 3px; font-size: 7px; color: #666;">
-        <span id="extension-version">Loading version...</span>
-      </div>
-      <div>
+      <div class="footer-row">
+        <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>
+        <span class="footer-separator">•</span>
         <a href="https://github.com/Apra-Labs/ai-code-buddy#privacy" target="_blank">Privacy</a>
-        &nbsp;•&nbsp;
+        <span class="footer-separator">•</span>
         <a href="https://github.com/Apra-Labs/ai-code-buddy#security" target="_blank">Security</a>
-        &nbsp;•&nbsp;
+        <span class="footer-separator">•</span>
         <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">Docs</a>
       </div>
     </div>

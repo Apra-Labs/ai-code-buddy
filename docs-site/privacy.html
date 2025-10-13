@@ -394,7 +394,9 @@
           </div>
           <div class="footer-column">
             <h4>Documentation</h4>
+            <a href="site-specific-prompts.html">Site-Specific Prompts</a>
             <a href="api-keys.html">API Keys</a>
+            <a href="site-permissions.html">Site Permissions</a>
             <a href="security.html">Security</a>
             <a href="troubleshooting.html">Troubleshooting</a>
             <a href="privacy.html">Privacy Policy</a>
@@ -408,13 +410,36 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. All Rights Reserved.</p>
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
         <p>🔒 Your API keys are safe - stored locally, never sent to us. <a href="privacy.html">Privacy Policy</a></p>
       </div>
     </div>
   </footer>
 
-  <a href="#" style="position: fixed; bottom: 30px; right: 30px; background: var(--apra-green); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.3s;" title="Back to top">↑</a>
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
 
+  <style>
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+  </style>
 </body>
 </html>

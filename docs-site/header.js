@@ -33,6 +33,7 @@ function renderHeader() {
         </div>
       </div>
       <nav class="nav">
+        <a href="index.html">Home</a>
         <a href="index.html#features">Features</a>
         <a href="index.html#quick-start">Quick Start</a>
         <a href="index.html#docs">Docs</a>

@@ -309,6 +309,30 @@
       </p>
 
       <div class="options-grid">
+        <!-- Option 0: Built-in Blocked Sites (NEW - Recommended) -->
+        <div class="option-card" style="border-color: #94BA33; background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);">
+          <span class="option-icon">✨</span>
+          <h3 class="option-title">Built-in Blocked Sites <span style="background: #94BA33; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.6em; margin-left: 8px;">RECOMMENDED</span></h3>
+          <p class="option-description">
+            <strong>New!</strong> The easiest way to control where the extension runs. Managed directly in the extension settings.
+          </p>
+
+          <div class="steps-compact">
+            <ol>
+              <li>Click the AI Code Buddy icon in your toolbar</li>
+              <li>Go to <strong>Settings</strong> tab</li>
+              <li>Find <strong>Blocked Sites</strong> section at the top</li>
+              <li>Add/remove sites (one per line)</li>
+              <li>Click <strong>Save Blocked Sites</strong></li>
+              <li>Reload pages to see changes</li>
+            </ol>
+          </div>
+
+          <div class="note-box">
+            <strong>💡 Why use this?</strong> Pre-configured defaults block common sites (Facebook, Google, Gmail, etc.). Supports wildcards like <code>*.example.com</code> or <code>*github.com</code>
+          </div>
+        </div>
+
         <!-- Option 1: Specific Sites -->
         <div class="option-card">
           <span class="option-icon">🎯</span>
@@ -377,6 +401,47 @@
           </div>
         </div>
       </div>
+
+      <!-- Comparison Section -->
+      <div style="background: white; border: 2px solid #e5e5e5; border-radius: 12px; padding: 30px; margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px;">🤔 Which Method Should I Use?</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+          <div>
+            <h3 style="color: #94BA33; font-size: 1.2em; margin-bottom: 15px;">✨ Built-in Blocked Sites</h3>
+            <ul style="color: #666; line-height: 2;">
+              <li>✅ Easiest to manage</li>
+              <li>✅ Works for all users</li>
+              <li>✅ Pre-configured defaults</li>
+              <li>✅ Supports wildcards</li>
+              <li>✅ Export/import settings</li>
+              <li>❌ Requires manual site entry</li>
+            </ul>
+            <p style="margin-top: 15px; padding: 10px; background: #f0f7e6; border-radius: 6px; color: #666;">
+              <strong>Best for:</strong> Blocking social media, email, shopping sites
+            </p>
+          </div>
+
+          <div>
+            <h3 style="color: #666; font-size: 1.2em; margin-bottom: 15px;">🔒 Chrome Permissions</h3>
+            <ul style="color: #666; line-height: 2;">
+              <li>✅ Browser-level control</li>
+              <li>✅ More secure (OS enforced)</li>
+              <li>✅ Works for all extensions</li>
+              <li>✅ Visual indicators in Chrome</li>
+              <li>❌ More complex to configure</li>
+              <li>❌ Not available for unpacked extensions</li>
+            </ul>
+            <p style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; color: #666;">
+              <strong>Best for:</strong> Strict security requirements, work-only usage
+            </p>
+          </div>
+        </div>
+
+        <div style="background: #fff7e6; border-left: 4px solid #ffa500; padding: 15px 20px; border-radius: 6px; margin-top: 25px;">
+          <strong style="color: #ff8c00;">💡 Pro Tip:</strong> You can use BOTH methods together! Use built-in blocking for convenience and Chrome permissions for extra security.
+        </div>
+      </div>
     </section>
 
     <div class="scenarios-section">
@@ -407,12 +472,31 @@
 
       <div class="scenario-card">
         <div class="scenario-title">Scenario 3: Everywhere Except Social Media</div>
-        <p style="color: #666; margin: 10px 0;">Block Facebook, Twitter, Instagram</p>
+        <p style="color: #666; margin: 10px 0;">Block Facebook, Twitter, Instagram, Gmail, YouTube</p>
         <div class="scenario-urls">
-          <strong>Solution:</strong> Keep "On all sites", then block specific sites:
+          <strong>✨ Recommended Solution:</strong> Use Built-in Blocked Sites
           <div style="margin-top: 10px; color: #666;">
-            1. Visit facebook.com → Right-click icon → Block<br>
-            2. Repeat for twitter.com, instagram.com, etc.
+            1. Click extension icon → Settings tab<br>
+            2. Default blocked sites already include social media!<br>
+            3. Add more sites if needed (one per line)<br>
+            4. Click "Save Blocked Sites" → Reload pages
+          </div>
+          <div style="margin-top: 15px; padding: 10px; background: #f0f7e6; border-radius: 6px;">
+            <strong style="color: #94BA33;">Pre-configured defaults:</strong> Facebook, LinkedIn, Twitter, Instagram, TikTok, Google, Gmail, YouTube, Netflix, Reddit, Amazon, and more!
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-title">Scenario 4: Block All Company Subdomains</div>
+        <p style="color: #666; margin: 10px 0;">Don't run on internal company sites</p>
+        <div class="scenario-urls">
+          <strong>✨ Solution:</strong> Use Built-in Blocked Sites with wildcards
+          <div style="margin-top: 10px; color: #666;">
+            1. Click extension icon → Settings → Blocked Sites<br>
+            2. Add: <code style="background: white; padding: 2px 8px; border-radius: 4px;">*.mycompany.com</code><br>
+            3. This blocks app.mycompany.com, dev.mycompany.com, etc.<br>
+            4. Save and reload pages
           </div>
         </div>
       </div>
@@ -442,6 +526,22 @@
         <div class="tip-text">
           <strong>Can't find Site Access?</strong><br>
           Only available for extensions installed from Chrome Web Store, not unpacked extensions
+        </div>
+      </div>
+
+      <div class="tip-item">
+        <div class="tip-icon">✨</div>
+        <div class="tip-text">
+          <strong>Check if site is blocked:</strong><br>
+          Open Chrome DevTools (F12) → Console tab → Look for "AI Code Buddy: Current site is blocked" message
+        </div>
+      </div>
+
+      <div class="tip-item">
+        <div class="tip-icon">🔄</div>
+        <div class="tip-text">
+          <strong>Reset to defaults:</strong><br>
+          Settings → Blocked Sites → Click "Reset to Defaults" to restore the original list
         </div>
       </div>
     </div>

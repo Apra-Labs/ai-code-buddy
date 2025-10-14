@@ -107,12 +107,50 @@
     }
   }
 
+  // Check if current site is blocked
+  function isCurrentSiteBlocked(blockedSites) {
+    if (!blockedSites || blockedSites.length === 0) {
+      return false;
+    }
+
+    const currentHostname = window.location.hostname.toLowerCase();
+
+    return blockedSites.some(pattern => {
+      const patternLower = pattern.toLowerCase().trim();
+
+      // Handle wildcard patterns like *.example.com
+      if (patternLower.startsWith('*.')) {
+        const domain = patternLower.substring(2);
+        return currentHostname.endsWith(domain) || currentHostname === domain.substring(0);
+      }
+
+      // Handle wildcard patterns like *example.com
+      if (patternLower.startsWith('*')) {
+        const domain = patternLower.substring(1);
+        return currentHostname.includes(domain);
+      }
+
+      // Exact match or subdomain match
+      return currentHostname === patternLower || currentHostname.endsWith('.' + patternLower);
+    });
+  }
+
   // Initialize extension
   async function init() {
-    console.log('AI Code Buddy initialized');
+    console.log('AI Code Buddy initializing...');
+
+    // Load settings including blocked sites
+    const settings = await chrome.storage.sync.get(['customSelectors', 'blockedSites']);
+
+    // Check if current site is blocked
+    if (settings.blockedSites && isCurrentSiteBlocked(settings.blockedSites)) {
+      console.log('AI Code Buddy: Current site is blocked, extension disabled');
+      return; // Exit early - don't inject anything
+    }
+
+    console.log('AI Code Buddy: Site not blocked, proceeding with initialization');
 
     // Load custom selectors if configured
-    const settings = await chrome.storage.sync.get('customSelectors');
     if (settings.customSelectors) {
       customSelectors = settings.customSelectors;
       console.log('✓ Custom selectors loaded');

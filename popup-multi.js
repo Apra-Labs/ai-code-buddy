@@ -10,18 +10,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Tabs
     tabs: document.querySelectorAll('.tab'),
     tabContents: document.querySelectorAll('.tab-content'),
-    
+
     // Provider selection
     providerCards: document.querySelectorAll('.provider-card'),
     providerTitle: document.getElementById('provider-title'),
     configFields: document.getElementById('config-fields'),
     providerConfigSection: document.getElementById('provider-config'),
-    
+
     // Status
     statusDiv: document.getElementById('status'),
     statusText: document.getElementById('status-text'),
     notification: document.getElementById('notification'),
-    
+
     // Buttons
     saveConfig: document.getElementById('saveConfig'),
     testConnection: document.getElementById('testConnection'),
@@ -31,11 +31,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     exportConfig: document.getElementById('exportConfig'),
     importConfig: document.getElementById('importConfig'),
     importFile: document.getElementById('importFile'),
-    
+    saveBlockedSites: document.getElementById('saveBlockedSites'),
+    resetBlockedSites: document.getElementById('resetBlockedSites'),
+
     // Settings
     outputSelector: document.getElementById('outputSelector'),
     inputSelector: document.getElementById('inputSelector'),
-    
+    blockedSites: document.getElementById('blockedSites'),
+
     // Advanced
     customPrompt: document.getElementById('customPrompt'),
     maxTokens: document.getElementById('maxTokens'),
@@ -69,7 +72,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         'maxTokens',
         'temperature',
         'timeout',
-        'sitePrompts'
+        'sitePrompts',
+        'blockedSites'
       ]);
 
       // Load provider selection
@@ -109,6 +113,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSitePrompts(settings.sitePrompts);
       }
 
+      // Load blocked sites
+      if (settings.blockedSites) {
+        elements.blockedSites.value = settings.blockedSites.join('\n');
+      }
+
     } catch (error) {
       console.error('Error loading settings:', error);
       showNotification('Error loading settings', 'error');
@@ -143,6 +152,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Site-specific prompts
     elements.addSitePrompt.addEventListener('click', () => showSitePromptModal());
+
+    // Blocked sites
+    elements.saveBlockedSites.addEventListener('click', saveBlockedSites);
+    elements.resetBlockedSites.addEventListener('click', resetBlockedSites);
   }
 
   // Switch tabs
@@ -928,5 +941,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         showNotification('Failed to save prompt', 'error');
       }
     });
+  }
+
+  // Save blocked sites
+  async function saveBlockedSites() {
+    try {
+      const sitesText = elements.blockedSites.value;
+      const blockedSites = sitesText
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+      await chrome.storage.sync.set({ blockedSites });
+      showNotification(`Saved ${blockedSites.length} blocked sites. Reload pages for changes to take effect.`, 'success');
+    } catch (error) {
+      console.error('Error saving blocked sites:', error);
+      showNotification('Failed to save blocked sites', 'error');
+    }
+  }
+
+  // Reset blocked sites to defaults
+  async function resetBlockedSites() {
+    const confirmed = await showConfirmDialog(
+      'Reset Blocked Sites',
+      'Reset to default list of blocked sites? This will overwrite your current list.'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      // Get defaults from background script
+      const response = await chrome.runtime.sendMessage({ action: 'getDefaultBlockedSites' });
+
+      if (response && response.sites) {
+        await chrome.storage.sync.set({ blockedSites: response.sites });
+        elements.blockedSites.value = response.sites.join('\n');
+        showNotification('Blocked sites reset to defaults', 'success');
+      } else {
+        // Fallback - hardcode defaults if background script doesn't respond
+        const defaultSites = [
+          'facebook.com', 'linkedin.com', 'twitter.com', 'x.com',
+          'instagram.com', 'tiktok.com', 'google.com', 'bing.com',
+          'gmail.com', 'youtube.com', 'netflix.com', 'reddit.com'
+        ];
+        await chrome.storage.sync.set({ blockedSites: defaultSites });
+        elements.blockedSites.value = defaultSites.join('\n');
+        showNotification('Blocked sites reset to defaults', 'success');
+      }
+    } catch (error) {
+      console.error('Error resetting blocked sites:', error);
+      showNotification('Failed to reset blocked sites', 'error');
+    }
   }
 });

@@ -13,7 +13,7 @@ AI Code Buddy integrates AI assistance into web-based terminals and text areas t
 
 **Detailed explanation (if needed):**
 ```
-This extension adds AI-powered code analysis capabilities to web terminals (like RPort, Cloud Shell, GitPod). Users select terminal output or scripts, click a button to send to AI, and receive explanations, fixes, and improvements. The extension does one thing: bridge web terminals with AI providers for development assistance.
+This extension adds AI-powered code analysis capabilities to web terminals (like RPort, Cloud Shell, GitPod). Users select terminal output, logs, or scripts, and a hover button appears above the selection (like Medium's annotation feature). Clicking the button sends text to AI for analysis, explanations, fixes, and improvements. The extension does one thing: bridge web terminals with AI providers for development assistance.
 ```
 
 ---
@@ -24,7 +24,7 @@ This extension adds AI-powered code analysis capabilities to web terminals (like
 
 **Justification:**
 ```
-Required to inject the "Send to AI" button into web pages and read selected text when the user explicitly activates the extension. This allows users to select terminal output or code snippets and send them to AI for analysis. The extension only accesses the active tab when the user clicks the extension icon or "Send to AI" button.
+Required to detect text selection and show a hover button, then read the selected text when user explicitly clicks the button. This allows users to select terminal output or code snippets and send them to AI for analysis. The extension only accesses the active tab when the user selects text and clicks the hover button.
 ```
 
 **Data handling:**
@@ -74,7 +74,7 @@ Host permissions are required for two purposes:
 
 1. AI Provider APIs: The extension needs to make direct API calls to the user's chosen AI provider (Claude, OpenAI, Gemini, etc.) using the user's own API key. These are HTTPS requests containing the selected code/text and receiving AI responses.
 
-2. Content Script Injection: Permission to inject our "Send to AI" button into any web-based terminal or text area (RPort, Cloud Shell, GitPod, AWS CloudShell, VS Code Web, etc.). The extension works across multiple terminal platforms, so broad host permissions are necessary.
+2. Content Script Injection: Permission to detect text selections and show hover buttons on any web-based terminal or text area (RPort, Cloud Shell, GitPod, AWS CloudShell, VS Code Web, etc.). The extension works across multiple terminal platforms, so broad host permissions are necessary.
 
 All API calls are made directly from the user's browser to the AI provider - there is no intermediary server. The user controls which text is sent and can inspect all network requests.
 ```

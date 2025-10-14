@@ -203,7 +203,7 @@ Before committing:
 
 Before pushing to main:
 1. ✅ Run `npm run test:all`
-2. ✅ Build succeeds: `./build-extension.bat`
+2. ✅ Build succeeds: `./build.bat`
 3. ✅ Manual smoke test in browser
 
 ---

@@ -111,9 +111,9 @@ jobs:
 
       - name: Build extension package
         run: |
-          echo "Running build-extension.sh to create production package..."
-          chmod +x build-extension.sh
-          ./build-extension.sh
+          echo "Running build.sh to create production package..."
+          chmod +x build.sh
+          ./build.sh
 
       - name: Add build-info.json to package
         run: |

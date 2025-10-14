@@ -36,8 +36,8 @@
   }
 
   // State management
-  let improvedScript = null;
-  let originalScript = null;
+  let improvedCode = null;
+  let originalCode = null;
   let lastCommandOutput = null;
   let customSelectors = null;
   let processedElements = new WeakSet(); // Track which elements already have buttons
@@ -75,7 +75,7 @@
                 </li>
                 <li>
                   <span class="claude-shortcuts-key">Alt+Shift+I</span>
-                  <span>Insert Script</span>
+                  <span>Insert Code</span>
                 </li>
               </ul>
             </div>
@@ -107,56 +107,246 @@
     }
   }
 
-  // Check if current site is blocked
-  function isCurrentSiteBlocked(blockedSites) {
-    if (!blockedSites || blockedSites.length === 0) {
-      return false;
-    }
+  // Selection hover button state
+  let selectionHoverButton = null;
 
-    const currentHostname = window.location.hostname.toLowerCase();
+  // Setup selection-based hover button for Feature 2 (readonly content)
+  function setupSelectionHover() {
+    document.addEventListener('mouseup', handleSelection);
+    document.addEventListener('selectionchange', handleSelection);
 
-    return blockedSites.some(pattern => {
-      const patternLower = pattern.toLowerCase().trim();
-
-      // Handle wildcard patterns like *.example.com
-      if (patternLower.startsWith('*.')) {
-        const domain = patternLower.substring(2);
-        return currentHostname.endsWith(domain) || currentHostname === domain.substring(0);
+    // Also handle keyboard selection (Shift+Arrow keys)
+    document.addEventListener('keyup', (e) => {
+      if (e.shiftKey) {
+        handleSelection(e);
       }
-
-      // Handle wildcard patterns like *example.com
-      if (patternLower.startsWith('*')) {
-        const domain = patternLower.substring(1);
-        return currentHostname.includes(domain);
-      }
-
-      // Exact match or subdomain match
-      return currentHostname === patternLower || currentHostname.endsWith('.' + patternLower);
     });
+
+    console.log('✓ Selection-based hover enabled for readonly content');
+  }
+
+  // Handle text selection and show/hide hover button
+  function handleSelection(e) {
+    // Small delay to let selection settle
+    setTimeout(() => {
+      let selectedText = '';
+      let rect = null;
+      let sourceElement = null;
+
+      // Check if selection is from textarea/input (they don't use window.getSelection)
+      const activeElement = document.activeElement;
+      if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+        // For textarea/input, use selectionStart/selectionEnd
+        const start = activeElement.selectionStart;
+        const end = activeElement.selectionEnd;
+
+        if (start !== end) {
+          selectedText = activeElement.value.substring(start, end).trim();
+          sourceElement = activeElement;
+
+          // Get the bounding rect of the input/textarea
+          rect = activeElement.getBoundingClientRect();
+        }
+      } else {
+        // For contenteditable and regular text, use window.getSelection
+        const selection = window.getSelection();
+        selectedText = selection.toString().trim();
+
+        if (selectedText && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          rect = range.getBoundingClientRect();
+
+          const container = range.commonAncestorContainer;
+          sourceElement = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+        }
+      }
+
+      // Remove existing hover button if selection is empty or too short
+      if (!selectedText || selectedText.length < 3) {
+        removeSelectionHoverButton();
+        return;
+      }
+
+      // Don't show inside our own modal
+      if (sourceElement && sourceElement.closest && sourceElement.closest('.claude-code-modal')) {
+        removeSelectionHoverButton();
+        return;
+      }
+
+      // Show or update the hover button position
+      // Now works for BOTH editable and non-editable text
+      showSelectionHoverButton(rect, selectedText, sourceElement);
+    }, 10);
+  }
+
+  // Show the selection hover button (like Medium's annotation button)
+  function showSelectionHoverButton(rect, selectedText, sourceElement) {
+    // Remove existing button if any
+    removeSelectionHoverButton();
+
+    // Create the hover button
+    const button = document.createElement('button');
+    button.className = 'claude-selection-hover-btn';
+    button.setAttribute('data-claude-extension', 'true');
+    button.innerHTML = `
+      <span class="claude-selection-icon">✨</span>
+      <span class="claude-selection-text">Send to AI</span>
+    `;
+    button.title = 'Send selected text to AI (Alt+Shift+A)';
+
+    // Position the button above the selection (like Medium)
+    // Calculate position relative to viewport
+    const buttonTop = rect.top + window.scrollY - 45; // 45px above selection
+    const buttonLeft = rect.left + window.scrollX + (rect.width / 2); // Center horizontally
+
+    button.style.position = 'absolute';
+    button.style.top = `${buttonTop}px`;
+    button.style.left = `${buttonLeft}px`;
+    button.style.transform = 'translateX(-50%)'; // Center the button
+
+    // Store the selected text and source element for click handler
+    button._selectedText = selectedText;
+    button._sourceElement = sourceElement;
+
+    // Click handler
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        // Use the stored selected text
+        const currentSelection = button._selectedText;
+
+        if (!currentSelection) {
+          showNotification('Selection was cleared', 'warning');
+          removeSelectionHoverButton();
+          return;
+        }
+
+        // Check if API key is configured (IMMEDIATE ERROR - no modal)
+        const settings = await chrome.storage.sync.get(['apiKey', 'provider']);
+        const providerName = settings.provider ?
+          (AI_PROVIDERS[settings.provider]?.name || settings.provider) :
+          'your AI provider';
+
+        if (!settings.apiKey && settings.provider !== 'ollama') {
+          showNotification(`Please configure credentials for ${providerName} in the extension popup`, 'error');
+          removeSelectionHoverButton();
+          return;
+        }
+
+        // Check if selection came from an editable field
+        const sourceElem = button._sourceElement;
+        const isFromEditableField = sourceElem && (
+          sourceElem.tagName === 'TEXTAREA' ||
+          sourceElem.tagName === 'INPUT' ||
+          sourceElem.isContentEditable ||
+          sourceElem.contentEditable === 'true'
+        );
+
+        // If from editable field, set that as the target
+        if (isFromEditableField) {
+          lastTriggeredInputElement = sourceElem;
+        } else {
+          // From readonly field - try to find closest input
+          const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
+          lastTriggeredInputElement = possibleInputs.length > 0 ? possibleInputs[0] : null;
+        }
+
+        // Store for modal
+        originalCode = currentSelection;
+        lastCommandOutput = currentSelection;
+
+        // SHOW MODAL IMMEDIATELY with loading state (null = loading)
+        showImprovedCodeModalWithLoading(currentSelection, !isFromEditableField);
+
+        // Remove the hover button
+        removeSelectionHoverButton();
+
+        // NOW send to AI for processing (async in background)
+        const response = await chrome.runtime.sendMessage({
+          action: 'analyzeOutput',
+          data: {
+            output: currentSelection,
+            script: '', // No original script for selection
+            conversationHistory: conversationHistory,
+            url: window.location.href
+          }
+        });
+
+        // Find the modal (it should still be open)
+        const modal = document.querySelector('.claude-code-modal');
+        if (!modal) return; // User closed it
+
+        if (response.success) {
+          improvedCode = response.improvedCode;
+
+          // Add to conversation history
+          conversationHistory.push({
+            script: '',
+            output: currentSelection,
+            improved: improvedCode,
+            timestamp: Date.now()
+          });
+
+          if (conversationHistory.length > MAX_HISTORY) {
+            conversationHistory = conversationHistory.slice(-MAX_HISTORY);
+          }
+
+          // Update modal with the code
+          updateModalWithCode(modal, improvedCode);
+
+        } else {
+          // Show error in modal
+          updateModalWithError(modal, response.error || 'Failed to analyze text');
+        }
+
+      } catch (error) {
+        console.error('Error analyzing selection:', error);
+        // Try to update modal with error
+        const modal = document.querySelector('.claude-code-modal');
+        if (modal) {
+          updateModalWithError(modal, error.message);
+        } else {
+          showNotification('Error: ' + error.message, 'error');
+        }
+        removeSelectionHoverButton();
+      }
+    });
+
+    // Add to page
+    document.body.appendChild(button);
+    selectionHoverButton = button;
+
+    // Animate in
+    setTimeout(() => {
+      button.classList.add('visible');
+    }, 10);
+  }
+
+  // Remove the selection hover button
+  function removeSelectionHoverButton() {
+    if (selectionHoverButton) {
+      selectionHoverButton.remove();
+      selectionHoverButton = null;
+    }
   }
 
   // Initialize extension
   async function init() {
     console.log('AI Code Buddy initializing...');
 
-    // Load settings including blocked sites
-    const settings = await chrome.storage.sync.get(['customSelectors', 'blockedSites']);
-
-    // Check if current site is blocked
-    if (settings.blockedSites && isCurrentSiteBlocked(settings.blockedSites)) {
-      console.log('AI Code Buddy: Current site is blocked, extension disabled');
-      return; // Exit early - don't inject anything
-    }
-
-    console.log('AI Code Buddy: Site not blocked, proceeding with initialization');
-
     // Load custom selectors if configured
+    const settings = await chrome.storage.sync.get(['customSelectors']);
     if (settings.customSelectors) {
       customSelectors = settings.customSelectors;
       console.log('✓ Custom selectors loaded');
     }
 
-    // Set up observers and inject buttons
+    // Setup selection-based hover for Feature 2 (readonly content)
+    setupSelectionHover();
+
+    // Set up observers (for future features if needed)
     observePageChanges();
     injectButtons();
 
@@ -233,13 +423,13 @@
               element.hasAttribute('data-claude-extension') ||
               element.querySelector('.claude-assist-btn') ||
               element.closest('[data-claude-extension]') ||
-              element.closest('.claude-script-modal') ||
-              element.classList.contains('claude-modal-script')) {
+              element.closest('.claude-code-modal') ||
+              element.classList.contains('claude-modal-code')) {
             continue;
           }
 
           // For OUTPUT elements: Skip if processed
-          // For INPUT elements: Allow even if processed (we need to find them for "Use Script")
+          // For INPUT elements: Allow even if processed (we need to find them for "Use Code")
           if (!isInputLike && element.hasAttribute('data-claude-processed')) {
             continue;
           }
@@ -263,32 +453,17 @@
   }
 
   // Inject buttons into the page
+  // NOTE: Feature 1 (editable inputs) and Feature 2 (readonly outputs) are now separate
+  // Feature 1: Buttons for editable textareas/inputs (unchanged - still works)
+  // Feature 2: Selection-based hover for readonly content (NEW - no automatic buttons)
   function injectButtons() {
-    // Find and process command output areas
-    const outputElements = findElements(
-      SELECTORS.commandOutput,
-      customSelectors?.commandOutput
-    );
+    // Feature 1: Find and process command INPUT areas only (editable textareas)
+    // These get buttons if they meet specific criteria (optional - currently disabled)
 
-    console.log(`[Button Injection] Found ${outputElements.length} output elements`);
+    // Feature 2 is now handled by selection-based hover (see setupSelectionHover())
+    // No automatic buttons are injected for read-only output elements
 
-    outputElements.forEach(element => {
-      // Check if we've already processed this element
-      if (processedElements.has(element)) {
-        return;
-      }
-
-      // Double-check it doesn't have our button
-      if (!element.querySelector('.claude-send-btn') &&
-          !element.nextElementSibling?.querySelector('.claude-send-btn')) {
-        addSendToClaudeButton(element);
-        processedElements.add(element);
-      }
-    });
-
-    // Note: Insert buttons are no longer created since we always show the modal
-    // The modal provides better UX with editable textareas and "Use Script" button
-    // Keeping the input element detection code for future use if needed
+    console.log('[Button Injection] Selection-based hover mode active - no automatic buttons');
   }
 
   // Detect if output contains error patterns
@@ -361,7 +536,7 @@
     }
   }
 
-  // Add "Insert Improved Script" button to input element
+  // Add "Insert Improved Code" button to input element
   function addInsertButton(inputElement) {
     // Mark element as processed
     inputElement.setAttribute('data-claude-processed', 'true');
@@ -370,16 +545,16 @@
     button.className = 'claude-assist-btn claude-insert-btn';
     button.innerHTML = `
       <span class="claude-btn-icon">📝</span>
-      <span class="claude-btn-text">Insert Improved Script</span>
+      <span class="claude-btn-text">Insert Improved Code</span>
     `;
-    button.title = '📝 Insert improved script (Alt+Shift+I)';
+    button.title = '📝 Insert improved code (Alt+Shift+I)';
     button.style.display = 'none'; // Initially hidden
     button.disabled = true;
 
     button.addEventListener('click', async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      await handleInsertScript(inputElement, button);
+      await handleInsertCode(inputElement, button);
     });
 
     // Position button near input element
@@ -415,7 +590,7 @@
 
       // Try to find associated script/command (look for input field above)
       const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
-      originalScript = '';
+      originalCode = '';
 
       // Find the closest input element (usually above the output) and STORE IT
       let closestInputToOutput = null;
@@ -430,8 +605,8 @@
             closestInputToOutput = input;
           }
           // Also try to get the original script from any input with content
-          if (!originalScript && (input.value || input.textContent)) {
-            originalScript = input.value || input.textContent;
+          if (!originalCode && (input.value || input.textContent)) {
+            originalCode = input.value || input.textContent;
           }
         }
       }
@@ -458,7 +633,7 @@
         action: 'analyzeOutput',
         data: {
           output: lastCommandOutput,
-          script: originalScript,
+          script: originalCode,
           conversationHistory: conversationHistory, // Include previous attempts
           url: window.location.href // Include current page URL for site-specific prompts
         }
@@ -467,21 +642,21 @@
       console.log(`📜 Sending request with ${conversationHistory.length} previous attempts in history`);
 
       if (response.success) {
-        improvedScript = response.improvedScript;
+        improvedCode = response.improvedCode;
 
-        console.log('✓ Received improved script:', improvedScript?.substring(0, 100) + '...');
+        console.log('✓ Received improved code:', improvedCode?.substring(0, 100) + '...');
 
-        if (!improvedScript || improvedScript.trim().length === 0) {
+        if (!improvedCode || improvedCode.trim().length === 0) {
           showNotification('AI returned empty response. Try again or check console.', 'error');
-          console.error('Empty improved script received');
+          console.error('Empty improved code received');
           return;
         }
 
         // Add to conversation history for context in future requests
         conversationHistory.push({
-          script: originalScript,
+          script: originalCode,
           output: lastCommandOutput,
-          improved: improvedScript,
+          improved: improvedCode,
           timestamp: Date.now()
         });
 
@@ -516,8 +691,8 @@
         lastTriggeredInputElement = closestInput;
 
         // ALWAYS show the modal - it provides better UX with editable textareas
-        // The modal will use lastTriggeredInputElement for the "Use Script" button
-        showImprovedScriptModal(improvedScript, outputElement, button);
+        // The modal will use lastTriggeredInputElement for the "Use Code" button
+        showImprovedCodeModal(improvedCode, outputElement, button);
       } else {
         showNotification(response.error || 'Failed to analyze output', 'error');
         console.error('API error:', response.error);
@@ -530,16 +705,16 @@
     }
   }
 
-  // Handle inserting improved script
-  async function handleInsertScript(inputElement, button) {
+  // Handle inserting improved code
+  async function handleInsertCode(inputElement, button) {
     console.log('🔘 Insert button clicked!');
     console.log('Input element:', inputElement);
-    console.log('Improved script available:', !!improvedScript);
-    console.log('Script length:', improvedScript?.length);
+    console.log('Improved script available:', !!improvedCode);
+    console.log('Script length:', improvedCode?.length);
 
-    if (!improvedScript) {
-      showNotification('No improved script available', 'error');
-      console.error('No improved script in memory');
+    if (!improvedCode) {
+      showNotification('No improved code available', 'error');
+      console.error('No improved code in memory');
       return;
     }
 
@@ -551,17 +726,17 @@
       // Set the value based on element type
       if (inputElement.tagName === 'TEXTAREA' || inputElement.tagName === 'INPUT') {
         console.log('Setting value on TEXTAREA/INPUT');
-        inputElement.value = improvedScript;
+        inputElement.value = improvedCode;
         // Trigger input event for frameworks that listen to it
         inputElement.dispatchEvent(new Event('input', { bubbles: true }));
         inputElement.dispatchEvent(new Event('change', { bubbles: true }));
       } else if (inputElement.isContentEditable || inputElement.contentEditable === 'true') {
         console.log('Setting innerText on contenteditable DIV');
         // For contenteditable, use innerText which preserves line breaks
-        inputElement.innerText = improvedScript;
+        inputElement.innerText = improvedCode;
         // Also try textContent as fallback
         if (!inputElement.innerText) {
-          inputElement.textContent = improvedScript;
+          inputElement.textContent = improvedCode;
         }
         // Trigger input event for contenteditable
         inputElement.dispatchEvent(new Event('input', { bubbles: true }));
@@ -574,14 +749,14 @@
         const realInput = inputElement.querySelector('textarea, input[type="text"]');
         if (realInput) {
           console.log('Found real input inside:', realInput.tagName);
-          realInput.value = improvedScript;
+          realInput.value = improvedCode;
           realInput.dispatchEvent(new Event('input', { bubbles: true }));
           realInput.dispatchEvent(new Event('change', { bubbles: true }));
         } else {
           // Last resort - try everything
-          inputElement.innerText = improvedScript;
-          inputElement.textContent = improvedScript;
-          inputElement.value = improvedScript;
+          inputElement.innerText = improvedCode;
+          inputElement.textContent = improvedCode;
+          inputElement.value = improvedCode;
           inputElement.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }
@@ -638,10 +813,266 @@
     }, 5000);
   }
 
-  // Show improved script in a modal when no input fields found
-  function showImprovedScriptModal(script, sourceOutputElement = null, sourceButton = null) {
+  // Show modal immediately with loading animation (for selection hover workflow)
+  function showImprovedCodeModalWithLoading(selectedText, hideUseButton = false) {
     // Remove existing modal if any
-    const existing = document.querySelector('.claude-script-modal');
+    const existing = document.querySelector('.claude-code-modal');
+    if (existing) {
+      existing.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'claude-code-modal';
+    modal.innerHTML = `
+      <div class="claude-modal-overlay"></div>
+      <div class="claude-modal-content">
+        <div class="claude-modal-header">
+          <h3>✨ AI Code Buddy</h3>
+          <button class="claude-modal-close" title="Close">&times;</button>
+        </div>
+        <div class="claude-modal-body">
+          <div class="claude-modal-section">
+            <label class="claude-modal-label">Your Prompt (editable):</label>
+            <textarea class="claude-modal-prompt" rows="4" placeholder="Describe what you want to achieve...">${escapeHtml(selectedText)}</textarea>
+          </div>
+          <div class="claude-modal-section loading">
+            <label class="claude-modal-label">Generated Code (editable):</label>
+            <textarea class="claude-modal-code" rows="12" placeholder="AI is generating code..."></textarea>
+            <div class="claude-loading-spinner"></div>
+            <div class="claude-loading-text">AI is thinking...</div>
+          </div>
+        </div>
+        <div class="claude-modal-footer">
+          <button class="claude-modal-use btn-primary" style="${hideUseButton ? 'display: none;' : ''}" disabled>✓ Use Code</button>
+          <button class="claude-modal-iterate btn-secondary" disabled>🔄 Generate</button>
+          <button class="claude-modal-copy btn-tertiary" disabled>📋 Copy</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Event listeners for closing modal
+    const closeButtons = modal.querySelectorAll('.claude-modal-close, .claude-modal-overlay');
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => modal.remove());
+    });
+
+    // Esc key to close modal
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+
+    return modal;
+  }
+
+  // Update modal with generated code (stops loading, shows code)
+  function updateModalWithCode(modal, code) {
+    const codeSection = modal.querySelector('.claude-modal-section.loading');
+    const codeTextarea = modal.querySelector('.claude-modal-code');
+    const loadingSpinner = modal.querySelector('.claude-loading-spinner');
+    const loadingText = modal.querySelector('.claude-loading-text');
+
+    // Remove loading state
+    if (codeSection) {
+      codeSection.classList.remove('loading');
+    }
+    if (loadingSpinner) {
+      loadingSpinner.remove();
+    }
+    if (loadingText) {
+      loadingText.remove();
+    }
+
+    // Set code value
+    if (codeTextarea) {
+      codeTextarea.value = code;
+    }
+
+    // Enable buttons
+    const useButton = modal.querySelector('.claude-modal-use');
+    const copyButton = modal.querySelector('.claude-modal-copy');
+    const iterateButton = modal.querySelector('.claude-modal-iterate');
+
+    if (useButton && !useButton.style.display.includes('none')) {
+      useButton.disabled = false;
+    }
+    if (copyButton) {
+      copyButton.disabled = false;
+    }
+    if (iterateButton) {
+      iterateButton.disabled = false;
+    }
+
+    // Setup button event listeners now that we have code
+    setupModalButtonListeners(modal);
+  }
+
+  // Update modal with error (stops loading, shows error toast)
+  function updateModalWithError(modal, errorMessage) {
+    const codeSection = modal.querySelector('.claude-modal-section.loading');
+    const loadingSpinner = modal.querySelector('.claude-loading-spinner');
+    const loadingText = modal.querySelector('.claude-loading-text');
+
+    // Remove loading state
+    if (codeSection) {
+      codeSection.classList.remove('loading');
+    }
+    if (loadingSpinner) {
+      loadingSpinner.remove();
+    }
+    if (loadingText) {
+      loadingText.remove();
+    }
+
+    // Show error notification
+    showNotification(errorMessage, 'error');
+
+    // Enable Generate button so user can try again
+    const iterateButton = modal.querySelector('.claude-modal-iterate');
+    if (iterateButton) {
+      iterateButton.disabled = false;
+    }
+
+    // Setup button listeners (for Generate button retry)
+    setupModalButtonListeners(modal);
+  }
+
+  // Setup modal button event listeners (shared between all modal display modes)
+  function setupModalButtonListeners(modal) {
+    const promptTextarea = modal.querySelector('.claude-modal-prompt');
+    const codeTextarea = modal.querySelector('.claude-modal-code');
+    const useButton = modal.querySelector('.claude-modal-use');
+    const copyButton = modal.querySelector('.claude-modal-copy');
+    const iterateButton = modal.querySelector('.claude-modal-iterate');
+
+    // Remove old listeners by cloning (prevents duplicate listeners)
+    const newUseButton = useButton.cloneNode(true);
+    const newCopyButton = copyButton.cloneNode(true);
+    const newIterateButton = iterateButton.cloneNode(true);
+    useButton.replaceWith(newUseButton);
+    copyButton.replaceWith(newCopyButton);
+    iterateButton.replaceWith(newIterateButton);
+
+    // "Use Code" button
+    newUseButton.addEventListener('click', () => {
+      const codeToInsert = codeTextarea.value;
+      const targetInput = lastTriggeredInputElement;
+
+      if (!targetInput) {
+        showNotification('No input field found to insert code', 'error');
+        return;
+      }
+
+      // Insert into the target input field
+      if (targetInput.tagName === 'TEXTAREA' || targetInput.tagName === 'INPUT') {
+        targetInput.value = codeToInsert;
+        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+        targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+      } else if (targetInput.isContentEditable || targetInput.contentEditable === 'true') {
+        targetInput.innerText = codeToInsert;
+        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      // Focus the input
+      targetInput.focus();
+
+      // Flash success
+      showNotification('Code inserted successfully!', 'success');
+
+      // Close modal
+      modal.remove();
+    });
+
+    // "Copy" button
+    newCopyButton.addEventListener('click', async () => {
+      try {
+        const codeToCopy = codeTextarea.value;
+        await navigator.clipboard.writeText(codeToCopy);
+        showNotification('Copied to clipboard', 'success');
+        modal.remove();
+      } catch (error) {
+        showNotification('Failed to copy to clipboard', 'error');
+      }
+    });
+
+    // "Generate" button (was "Improve Further")
+    newIterateButton.addEventListener('click', async () => {
+      const currentPrompt = promptTextarea.value;
+      const codeSection = codeTextarea.closest('.claude-modal-section');
+
+      // Show loading state
+      codeSection.classList.add('loading');
+
+      const loadingSpinner = document.createElement('div');
+      loadingSpinner.className = 'claude-loading-spinner';
+      codeSection.appendChild(loadingSpinner);
+
+      const loadingText = document.createElement('div');
+      loadingText.className = 'claude-loading-text';
+      loadingText.textContent = 'AI is thinking...';
+      codeSection.appendChild(loadingText);
+
+      // Disable buttons
+      newIterateButton.disabled = true;
+      newUseButton.disabled = true;
+      newCopyButton.disabled = true;
+
+      try {
+        const response = await chrome.runtime.sendMessage({
+          action: 'analyzeOutput',
+          data: {
+            output: lastCommandOutput,
+            script: currentPrompt,
+            conversationHistory: conversationHistory,
+            url: window.location.href
+          }
+        });
+
+        if (response.success && response.improvedCode) {
+          improvedCode = response.improvedCode;
+          codeTextarea.value = improvedCode;
+
+          conversationHistory.push({
+            script: currentPrompt,
+            output: lastCommandOutput,
+            improved: improvedCode,
+            timestamp: Date.now()
+          });
+
+          if (conversationHistory.length > MAX_HISTORY) {
+            conversationHistory = conversationHistory.slice(-MAX_HISTORY);
+          }
+
+          showNotification('Code improved! Edit further or use it.', 'success');
+        } else {
+          showNotification(response.error || 'Failed to improve code', 'error');
+        }
+      } catch (error) {
+        console.error('Error improving code:', error);
+        showNotification('Error: ' + error.message, 'error');
+      } finally {
+        // Remove loading state
+        codeSection.classList.remove('loading');
+        loadingSpinner.remove();
+        loadingText.remove();
+
+        // Re-enable buttons
+        newIterateButton.disabled = false;
+        newUseButton.disabled = false;
+        newCopyButton.disabled = false;
+      }
+    });
+  }
+
+  // Show improved code in a modal when no input fields found
+  function showImprovedCodeModal(script, sourceOutputElement = null, sourceButton = null, hideUseButton = false) {
+    // Remove existing modal if any
+    const existing = document.querySelector('.claude-code-modal');
     if (existing) {
       existing.remove();
     }
@@ -667,27 +1098,27 @@
     }
 
     const modal = document.createElement('div');
-    modal.className = 'claude-script-modal';
+    modal.className = 'claude-code-modal';
     modal.innerHTML = `
       <div class="claude-modal-overlay"></div>
       <div class="claude-modal-content">
         <div class="claude-modal-header">
-          <h3>{+} AI Code Buddy</h3>
+          <h3>✨ AI Code Buddy</h3>
           <button class="claude-modal-close" title="Close">&times;</button>
         </div>
         <div class="claude-modal-body">
           <div class="claude-modal-section">
             <label class="claude-modal-label">Your Prompt (editable):</label>
-            <textarea class="claude-modal-prompt" rows="4" placeholder="Describe what you want to achieve...">${escapeHtml(originalScript || lastCommandOutput || '')}</textarea>
+            <textarea class="claude-modal-prompt" rows="4" placeholder="Describe what you want to achieve...">${escapeHtml(originalCode || lastCommandOutput || '')}</textarea>
           </div>
           <div class="claude-modal-section">
-            <label class="claude-modal-label">Generated Script (editable):</label>
-            <textarea class="claude-modal-script" rows="12">${escapeHtml(script)}</textarea>
+            <label class="claude-modal-label">Generated Code (editable):</label>
+            <textarea class="claude-modal-code" rows="12">${escapeHtml(script)}</textarea>
           </div>
         </div>
         <div class="claude-modal-footer">
-          <button class="claude-modal-use btn-primary">✓ Use Script</button>
-          <button class="claude-modal-iterate btn-secondary">🔄 Improve Further</button>
+          <button class="claude-modal-use btn-primary" style="${hideUseButton ? 'display: none;' : ''}">✓ Use Code</button>
+          <button class="claude-modal-iterate btn-secondary">🔄 Generate</button>
           <button class="claude-modal-copy btn-tertiary">📋 Copy</button>
         </div>
       </div>
@@ -712,23 +1143,23 @@
 
     // Get modal elements
     const promptTextarea = modal.querySelector('.claude-modal-prompt');
-    const scriptTextarea = modal.querySelector('.claude-modal-script');
+    const codeTextarea = modal.querySelector('.claude-modal-code');
     const useButton = modal.querySelector('.claude-modal-use');
     const copyButton = modal.querySelector('.claude-modal-copy');
     const iterateButton = modal.querySelector('.claude-modal-iterate');
 
-    // "Use Script" button - inserts script into target input and closes modal
-    if (targetInput) {
+    // "Use Code" button - inserts code into target input and closes modal
+    if (targetInput && !hideUseButton) {
       useButton.addEventListener('click', () => {
-        const scriptToInsert = scriptTextarea.value;
+        const codeToInsert = codeTextarea.value;
 
         // Insert into the target input field
         if (targetInput.tagName === 'TEXTAREA' || targetInput.tagName === 'INPUT') {
-          targetInput.value = scriptToInsert;
+          targetInput.value = codeToInsert;
           targetInput.dispatchEvent(new Event('input', { bubbles: true }));
           targetInput.dispatchEvent(new Event('change', { bubbles: true }));
         } else if (targetInput.isContentEditable || targetInput.contentEditable === 'true') {
-          targetInput.innerText = scriptToInsert;
+          targetInput.innerText = codeToInsert;
           targetInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
 
@@ -751,7 +1182,7 @@
     // "Copy" button - copies script to clipboard and closes modal
     copyButton.addEventListener('click', async () => {
       try {
-        const scriptToCopy = scriptTextarea.value;
+        const scriptToCopy = codeTextarea.value;
         await navigator.clipboard.writeText(scriptToCopy);
         showNotification('Copied to clipboard', 'success');
         // Close modal after copying
@@ -767,21 +1198,21 @@
     iterateButton.addEventListener('click', async () => {
         // Get current values from textareas
         const currentPrompt = promptTextarea.value;
-        const currentScript = scriptTextarea.value;
+        const currentScript = codeTextarea.value;
 
         // Show big loading overlay on script section
-        const scriptSection = scriptTextarea.closest('.claude-modal-section');
-        scriptSection.classList.add('loading');
+        const codeSection = codeTextarea.closest('.claude-modal-section');
+        codeSection.classList.add('loading');
 
         // Create loading spinner and text
         const loadingSpinner = document.createElement('div');
         loadingSpinner.className = 'claude-loading-spinner';
-        scriptSection.appendChild(loadingSpinner);
+        codeSection.appendChild(loadingSpinner);
 
         const loadingText = document.createElement('div');
         loadingText.className = 'claude-loading-text';
         loadingText.textContent = 'AI is thinking...';
-        scriptSection.appendChild(loadingText);
+        codeSection.appendChild(loadingText);
 
         // Disable button
         iterateButton.disabled = true;
@@ -799,16 +1230,16 @@
             }
           });
 
-          if (response.success && response.improvedScript) {
-            // Update the modal with new improved script
-            improvedScript = response.improvedScript;
-            scriptTextarea.value = improvedScript;
+          if (response.success && response.improvedCode) {
+            // Update the modal with new improved code
+            improvedCode = response.improvedCode;
+            codeTextarea.value = improvedCode;
 
             // Update conversation history
             conversationHistory.push({
               script: currentPrompt,
               output: lastCommandOutput,
-              improved: improvedScript,
+              improved: improvedCode,
               timestamp: Date.now()
             });
 
@@ -825,7 +1256,7 @@
           showNotification('Error: ' + error.message, 'error');
         } finally {
           // Remove loading overlay
-          scriptSection.classList.remove('loading');
+          codeSection.classList.remove('loading');
           loadingSpinner.remove();
           loadingText.remove();
 
@@ -867,18 +1298,18 @@
           }
         }).then(response => {
           if (response && response.success) {
-            improvedScript = response.improvedScript;
-            originalScript = selectedText;
+            improvedCode = response.improvedCode;
+            originalCode = selectedText;
             lastCommandOutput = 'Selected text improvement';
 
-            console.log('✓ Received improved script from selected text');
+            console.log('✓ Received improved code from selected text');
 
             // Try to find the closest input field for insertion
             const possibleInputs = findElements(SELECTORS.commandInput, customSelectors?.commandInput);
             lastTriggeredInputElement = possibleInputs.length > 0 ? possibleInputs[0] : null;
 
-            // Show the modal with the improved script
-            showImprovedScriptModal(improvedScript);
+            // Show the modal with the improved code
+            showImprovedCodeModal(improvedCode);
 
             showNotification('Text improved! Check the modal.', 'success');
           } else {
@@ -902,27 +1333,82 @@
 
   // Keyboard shortcuts handler
   document.addEventListener('keydown', async (e) => {
-    // Alt+Shift+A: Send to AI (trigger first visible Send button)
+    // Alt+Shift+A: Send to AI
     if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'a') {
       e.preventDefault();
-      const sendButton = document.querySelector('.claude-send-btn:not(:disabled)');
-      if (sendButton) {
-        sendButton.click();
-        showNotification('⌨️ Shortcut used: Alt+Shift+A', 'info');
+
+      // First, check if there's a visible hover button (from selection)
+      const hoverButton = document.querySelector('.claude-selection-hover-btn.visible');
+      if (hoverButton) {
+        hoverButton.click();
+        showNotification('⌨️ Shortcut: Alt+Shift+A', 'info');
+        return;
+      }
+
+      // Fallback: Check if there's selected text and trigger handleSelection
+      let hasSelection = false;
+      const activeElement = document.activeElement;
+
+      // Check textarea/input selection
+      if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+        const start = activeElement.selectionStart;
+        const end = activeElement.selectionEnd;
+        if (start !== end) {
+          hasSelection = true;
+          handleSelection(e); // This will show the hover button
+          // Wait a bit for button to appear, then click it
+          setTimeout(() => {
+            const btn = document.querySelector('.claude-selection-hover-btn');
+            if (btn) btn.click();
+          }, 50);
+        }
       } else {
-        showNotification('No output to analyze. Run a command first.', 'warning');
+        // Check window selection
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+        if (selectedText && selectedText.length >= 3) {
+          hasSelection = true;
+          handleSelection(e); // This will show the hover button
+          // Wait a bit for button to appear, then click it
+          setTimeout(() => {
+            const btn = document.querySelector('.claude-selection-hover-btn');
+            if (btn) btn.click();
+          }, 50);
+        }
+      }
+
+      if (!hasSelection) {
+        showNotification('Please select text first to use Alt+Shift+A', 'warning');
       }
     }
 
-    // Alt+Shift+I: Insert improved script (trigger first visible Insert button)
+    // Alt+Shift+I: Insert last AI output into focused editable field
     if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'i') {
       e.preventDefault();
-      const insertButton = document.querySelector('.claude-insert-btn:not(:disabled):not([style*="display: none"])');
-      if (insertButton) {
-        insertButton.click();
-        showNotification('⌨️ Shortcut used: Alt+Shift+I', 'info');
+
+      if (!improvedCode) {
+        showNotification('No AI output available. Use Alt+Shift+A first.', 'warning');
+        return;
+      }
+
+      // Get the currently focused element
+      const activeElement = document.activeElement;
+
+      if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+        // Insert into textarea/input
+        activeElement.value = improvedCode;
+        activeElement.dispatchEvent(new Event('input', { bubbles: true }));
+        activeElement.dispatchEvent(new Event('change', { bubbles: true }));
+        activeElement.focus();
+        showNotification('⌨️ Shortcut: Alt+Shift+I - Code inserted!', 'success');
+      } else if (activeElement && (activeElement.isContentEditable || activeElement.contentEditable === 'true')) {
+        // Insert into contenteditable
+        activeElement.innerText = improvedCode;
+        activeElement.dispatchEvent(new Event('input', { bubbles: true }));
+        activeElement.focus();
+        showNotification('⌨️ Shortcut: Alt+Shift+I - Code inserted!', 'success');
       } else {
-        showNotification('No improved script available. Analyze output first.', 'warning');
+        showNotification('Please focus an editable field first to use Alt+Shift+I', 'warning');
       }
     }
   });

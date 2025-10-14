@@ -5,6 +5,52 @@ All notable changes to AI Code Buddy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3] - 2025-10-14
+
+### Changed
+- **Selection hover button now works for ALL text** (both editable and non-editable)
+  - Previously: Only worked on readonly content (Feature 2)
+  - Now: Works universally on any selected text including textareas, input fields, and contenteditable
+  - Consistent UX across the entire browser
+  - Users can get AI help for any text they select, anywhere
+
+### Removed
+- **Blocked Sites feature completely removed**
+  - Feature was originally added to hide "too many injected buttons" problem
+  - Selection-based hover button eliminated the need for blocking sites
+  - Removed from: content.js, background.js, popup UI, settings, documentation
+  - Deleted: site-permissions.html, TESTING-BLOCKED-SITES.md
+  - Cleaner codebase and simpler user experience
+
+### Technical
+- All 208 tests passing with updated selection hover tests
+- Removed ~150 lines of blocked sites code
+- Updated test expectations to match new universal selection behavior
+- Simplified extension initialization (no more site checking)
+
+## [2.2.2] - 2025-10-14
+
+### Changed
+- **Major UX Improvement**: Replaced automatic button injection with selection-based hover button
+  - Feature 2 (readonly content analysis) now uses Medium-style hover button
+  - User selects text and gets a clean hover button above the selection
+  - Eliminates button clutter on web pages
+  - Much more intuitive and less intrusive UX
+  - Feature 1 (editable textarea assistance) remains unchanged
+
+### Added
+- Selection-based hover button with smooth animations
+- Medium-style annotation UX for text selection
+- Automatic detection to avoid showing button in editable fields
+- Better mobile responsiveness for selection hover
+- 24 new unit tests for selection hover feature
+
+### Technical
+- All 208 tests passing with no regressions (184 existing + 24 new)
+- New selection event handlers (mouseup, selectionchange, keyup)
+- CSS animations for hover button appearance
+- Smart detection to preserve Feature 1 functionality
+
 ## [2.2.0] - 2025-10-13
 
 ### Added

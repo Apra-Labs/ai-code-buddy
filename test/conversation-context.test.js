@@ -13,12 +13,12 @@ function buildConversationContext(conversationHistory) {
     contextSection = '\n\n## Previous Attempts (learn from these!):\n';
     conversationHistory.forEach((attempt, index) => {
       contextSection += `\nAttempt ${index + 1}:\n`;
-      contextSection += `Script tried:\n${attempt.script}\n`;
+      contextSection += `Script tried:\n${attempt.code}\n`;
       contextSection += `Result/Error:\n${attempt.output}\n`;
       contextSection += `Improvement made:\n${attempt.improved}\n`;
       contextSection += `---\n`;
     });
-    contextSection += '\nThe script is STILL failing. Learn from previous attempts and try a DIFFERENT approach.\n';
+    contextSection += '\nThe code is STILL failing. Learn from previous attempts and try a DIFFERENT approach.\n';
   }
   return contextSection;
 }
@@ -27,14 +27,14 @@ function buildConversationContext(conversationHistory) {
  * Builds the complete prompt with conversation awareness
  * Mirrors the logic from background.js handleAnalyzeOutput()
  */
-function buildPromptWithContext(output, script, conversationHistory = []) {
+function buildPromptWithContext(output, code, conversationHistory = []) {
   const contextSection = buildConversationContext(conversationHistory);
 
-  const prompt = `You are helping debug a command or script that ${conversationHistory.length > 0 ? 'is STILL failing after ' + conversationHistory.length + ' attempts' : 'may have failed or produced unexpected output'}.
+  const prompt = `You are helping debug a command or code that ${conversationHistory.length > 0 ? 'is STILL failing after ' + conversationHistory.length + ' attempts' : 'may have failed or produced unexpected output'}.
 ${contextSection}
 
 ## Current Attempt:
-${script ? `Current Script:\n${script}\n\n` : ''}Latest Output/Error:
+${code ? `Current Script:\n${code}\n\n` : ''}Latest Output/Error:
 ${output}
 
 ${conversationHistory.length > 0 ?
@@ -43,15 +43,15 @@ ${conversationHistory.length > 0 ?
   '- Alternative logic or approach\n' +
   '- Checking different error conditions\n' +
   '- Using different syntax or methods\n\n'
-  : ''}Provide ONLY the improved script with no explanation, ready to run immediately.
+  : ''}Provide ONLY the improved code with no explanation, ready to run immediately.
 Focus on:
 - Fixing any errors shown in the output
 - Adding better error handling
 - Improving efficiency and reliability
-- Making the script more robust
+- Making the code more robust
 ${conversationHistory.length > 0 ? '- Using a DIFFERENT approach than previous attempts' : ''}
 
-Return only the executable script code, nothing else.`;
+Return only the executable code code, nothing else.`;
 
   return prompt;
 }
@@ -85,7 +85,7 @@ describe('Conversation Context Management', () => {
     });
 
     it('should not include "DIFFERENT approach" section for first attempt', () => {
-      const prompt = buildPromptWithContext('error', 'script', []);
+      const prompt = buildPromptWithContext('error', 'code', []);
       assert.ok(!prompt.includes('COMPLETELY DIFFERENT solution'));
     });
   });
@@ -93,7 +93,7 @@ describe('Conversation Context Management', () => {
   describe('Context Building - Single Attempt', () => {
     it('should include previous attempt details', () => {
       const history = [{
-        script: 'ls /nonexistent',
+        code: 'ls /nonexistent',
         output: 'ls: cannot access',
         improved: 'ls -la /tmp'
       }];
@@ -108,7 +108,7 @@ describe('Conversation Context Management', () => {
 
     it('should indicate urgency after 1 attempt', () => {
       const history = [{
-        script: 'test1',
+        code: 'test1',
         output: 'error1',
         improved: 'improved1'
       }];
@@ -119,7 +119,7 @@ describe('Conversation Context Management', () => {
 
     it('should suggest trying different approach after 1 attempt', () => {
       const history = [{
-        script: 'test',
+        code: 'test',
         output: 'error',
         improved: 'improved'
       }];
@@ -131,7 +131,7 @@ describe('Conversation Context Management', () => {
 
     it('should end context with learning message', () => {
       const history = [{
-        script: 'test',
+        code: 'test',
         output: 'error',
         improved: 'improved'
       }];
@@ -144,9 +144,9 @@ describe('Conversation Context Management', () => {
   describe('Context Building - Multiple Attempts', () => {
     it('should include all attempts in order', () => {
       const history = [
-        { script: 'attempt1', output: 'error1', improved: 'fix1' },
-        { script: 'attempt2', output: 'error2', improved: 'fix2' },
-        { script: 'attempt3', output: 'error3', improved: 'fix3' }
+        { code: 'attempt1', output: 'error1', improved: 'fix1' },
+        { code: 'attempt2', output: 'error2', improved: 'fix2' },
+        { code: 'attempt3', output: 'error3', improved: 'fix3' }
       ];
 
       const context = buildConversationContext(history);
@@ -160,9 +160,9 @@ describe('Conversation Context Management', () => {
 
     it('should show increasing urgency with more attempts', () => {
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' },
-        { script: 't2', output: 'e2', improved: 'i2' },
-        { script: 't3', output: 'e3', improved: 'i3' }
+        { code: 't1', output: 'e1', improved: 'i1' },
+        { code: 't2', output: 'e2', improved: 'i2' },
+        { code: 't3', output: 'e3', improved: 'i3' }
       ];
 
       const prompt = buildPromptWithContext('error4', 'test4', history);
@@ -171,11 +171,11 @@ describe('Conversation Context Management', () => {
 
     it('should maintain attempt numbering correctly', () => {
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' },
-        { script: 't2', output: 'e2', improved: 'i2' },
-        { script: 't3', output: 'e3', improved: 'i3' },
-        { script: 't4', output: 'e4', improved: 'i4' },
-        { script: 't5', output: 'e5', improved: 'i5' }
+        { code: 't1', output: 'e1', improved: 'i1' },
+        { code: 't2', output: 'e2', improved: 'i2' },
+        { code: 't3', output: 'e3', improved: 'i3' },
+        { code: 't4', output: 'e4', improved: 'i4' },
+        { code: 't5', output: 'e5', improved: 'i5' }
       ];
 
       const context = buildConversationContext(history);
@@ -187,8 +187,8 @@ describe('Conversation Context Management', () => {
 
     it('should separate attempts with dividers', () => {
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' },
-        { script: 't2', output: 'e2', improved: 'i2' }
+        { code: 't1', output: 'e1', improved: 'i1' },
+        { code: 't2', output: 'e2', improved: 'i2' }
       ];
 
       const context = buildConversationContext(history);
@@ -203,52 +203,52 @@ describe('Conversation Context Management', () => {
       assert.ok(prompt.includes('## Current Attempt:'));
       assert.ok(prompt.includes('Current Script:'));
       assert.ok(prompt.includes('Latest Output/Error:'));
-      assert.ok(prompt.includes('Provide ONLY the improved script'));
+      assert.ok(prompt.includes('Provide ONLY the improved code'));
     });
 
     it('should include all required sections with history', () => {
-      const history = [{ script: 't', output: 'e', improved: 'i' }];
-      const prompt = buildPromptWithContext('error', 'script', history);
+      const history = [{ code: 't', output: 'e', improved: 'i' }];
+      const prompt = buildPromptWithContext('error', 'code', history);
       assert.ok(prompt.includes('## Previous Attempts'));
       assert.ok(prompt.includes('## Current Attempt:'));
       assert.ok(prompt.includes('IMPORTANT: The previous approaches did NOT work'));
     });
 
-    it('should include current script in prompt', () => {
-      const script = 'ls -la /home/user/documents';
-      const prompt = buildPromptWithContext('error', script, []);
-      assert.ok(prompt.includes(script));
+    it('should include current code in prompt', () => {
+      const code = 'ls -la /home/user/documents';
+      const prompt = buildPromptWithContext('error', code, []);
+      assert.ok(prompt.includes(code));
     });
 
     it('should include current error/output in prompt', () => {
       const output = 'bash: command not found: nonexistent-command';
-      const prompt = buildPromptWithContext(output, 'script', []);
+      const prompt = buildPromptWithContext(output, 'code', []);
       assert.ok(prompt.includes(output));
     });
 
-    it('should handle scripts with special characters', () => {
-      const script = 'grep "pattern" file.txt | awk \'{print $1}\'';
-      const prompt = buildPromptWithContext('error', script, []);
-      assert.ok(prompt.includes(script));
+    it('should handle codes with special characters', () => {
+      const code = 'grep "pattern" file.txt | awk \'{print $1}\'';
+      const prompt = buildPromptWithContext('error', code, []);
+      assert.ok(prompt.includes(code));
     });
 
-    it('should handle multiline scripts', () => {
-      const script = 'for file in *.txt\ndo\n  cat "$file"\ndone';
-      const prompt = buildPromptWithContext('error', script, []);
-      assert.ok(prompt.includes(script));
+    it('should handle multiline codes', () => {
+      const code = 'for file in *.txt\ndo\n  cat "$file"\ndone';
+      const prompt = buildPromptWithContext('error', code, []);
+      assert.ok(prompt.includes(code));
     });
   });
 
   describe('Learning Instructions', () => {
     it('should not include "DIFFERENT approach" for first attempt', () => {
-      const prompt = buildPromptWithContext('error', 'script', []);
+      const prompt = buildPromptWithContext('error', 'code', []);
       assert.ok(!prompt.includes('Using a DIFFERENT approach than previous attempts'));
     });
 
     it('should emphasize DIFFERENT approach after failures', () => {
       const history = [
-        { script: 'approach1', output: 'failed', improved: 'fix1' },
-        { script: 'approach2', output: 'failed', improved: 'fix2' }
+        { code: 'approach1', output: 'failed', improved: 'fix1' },
+        { code: 'approach2', output: 'failed', improved: 'fix2' }
       ];
 
       const prompt = buildPromptWithContext('still failing', 'approach3', history);
@@ -259,8 +259,8 @@ describe('Conversation Context Management', () => {
 
     it('should provide specific guidance after multiple failures', () => {
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' },
-        { script: 't2', output: 'e2', improved: 'i2' }
+        { code: 't1', output: 'e1', improved: 'i1' },
+        { code: 't2', output: 'e2', improved: 'i2' }
       ];
 
       const prompt = buildPromptWithContext('e3', 't3', history);
@@ -272,25 +272,25 @@ describe('Conversation Context Management', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle empty script', () => {
+    it('should handle empty code', () => {
       const prompt = buildPromptWithContext('error', '', []);
       assert.ok(prompt.includes('Latest Output/Error:'));
       assert.ok(!prompt.includes('Current Script:\n\n'));
     });
 
-    it('should handle null script', () => {
+    it('should handle null code', () => {
       const prompt = buildPromptWithContext('error', null, []);
       assert.ok(prompt.includes('Latest Output/Error:'));
     });
 
-    it('should handle undefined script', () => {
+    it('should handle undefined code', () => {
       const prompt = buildPromptWithContext('error', undefined, []);
       assert.ok(prompt.includes('Latest Output/Error:'));
     });
 
     it('should handle very long history (10+ attempts)', () => {
       const history = Array.from({ length: 15 }, (_, i) => ({
-        script: `attempt${i + 1}`,
+        code: `attempt${i + 1}`,
         output: `error${i + 1}`,
         improved: `fix${i + 1}`
       }));
@@ -304,8 +304,8 @@ describe('Conversation Context Management', () => {
 
     it('should handle history entries with missing fields gracefully', () => {
       const history = [
-        { script: 'test', output: '', improved: 'fix' },
-        { script: '', output: 'error', improved: '' }
+        { code: 'test', output: '', improved: 'fix' },
+        { code: '', output: 'error', improved: '' }
       ];
 
       const context = buildConversationContext(history);
@@ -315,7 +315,7 @@ describe('Conversation Context Management', () => {
 
     it('should handle special characters in history', () => {
       const history = [{
-        script: 'grep "pattern with $special & chars"',
+        code: 'grep "pattern with $special & chars"',
         output: 'error: "quotes" and \'apostrophes\'',
         improved: 'grep -F "pattern with $special & chars"'
       }];
@@ -330,7 +330,7 @@ describe('Conversation Context Management', () => {
   describe('Context Consistency', () => {
     it('should produce same output for same input', () => {
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' }
+        { code: 't1', output: 'e1', improved: 'i1' }
       ];
 
       const context1 = buildConversationContext(history);
@@ -340,9 +340,9 @@ describe('Conversation Context Management', () => {
 
     it('should maintain order of attempts', () => {
       const history = [
-        { script: 'first', output: 'e1', improved: 'i1' },
-        { script: 'second', output: 'e2', improved: 'i2' },
-        { script: 'third', output: 'e3', improved: 'i3' }
+        { code: 'first', output: 'e1', improved: 'i1' },
+        { code: 'second', output: 'e2', improved: 'i2' },
+        { code: 'third', output: 'e3', improved: 'i3' }
       ];
 
       const context = buildConversationContext(history);
@@ -356,15 +356,15 @@ describe('Conversation Context Management', () => {
 
     it('should include all history details for each attempt', () => {
       const history = [{
-        script: 'my-script-command',
+        code: 'my-code-command',
         output: 'specific-error-output',
-        improved: 'improved-script-version'
+        improved: 'improved-code-version'
       }];
 
       const context = buildConversationContext(history);
-      assert.ok(context.includes('my-script-command'));
+      assert.ok(context.includes('my-code-command'));
       assert.ok(context.includes('specific-error-output'));
-      assert.ok(context.includes('improved-script-version'));
+      assert.ok(context.includes('improved-code-version'));
     });
   });
 
@@ -372,12 +372,12 @@ describe('Conversation Context Management', () => {
     it('should handle bash permission denied scenario', () => {
       const history = [
         {
-          script: 'rm /etc/important-file',
+          code: 'rm /etc/important-file',
           output: 'rm: cannot remove: Permission denied',
           improved: 'sudo rm /etc/important-file'
         },
         {
-          script: 'sudo rm /etc/important-file',
+          code: 'sudo rm /etc/important-file',
           output: 'rm: cannot remove: Read-only file system',
           improved: 'sudo mount -o remount,rw / && sudo rm /etc/important-file'
         }
@@ -397,9 +397,9 @@ describe('Conversation Context Management', () => {
 
     it('should handle Python import error scenario', () => {
       const history = [{
-        script: 'python script.py',
+        code: 'python code.py',
         output: 'ModuleNotFoundError: No module named \'requests\'',
-        improved: 'pip install requests && python script.py'
+        improved: 'pip install requests && python code.py'
       }];
 
       const context = buildConversationContext(history);
@@ -410,12 +410,12 @@ describe('Conversation Context Management', () => {
     it('should handle Docker network issue scenario', () => {
       const history = [
         {
-          script: 'docker run myapp',
+          code: 'docker run myapp',
           output: 'Error: Cannot connect to Docker daemon',
           improved: 'sudo systemctl start docker && docker run myapp'
         },
         {
-          script: 'sudo systemctl start docker && docker run myapp',
+          code: 'sudo systemctl start docker && docker run myapp',
           output: 'Error: port 8080 already in use',
           improved: 'docker run -p 8081:8080 myapp'
         }
@@ -448,21 +448,21 @@ if (require.main === module) {
     },
     () => {
       console.log('✓ No history: uses gentle first-attempt language');
-      const prompt = buildPromptWithContext('error', 'script', []);
+      const prompt = buildPromptWithContext('error', 'code', []);
       assert.ok(!prompt.includes('STILL failing'));
     },
 
     // Single attempt tests
     () => {
       console.log('✓ Single attempt: includes previous details');
-      const history = [{ script: 'test', output: 'error', improved: 'fix' }];
+      const history = [{ code: 'test', output: 'error', improved: 'fix' }];
       const context = buildConversationContext(history);
       assert.ok(context.includes('Attempt 1:'));
       assert.ok(context.includes('test'));
     },
     () => {
       console.log('✓ Single attempt: shows urgency');
-      const history = [{ script: 't', output: 'e', improved: 'i' }];
+      const history = [{ code: 't', output: 'e', improved: 'i' }];
       const prompt = buildPromptWithContext('e2', 't2', history);
       assert.ok(prompt.includes('STILL failing after 1 attempts'));
     },
@@ -471,8 +471,8 @@ if (require.main === module) {
     () => {
       console.log('✓ Multiple attempts: maintains order');
       const history = [
-        { script: 'first', output: 'e1', improved: 'i1' },
-        { script: 'second', output: 'e2', improved: 'i2' }
+        { code: 'first', output: 'e1', improved: 'i1' },
+        { code: 'second', output: 'e2', improved: 'i2' }
       ];
       const context = buildConversationContext(history);
       assert.ok(context.indexOf('first') < context.indexOf('second'));
@@ -480,9 +480,9 @@ if (require.main === module) {
     () => {
       console.log('✓ Multiple attempts: includes all attempts');
       const history = [
-        { script: 't1', output: 'e1', improved: 'i1' },
-        { script: 't2', output: 'e2', improved: 'i2' },
-        { script: 't3', output: 'e3', improved: 'i3' }
+        { code: 't1', output: 'e1', improved: 'i1' },
+        { code: 't2', output: 'e2', improved: 'i2' },
+        { code: 't3', output: 'e3', improved: 'i3' }
       ];
       const context = buildConversationContext(history);
       // "Attempt" appears in attempt numbers + "previous attempts" message
@@ -492,21 +492,21 @@ if (require.main === module) {
     // Learning instructions
     () => {
       console.log('✓ Learning: emphasizes different approach after failures');
-      const history = [{ script: 't', output: 'e', improved: 'i' }];
+      const history = [{ code: 't', output: 'e', improved: 'i' }];
       const prompt = buildPromptWithContext('e', 't', history);
       assert.ok(prompt.includes('COMPLETELY DIFFERENT solution'));
     },
 
     // Edge cases
     () => {
-      console.log('✓ Edge case: handles empty script');
+      console.log('✓ Edge case: handles empty code');
       const prompt = buildPromptWithContext('error', '', []);
       assert.ok(prompt.includes('Latest Output/Error:'));
     },
     () => {
       console.log('✓ Edge case: handles very long history');
       const history = Array.from({ length: 10 }, (_, i) => ({
-        script: `t${i}`, output: `e${i}`, improved: `i${i}`
+        code: `t${i}`, output: `e${i}`, improved: `i${i}`
       }));
       const context = buildConversationContext(history);
       assert.ok(countOccurrences(context, 'Attempt') >= 10);
@@ -516,7 +516,7 @@ if (require.main === module) {
     () => {
       console.log('✓ Real world: handles permission denied scenario');
       const history = [{
-        script: 'rm file',
+        code: 'rm file',
         output: 'Permission denied',
         improved: 'sudo rm file'
       }];

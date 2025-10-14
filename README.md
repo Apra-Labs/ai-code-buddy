@@ -28,11 +28,11 @@ A Chrome extension that integrates **multiple AI providers** (Claude, OpenAI, Ge
 - **Universal Compatibility**: Works with any web-based terminal, code editor, or command interface
   - RPort, Cloud Shell, GitPod, VS Code Web, CodeSandbox, Replit, and more!
 - **Multi-Provider Support**: Choose from 9+ AI providers including Claude, OpenAI, Gemini, Ollama, and more
-- **Send to AI**: Analyze command outputs with one click
+- **Selection-Based Hover**: Select any text and get a Medium-style hover button - no buttons cluttering your page!
 - **Improved Scripts**: Get AI-powered script improvements instantly
 - **Auto-Insert**: Insert improved scripts directly into your terminal
 - **Conversational Context**: AI learns from previous attempts and errors
-- **Flexible Detection**: Automatically detects terminals using smart pattern matching
+- **Clean UX**: Only shows AI button when you need it - by selecting text
 - **Custom Selectors**: Configure selectors for any specific web application
 - **Privacy First**: API keys stored locally, fully open source, optional local AI with Ollama
 
@@ -99,12 +99,13 @@ Pick one based on your needs:
 
 1. **Open** any web terminal (RPort, Cloud Shell, etc.)
 2. **Run** any command
-3. **Click** the "Send to AI" button near the output
-4. AI analyzes and provides an improved script
-5. **Click** "Insert Improved Script" button
-6. **Run** the improved script!
+3. **Select the text** you want to analyze (terminal output, logs, errors)
+4. A **hover button appears** above your selection
+5. **Click the hover button** - AI analyzes and provides an improved script
+6. **Click "Use Script"** to insert it into the terminal
+7. **Run** the improved script!
 
-🎉 **You're done!** If the script fails, click "Send to AI" again - the AI learns from previous attempts!
+🎉 **You're done!** If the script fails, select the error and repeat - the AI learns from previous attempts!
 
 ## Usage
 
@@ -112,11 +113,13 @@ Pick one based on your needs:
 
 1. **Navigate to any web terminal** in Chrome (RPort, Cloud Shell, GitPod, etc.)
 2. **Run a command** in your terminal
-3. **Click "Send to AI"** button that appears near the output
-4. AI analyzes the output and provides an improved script
-5. **Click "Insert Improved Script"** to insert it into the command input
-6. Run the improved script
-7. If it fails, click "Send to AI" again - the AI will learn from the previous attempt!
+3. **Select the output text** you want to analyze (terminal output, logs, errors, code snippets)
+4. A **hover button appears** above your selection (like Medium's annotation feature)
+5. **Click the hover button** - AI analyzes the selection and provides insights/improvements
+6. Review the AI's response in the modal, edit if needed
+7. **Click "Use Script"** to insert it into the command input
+8. Run the improved script
+9. If it fails, **select the error output** and repeat - the AI learns from previous attempts!
 
 ### Compatible With
 
@@ -251,13 +254,13 @@ ai-code-buddy/
 
 **Windows:**
 ```bash
-build-extension.bat
+build.bat
 ```
 
 **Linux/Mac:**
 ```bash
-chmod +x build-extension.sh
-./build-extension.sh
+chmod +x build.sh
+./build.sh
 ```
 
 The build script will:

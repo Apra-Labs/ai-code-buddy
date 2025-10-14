@@ -1,53 +1,27 @@
 @echo off
 REM AI Code Buddy - Test Runner (Windows)
-REM Run all unit tests locally
+REM Wrapper that calls run-tests.sh using Git Bash
 
-echo.
-echo ================================================
-echo   AI Code Buddy - Running Unit Tests
-echo ================================================
-echo.
-
-REM Check if Node.js is installed
-where node >nul 2>&1
+REM Check if bash is available
+where bash >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-    echo ERROR: Node.js is not installed or not in PATH
-    echo Please install Node.js from https://nodejs.org/
+    echo ERROR: bash not found in PATH
+    echo.
+    echo This test runner requires Git Bash to be installed.
+    echo Please install Git for Windows from: https://git-scm.com/download/win
+    echo.
+    echo Alternative: Run run-tests.sh directly in Git Bash or use "npm test"
     pause
     exit /b 1
 )
 
-REM Display Node version
-echo Node.js version:
-node --version
-echo.
+REM Call run-tests.sh using bash
+bash run-tests.sh
+set EXIT_CODE=%ERRORLEVEL%
 
-REM Run unit tests only (fast)
-echo Running unit tests...
-echo.
-npm test
-
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo ================================================
-    echo   ❌ UNIT TESTS FAILED!
-    echo ================================================
-    echo.
-    echo Please fix the failing tests before committing.
-    echo.
-    pause
-    exit /b 1
+REM Pass through the exit code
+if %EXIT_CODE% neq 0 (
+    exit /b %EXIT_CODE%
 )
 
-echo.
-echo ================================================
-echo   ✅ ALL UNIT TESTS PASSED!
-echo ================================================
-echo.
-echo To run full validation (images + links):
-echo   npm run test:all
-echo.
-echo You can safely commit your changes.
-echo.
-
-pause
+exit /b 0

@@ -332,13 +332,118 @@
 @media print {
   .claude-button-wrapper,
   .claude-notification,
-  .claude-script-modal {
+  .claude-code-modal,
+  .claude-selection-hover-btn {
     display: none !important;
   }
 }
 
+/* Selection Hover Button - Medium-style annotation button */
+.claude-selection-hover-btn {
+  position: absolute;
+  z-index: 10000;
+  background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px; /* More pill-shaped like Medium */
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateY(-5px) translateX(-50%) scale(0.9);
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  pointer-events: auto;
+}
+
+.claude-selection-hover-btn.visible {
+  opacity: 1;
+  transform: translateY(0) translateX(-50%) scale(1);
+}
+
+.claude-selection-hover-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7a9b2a 0%, #5d7a1f 100%);
+  transform: translateY(-2px) translateX(-50%) scale(1.05);
+  box-shadow: 0 6px 16px rgba(148, 186, 51, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.claude-selection-hover-btn:active:not(:disabled) {
+  transform: translateY(0) translateX(-50%) scale(1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.claude-selection-hover-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.claude-selection-hover-btn.loading {
+  background: linear-gradient(135deg, #a8c957 0%, #7fa02e 100%);
+  cursor: wait;
+  position: relative;
+}
+
+.claude-selection-hover-btn.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: loading-sweep 1.5s infinite;
+}
+
+.claude-selection-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.claude-selection-text {
+  font-size: 13px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .claude-selection-hover-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .claude-selection-icon {
+    font-size: 12px;
+  }
+
+  .claude-selection-text {
+    font-size: 12px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .claude-selection-hover-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .claude-selection-hover-btn:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(148, 186, 51, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+}
+
 /* Modal styles for showing improved script */
-.claude-script-modal {
+.claude-code-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -433,7 +538,7 @@
   flex: 1;
 }
 
-.claude-modal-script {
+.claude-modal-code {
   background: #1e1e1e;
   color: #d4d4d4;
   padding: 16px;
@@ -698,7 +803,7 @@
 }
 
 .claude-modal-prompt,
-.claude-modal-script {
+.claude-modal-code {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -712,7 +817,7 @@
 }
 
 .claude-modal-prompt:focus,
-.claude-modal-script:focus {
+.claude-modal-code:focus {
   outline: none;
   border-color: #94BA33;
   background: white;
@@ -875,14 +980,14 @@
 /* Dark mode adjustments for textareas */
 @media (prefers-color-scheme: dark) {
   .claude-modal-prompt,
-  .claude-modal-script {
+  .claude-modal-code {
     background: #2d2d2d;
     border-color: #444;
     color: #d4d4d4;
   }
 
   .claude-modal-prompt:focus,
-  .claude-modal-script:focus {
+  .claude-modal-code:focus {
     background: #333;
     border-color: #94BA33;
   }

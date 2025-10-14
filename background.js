@@ -13,12 +13,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'analyzeOutput') {
     handleAnalyzeOutput(request.data).then(sendResponse);
     return true; // Will respond asynchronously
-  } else if (request.action === 'improveScript') {
-    handleImproveScript(request.data).then(sendResponse);
+  } else if (request.action === 'improveCode') {
+    handleImproveCode(request.data).then(sendResponse);
     return true; // Will respond asynchronously
-  } else if (request.action === 'getDefaultBlockedSites') {
-    sendResponse({ sites: DEFAULT_BLOCKED_SITES });
-    return false; // Synchronous response
   }
 });
 
@@ -129,7 +126,7 @@ Return only the executable script code, nothing else.`;
     if (response.success) {
       return {
         success: true,
-        improvedScript: response.content
+        improvedCode: response.content
       };
     } else {
       return {
@@ -147,7 +144,7 @@ Return only the executable script code, nothing else.`;
 }
 
 // Handle script improvement request
-async function handleImproveScript(data) {
+async function handleImproveCode(data) {
   try {
     const { script, url } = data;
 
@@ -228,7 +225,7 @@ Return only the executable script code, nothing else.`;
     if (response.success) {
       return {
         success: true,
-        improvedScript: response.content
+        improvedCode: response.content
       };
     } else {
       return {
@@ -237,7 +234,7 @@ Return only the executable script code, nothing else.`;
       };
     }
   } catch (error) {
-    console.error('Error in handleImproveScript:', error);
+    console.error('Error in handleImproveCode:', error);
     return {
       success: false,
       error: error.message
@@ -246,63 +243,18 @@ Return only the executable script code, nothing else.`;
 }
 
 
-// Default blocked sites list
-const DEFAULT_BLOCKED_SITES = [
-  // Social Media
-  'facebook.com',
-  'linkedin.com',
-  'twitter.com',
-  'x.com',
-  'instagram.com',
-  'tiktok.com',
-  'snapchat.com',
-
-  // Search & Portals
-  'google.com',
-  'bing.com',
-  'yahoo.com',
-  'duckduckgo.com',
-
-  // Email
-  'gmail.com',
-  'outlook.com',
-  'mail.yahoo.com',
-  'mail.google.com',
-
-  // Entertainment & News
-  'youtube.com',
-  'netflix.com',
-  'reddit.com',
-  'twitch.tv',
-  'news.google.com',
-
-  // Shopping
-  'amazon.com',
-  'ebay.com'
-];
-
 // Handle extension installation
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     // Open popup on first install
     chrome.action.openPopup();
 
-    // Set default settings including blocked sites
+    // Set default provider
     await chrome.storage.sync.set({
-      provider: 'claude', // Default to Claude
-      blockedSites: DEFAULT_BLOCKED_SITES
+      provider: 'claude' // Default to Claude
     });
 
-    console.log('Default blocked sites configured:', DEFAULT_BLOCKED_SITES);
-  } else if (details.reason === 'update') {
-    // On update, add blocked sites if not present
-    const settings = await chrome.storage.sync.get('blockedSites');
-    if (!settings.blockedSites) {
-      await chrome.storage.sync.set({
-        blockedSites: DEFAULT_BLOCKED_SITES
-      });
-      console.log('Default blocked sites added on update');
-    }
+    console.log('Extension installed - default provider set to Claude');
   }
 });
 

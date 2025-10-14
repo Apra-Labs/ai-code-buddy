@@ -338,8 +338,8 @@
         <h2>Most Common Issues</h2>
         <div class="solutions-grid">
           <div class="solution-card">
-            <h3>Buttons Not Appearing</h3>
-            <p>Refresh the page, check browser console (F12), or configure custom selectors in settings.</p>
+            <h3>Hover Button Not Appearing</h3>
+            <p>Select text first, then check if button appears. Refresh the page, check browser console (F12), or configure custom selectors in settings.</p>
           </div>
           <div class="solution-card">
             <h3>Connection Test Failed</h3>
@@ -629,7 +629,7 @@ netstat -an | grep 11434</div>
         <div class="issue-list">
           <div class="issue-item">
             <div class="issue-question" onclick="toggleIssue('issue12')">
-              <h3>"Send to AI" button appears repeatedly (infinite loop)</h3>
+              <h3>Hover button appears repeatedly (infinite loop)</h3>
               <span class="toggle-icon" id="issue12-icon">▼</span>
             </div>
             <div class="issue-answer" id="issue12-answer">
@@ -642,13 +642,14 @@ netstat -an | grep 11434</div>
 
           <div class="issue-item">
             <div class="issue-question" onclick="toggleIssue('issue13')">
-              <h3>Buttons not appearing on page</h3>
+              <h3>Hover button not appearing when selecting text</h3>
               <span class="toggle-icon" id="issue13-icon">▼</span>
             </div>
             <div class="issue-answer" id="issue13-answer">
               <p><strong>Fix:</strong></p>
               <ol>
-                <li>Check page uses standard elements</li>
+                <li>Try selecting text again - ensure selection is not empty</li>
+                <li>Check if page uses standard text selection</li>
                 <li>Try custom selectors:
                   <ul>
                     <li>Right-click → Inspect element</li>
@@ -663,14 +664,14 @@ netstat -an | grep 11434</div>
 
           <div class="issue-item">
             <div class="issue-question" onclick="toggleIssue('issue14')">
-              <h3>"Send to AI" button does nothing when clicked</h3>
+              <h3>Hover button does nothing when clicked</h3>
               <span class="toggle-icon" id="issue14-icon">▼</span>
             </div>
             <div class="issue-answer" id="issue14-answer">
               <p><strong>Fix:</strong></p>
               <ol>
                 <li>Open browser console (F12)</li>
-                <li>Click the button</li>
+                <li>Select text and click the hover button</li>
                 <li>Check for errors in console</li>
               </ol>
               <p><strong>Common issues:</strong></p>

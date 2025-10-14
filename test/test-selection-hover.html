@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Selection Hover - AI Code Buddy</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #94BA33;
+      padding-bottom: 10px;
+    }
+
+    .section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .terminal-output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .success {
+      color: #90ee90;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    }
+
+    .instructions {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 20px 0;
+    }
+
+    .instructions h3 {
+      margin-top: 0;
+      color: #1976D2;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #94BA33;
+      box-shadow: 0 0 0 3px rgba(148, 186, 51, 0.1);
+    }
+
+    .test-case {
+      border-left: 4px solid #94BA33;
+      padding-left: 15px;
+      margin: 15px 0;
+    }
+
+    .test-case h4 {
+      color: #6d8c26;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Selection Hover Button Test Page</h1>
+
+  <div class="instructions">
+    <h3>📋 How to Test</h3>
+    <ol>
+      <li>Make sure the AI Code Buddy extension is loaded in Chrome</li>
+      <li>Configure an AI provider in the extension popup</li>
+      <li>Select any text in <strong>any section</strong> below (editable or readonly)</li>
+      <li>A hover button should appear above your selection</li>
+      <li>Click it to send the selected text to AI</li>
+      <li><strong>Note:</strong> The hover button now works universally on all text!</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 1: Terminal Error Output (Readonly)</h4>
+      <p>Select the error text below - hover button should appear:</p>
+      <div class="terminal-output">
+$ npm install express
+<span class="error">npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path /home/user/package.json
+npm ERR! errno -2
+npm ERR! enoent ENOENT: no such file or directory, open '/home/user/package.json'
+npm ERR! enoent This is related to npm not being able to find a file.
+npm ERR! enoent</span>
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/user/.npm/_logs/2025-10-14T12_00_00_000Z-debug.log
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 2: Python Stack Trace (Readonly)</h4>
+      <p>Select the traceback below - hover button should appear:</p>
+      <div class="terminal-output">
+$ python script.py
+Traceback (most recent call last):
+  File "script.py", line 10, in &lt;module&gt;
+    result = process_data(input_file)
+  File "script.py", line 5, in process_data
+    with open(filename, 'r') as f:
+<span class="error">FileNotFoundError: [Errno 2] No such file or directory: 'data.txt'</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 3: Regular Text Paragraph (Readonly)</h4>
+      <p>Select this paragraph or any part of it - hover button should appear:</p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        This text should trigger the selection hover button when selected.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 4: Bash Command with Output (Readonly)</h4>
+      <p>Select the command or output - hover button should appear:</p>
+      <div class="terminal-output">
+$ docker ps
+<span class="error">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 5: Log File Content (Readonly)</h4>
+      <p>Select any part of these logs - hover button should appear:</p>
+      <div class="terminal-output">
+2025-10-14 12:00:01 <span class="success">[INFO]</span> Application started successfully
+2025-10-14 12:00:05 <span class="success">[INFO]</span> Connected to database
+2025-10-14 12:00:10 <span class="error">[ERROR]</span> Failed to load configuration file
+2025-10-14 12:00:10 <span class="error">[ERROR]</span> ConfigurationError: config.yaml not found
+2025-10-14 12:00:15 <span class="error">[FATAL]</span> Application shutting down due to critical error
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 6: Editable Textarea (hover button SHOULD appear)</h4>
+      <p><strong>Important:</strong> Select text in this textarea - hover button <strong>SHOULD</strong> appear now:</p>
+      <textarea placeholder="Type or paste your code here...
+Example:
+#!/bin/bash
+echo 'Hello World'
+
+The selection hover button SHOULD appear when you select text in this editable textarea.
+This tests that the hover button now works universally on all text (editable and readonly)."></textarea>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 7: Code Snippet (Readonly)</h4>
+      <p>Select this inline code <code>npm install --save express</code> or the block below:</p>
+      <div class="terminal-output">
+function calculateTotal(items) {
+  let total = 0;
+  for (let item of items) {
+    total += item.price * item.quantity;
+  }
+  return total;
+}
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>Test Case 8: Success Output (Readonly)</h4>
+      <p>Select the successful output - hover button should still appear:</p>
+      <div class="terminal-output">
+$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>✅ Expected Behavior</h3>
+    <ul>
+      <li><strong>All content (Test Cases 1-8):</strong> Hover button appears above selection</li>
+      <li><strong>Universal support:</strong> Works on readonly text, editable textareas, and input fields</li>
+      <li><strong>Button appearance:</strong> Smooth fade-in animation, pill-shaped, Apra Labs green</li>
+      <li><strong>Button position:</strong> Centered above selection (like Medium)</li>
+      <li><strong>Click behavior:</strong> Sends text to AI, shows loading state, then modal</li>
+      <li><strong>Modal:</strong> Shows AI analysis with editable textareas and action buttons</li>
+    </ul>
+  </div>
+
+  <div class="instructions" style="background: #fff3cd; border-left-color: #ffc107;">
+    <h3>🐛 Troubleshooting</h3>
+    <ul>
+      <li><strong>Button not appearing:</strong> Check extension is loaded and provider configured</li>
+      <li><strong>Button doesn't appear in textarea:</strong> Bug! It should appear on all text</li>
+      <li><strong>Button position wrong:</strong> Try scrolling or resizing window</li>
+      <li><strong>No AI response:</strong> Check console (F12) for errors, verify API key</li>
+    </ul>
+  </div>
+
+</body>
+</html>

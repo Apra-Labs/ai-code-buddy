@@ -68,24 +68,54 @@ echo "   - test/ directory"
 echo "   - popup.html, popup.js (legacy files)"
 echo "   - docs/API-KEYS-GUIDE.md (users can find online)"
 
-# Create ZIP
-cd "$BUILD_DIR"
-zip -r "../$OUTPUT_FILE" . -q
+echo ""
+echo "✅ Build directory created: $BUILD_DIR/"
+echo ""
 
-cd ..
+# Detect if running in CI/CD
+IS_CI="${CI:-false}"
+if [ "$GITHUB_ACTIONS" = "true" ]; then
+  IS_CI="true"
+fi
 
-# Get file size
-SIZE=$(du -h "$OUTPUT_FILE" | cut -f1)
+# Try to create ZIP (optional for local, required for CI/CD)
+if command -v zip &> /dev/null; then
+  echo "📦 Creating ZIP file for release..."
+  cd "$BUILD_DIR"
+  zip -r "../$OUTPUT_FILE" . -q
+  ZIP_EXIT_CODE=$?
+  cd ..
+
+  if [ -f "$OUTPUT_FILE" ] && [ $ZIP_EXIT_CODE -eq 0 ]; then
+    SIZE=$(du -h "$OUTPUT_FILE" | cut -f1)
+    echo "✅ ZIP created: $OUTPUT_FILE ($SIZE)"
+    echo ""
+    echo "🚀 Ready to upload to Chrome Web Store!"
+  else
+    echo "❌ ERROR: ZIP creation failed!"
+    if [ "$IS_CI" = "true" ]; then
+      echo "   CI/CD build requires ZIP file - failing build"
+      exit 1
+    else
+      echo "   (Continuing anyway for local development)"
+    fi
+  fi
+else
+  echo "ℹ️  ZIP command not found - skipping ZIP creation"
+  if [ "$IS_CI" = "true" ]; then
+    echo "❌ ERROR: ZIP command required in CI/CD environment"
+    exit 1
+  else
+    echo "   (This is normal for local development)"
+  fi
+fi
 
 echo ""
-echo "✅ Build complete!"
+echo "📂 For local development:"
+echo "   1. Open chrome://extensions/"
+echo "   2. Enable 'Developer mode'"
+echo "   3. Click 'Load unpacked'"
+echo "   4. Select the '$BUILD_DIR/' folder"
 echo ""
-echo "📦 Output: $OUTPUT_FILE"
-echo "📏 Size: $SIZE"
-echo ""
-echo "🚀 Ready to upload to Chrome Web Store!"
-echo ""
-echo "To test the build:"
-echo "  1. Unzip $OUTPUT_FILE to a test directory"
-echo "  2. Load unpacked in chrome://extensions/"
-echo "  3. Test all features work correctly"
+echo "📦 For Chrome Web Store:"
+echo "   - Upload $OUTPUT_FILE (created in CI/CD)"

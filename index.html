@@ -429,27 +429,90 @@
             }
           }
 
-          /* AI response animation */
+          /* AI response animation - starts hidden, appears after button click, stays visible */
           .ai-response {
-            animation: responseSlideIn 20s ease-in-out infinite;
             opacity: 0;
+            transform: translateY(-10px);
           }
 
-          @keyframes responseSlideIn {
-            0%, 10% {
+          .scenario-1 .ai-response {
+            animation: responseSlideIn1 20s ease-in-out infinite;
+          }
+
+          .scenario-2 .ai-response {
+            animation: responseSlideIn2 20s ease-in-out infinite;
+          }
+
+          .scenario-3 .ai-response {
+            animation: responseSlideIn3 20s ease-in-out infinite;
+          }
+
+          .scenario-4 .ai-response {
+            animation: responseSlideIn4 20s ease-in-out infinite;
+          }
+
+          /* Scenario 1: Response appears at 12% and stays visible through scroll-up position */
+          @keyframes responseSlideIn1 {
+            0%, 11% {
               opacity: 0;
               transform: translateY(-10px);
             }
-            12%, 20% {
+            13%, 40% {
               opacity: 1;
               transform: translateY(0);
             }
-            22% {
+            50% {
               opacity: 0;
               transform: translateY(0);
             }
             100% {
               opacity: 0;
+            }
+          }
+
+          /* Scenario 2: Response appears at 37% and stays visible through scroll-up position */
+          @keyframes responseSlideIn2 {
+            0%, 36% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            38%, 65% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            75% {
+              opacity: 0;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+            }
+          }
+
+          /* Scenario 3: Response appears at 62% and stays visible through scroll-up position */
+          @keyframes responseSlideIn3 {
+            0%, 61% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            63%, 90% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(0);
+            }
+          }
+
+          /* Scenario 4: Response appears at 87% and stays visible through scroll-up */
+          @keyframes responseSlideIn4 {
+            0%, 86% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            88%, 100% {
+              opacity: 1;
               transform: translateY(0);
             }
           }

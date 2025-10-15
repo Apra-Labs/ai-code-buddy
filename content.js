@@ -109,9 +109,15 @@
 
   // Selection hover button state
   let selectionHoverButton = null;
+  let lastMousePosition = { x: 0, y: 0 }; // Track mouse cursor position
 
   // Setup selection-based hover button for Feature 2 (readonly content)
   function setupSelectionHover() {
+    // Track mouse position globally
+    document.addEventListener('mousemove', (e) => {
+      lastMousePosition = { x: e.clientX, y: e.clientY };
+    }, true);
+
     // Use capture phase (third parameter: true) to catch events before they're stopped by libraries like xterm.js
     document.addEventListener('mouseup', handleSelection, true);
     document.addEventListener('selectionchange', handleSelection);
@@ -217,35 +223,17 @@
     `;
     button.title = 'Send selected text to AI (Alt+Shift+A)';
 
-    // Position the button above the selection (like Medium)
-    // Use fixed positioning since getBoundingClientRect() returns viewport-relative coordinates
-    // This ensures correct positioning even in scrollable containers
-    let buttonTop = rect.top - 45; // 45px above selection (viewport-relative)
-    const buttonLeft = rect.left + (rect.width / 2); // Center horizontally (viewport-relative)
+    // Position the button at the mouse cursor (like in the demo animation)
+    // This is simpler and always works - cursor is always in viewport!
+    const buttonTop = lastMousePosition.y - 50; // 50px above cursor
+    const buttonLeft = lastMousePosition.x; // Centered at cursor horizontally
 
-    // Bounds checking: ensure button stays within visible viewport
-    // If selection is too close to top (would place button above viewport), move it below selection instead
-    const minTopPosition = 10; // At least 10px from top of viewport
-    const buttonHeight = 40; // Approximate button height
-
-    if (buttonTop < minTopPosition) {
-      // Not enough space above - place button below the selection instead
-      buttonTop = rect.bottom + 10; // 10px below selection
-      console.log('📍 Button repositioned below selection (not enough space above)');
-    }
-
-    // Also check if button would be below viewport
-    const maxTopPosition = window.innerHeight - buttonHeight - 10;
-    if (buttonTop > maxTopPosition) {
-      // Would be below viewport - clamp to bottom of viewport
-      buttonTop = maxTopPosition;
-      console.log('📍 Button repositioned to bottom of viewport (selection too low)');
-    }
+    console.log('📍 Positioning button at cursor:', lastMousePosition);
 
     button.style.position = 'fixed';
     button.style.top = `${buttonTop}px`;
     button.style.left = `${buttonLeft}px`;
-    button.style.transform = 'translateX(-50%)'; // Center the button
+    button.style.transform = 'translateX(-50%)'; // Center the button horizontally
     button.style.zIndex = '2147483647'; // Ensure button stays on top
 
     // Store the selected text and source element for click handler

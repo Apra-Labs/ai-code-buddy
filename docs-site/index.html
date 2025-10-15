@@ -89,18 +89,156 @@
             <div class="browser-url">github.com/codespaces</div>
           </div>
           <div class="terminal-demo">
-            <div class="terminal-line">$ npm run build</div>
-            <div class="terminal-line error selection-demo">
-              <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
-              <div class="hover-button-demo">✨ Send to AI</div>
+            <!-- Scenario 1: npm error -->
+            <div class="scenario scenario-1">
+              <div class="terminal-line">$ npm run build</div>
+              <div class="terminal-line error selection-demo">
+                <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Missing dependency:</div>
+                <div class="terminal-line success">$ npm install react-dom</div>
+              </div>
             </div>
-            <div class="ai-response">
-              <div class="response-text">💡 Missing dependency. Install it:</div>
-              <div class="terminal-line success">$ npm install react-dom</div>
+
+            <!-- Scenario 2: log parsing -->
+            <div class="scenario scenario-2">
+              <div class="terminal-line">$ cat server.log</div>
+              <div class="terminal-line">2025-01-14 10:23:45 [INFO] Server started</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Extract all ERROR lines with timestamps</span>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use grep with regex:</div>
+                <div class="terminal-line success">$ grep -E '^\d{4}-\d{2}-\d{2}.*ERROR' server.log</div>
+              </div>
+            </div>
+
+            <!-- Scenario 3: CSV processing -->
+            <div class="scenario scenario-3">
+              <div class="terminal-line">$ head users.csv</div>
+              <div class="terminal-line">id,name,email,status</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Get all active user emails, comma separated</span>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use awk and paste:</div>
+                <div class="terminal-line success">$ awk -F, '$4=="active"{print $3}' users.csv | paste -sd,</div>
+              </div>
+            </div>
+
+            <!-- Scenario 4: JSON extraction -->
+            <div class="scenario scenario-4">
+              <div class="terminal-line">$ curl -s api.example.com/users</div>
+              <div class="terminal-line">{"users":[{"id":1,"name":"Alice"}...]}</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Extract just the names from JSON response</span>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use jq for JSON parsing:</div>
+                <div class="terminal-line success">$ curl -s api.example.com/users | jq -r '.users[].name'</div>
+              </div>
+            </div>
+
+            <!-- Single shared hover button that moves between scenarios -->
+            <div class="hover-button-demo">
+              <span style="margin-right: 6px;">✨</span>Send to AI
+            </div>
+
+            <!-- Animated mouse cursor -->
+            <div class="mouse-cursor">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1">
+                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+              </svg>
             </div>
           </div>
         </div>
         <style>
+          /* Scenario container */
+          .terminal-demo {
+            position: relative;
+            overflow: hidden;
+            height: 380px;
+          }
+
+          .scenario {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            animation: scenarioScrollUp 20s ease-in-out infinite;
+          }
+
+          /* Stagger each scenario by 5 seconds (20s / 4 scenarios) */
+          .scenario-1 {
+            animation-delay: 0s;
+          }
+
+          .scenario-2 {
+            animation-delay: 5s;
+          }
+
+          .scenario-3 {
+            animation-delay: 10s;
+          }
+
+          .scenario-4 {
+            animation-delay: 15s;
+          }
+
+          @keyframes scenarioScrollUp {
+            0% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateY(200px);
+            }
+            2% {
+              opacity: 0;
+              visibility: visible;
+              transform: translateY(200px);
+            }
+            5% {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(200px);
+            }
+            20% {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(200px);
+            }
+            22% {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(0);
+            }
+            40% {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(0);
+            }
+            42% {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(-190px);
+            }
+            48% {
+              opacity: 0.5;
+              visibility: visible;
+              transform: translateY(-380px);
+            }
+            50% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateY(-380px);
+            }
+            100% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateY(-380px);
+            }
+          }
+
           /* Selection highlight animation */
           .selection-demo {
             position: relative;
@@ -108,70 +246,483 @@
           }
 
           .selection-highlight {
-            background: linear-gradient(90deg,
-              rgba(148, 186, 51, 0) 0%,
-              rgba(148, 186, 51, 0.3) 20%,
-              rgba(148, 186, 51, 0.3) 80%,
-              rgba(148, 186, 51, 0) 100%
-            );
-            animation: selectionGlow 3s ease-in-out infinite;
+            position: relative;
             padding: 2px 4px;
             border-radius: 3px;
+            display: inline-block;
+            color: inherit;
           }
 
-          @keyframes selectionGlow {
-            0%, 100% {
-              background: rgba(148, 186, 51, 0.2);
-              box-shadow: 0 0 0 rgba(148, 186, 51, 0);
+          /* Animated selection sweep - simulates user selecting text */
+          .selection-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(148, 186, 51, 0.35);
+            border-radius: 3px;
+            animation: textSelectionSweep 20s ease-in-out infinite;
+            transform-origin: left center;
+            box-shadow: 0 0 8px rgba(148, 186, 51, 0.2);
+          }
+
+          /* Stagger selection animations per scenario */
+          .scenario-1 .selection-highlight::before {
+            animation-delay: 0s;
+          }
+
+          .scenario-2 .selection-highlight::before {
+            animation-delay: 5s;
+          }
+
+          .scenario-3 .selection-highlight::before {
+            animation-delay: 10s;
+          }
+
+          .scenario-4 .selection-highlight::before {
+            animation-delay: 15s;
+          }
+
+          @keyframes textSelectionSweep {
+            0% {
+              transform: scaleX(0);
+              opacity: 0;
+              visibility: hidden;
             }
-            50% {
-              background: rgba(148, 186, 51, 0.4);
+            2% {
+              transform: scaleX(0);
+              opacity: 1;
+              visibility: visible;
+            }
+            7% {
+              transform: scaleX(1);
+              opacity: 1;
+              visibility: visible;
+              box-shadow: 0 0 12px rgba(148, 186, 51, 0.4);
+            }
+            20% {
+              transform: scaleX(1);
+              opacity: 1;
+              visibility: visible;
               box-shadow: 0 0 8px rgba(148, 186, 51, 0.3);
             }
+            22% {
+              transform: scaleX(1);
+              opacity: 0;
+              visibility: hidden;
+              box-shadow: 0 0 0 rgba(148, 186, 51, 0);
+            }
+            100% {
+              transform: scaleX(1);
+              opacity: 0;
+              visibility: hidden;
+            }
           }
 
-          /* Hover button animation */
+          /* Hover button - matches real extension button exactly */
           .hover-button-demo {
             position: absolute;
-            top: -35px;
+            top: 185px; /* Positioned well above scenario-1's selection line to avoid hiding text */
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #94BA33 0%, #7a9b2a 100%);
+            background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
             color: white;
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 20px;
             font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            animation: hoverButtonFloat 3s ease-in-out infinite;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             white-space: nowrap;
-            z-index: 10;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            animation: hoverButtonFloat 20s ease-in-out infinite;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
           }
 
           @keyframes hoverButtonFloat {
-            0%, 100% {
+            /* Scenario 1 - Button appears at 5%, pressed at 10-12%, disappears when AI response shows */
+            0%, 4% {
               opacity: 0;
-              transform: translateX(-50%) translateY(-5px);
+              visibility: hidden;
+              top: 185px;
+              transform: translateX(-50%) scale(1);
             }
-            20%, 80% {
+            5% {
               opacity: 1;
-              transform: translateX(-50%) translateY(0);
+              visibility: visible;
+              top: 185px;
+              transform: translateX(-50%) scale(1);
+            }
+            10% {
+              opacity: 1;
+              visibility: visible;
+              top: 185px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            12% {
+              opacity: 1;
+              visibility: visible;
+              top: 185px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            13% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
+            }
+            22% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 2 - Button appears at 30%, pressed at 35-37%, disappears when AI response shows */
+            25%, 29% {
+              opacity: 0;
+              visibility: hidden;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            30% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            35% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            37% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            38% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
+            }
+            47% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 3 - Button appears at 55%, pressed at 60-62%, disappears when AI response shows */
+            50%, 54% {
+              opacity: 0;
+              visibility: hidden;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            55% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            60% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            62% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            63% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
+            }
+            72% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 4 - Button appears at 80%, pressed at 85-87%, disappears when AI response shows */
+            75%, 79% {
+              opacity: 0;
+              visibility: hidden;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            80% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(1);
+            }
+            85% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            87% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            88% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
+            }
+            97% {
+              opacity: 0;
+              visibility: hidden;
+            }
+            100% {
+              opacity: 0;
+              visibility: hidden;
             }
           }
 
-          /* AI response animation */
-          .ai-response {
-            animation: responseSlideIn 3s ease-in-out infinite;
+          /* Mouse cursor animation */
+          .mouse-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            z-index: 101;
             opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            animation: mouseCursorMove 20s ease-in-out infinite;
           }
 
-          @keyframes responseSlideIn {
-            0%, 60% {
+          @keyframes mouseCursorMove {
+            /* Scenario 1: Cursor appears and moves to button */
+            0%, 6% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 165px;
+            }
+            7% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 165px;
+            }
+            9% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 193px;
+            }
+            10%, 11% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 193px;
+            }
+            12% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 2 */
+            25%, 31% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            32% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            34% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            35%, 36% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            37% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 3 */
+            50%, 56% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            57% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            59% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            60%, 61% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            62% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 4 */
+            75%, 81% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            82% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            84% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            85%, 86% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            87% {
+              opacity: 0;
+              visibility: hidden;
+            }
+            100% {
+              opacity: 0;
+              visibility: hidden;
+            }
+          }
+
+          /* Button pressed state - shows when cursor is clicking */
+          .hover-button-demo.pressed {
+            transform: translateX(-50%) scale(0.95);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+          }
+
+          /* AI response animation - starts hidden, appears after button click, stays visible */
+          .ai-response {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+
+          .scenario-1 .ai-response {
+            animation: responseSlideIn1 20s ease-in-out infinite;
+          }
+
+          .scenario-2 .ai-response {
+            animation: responseSlideIn2 20s ease-in-out infinite;
+          }
+
+          .scenario-3 .ai-response {
+            animation: responseSlideIn3 20s ease-in-out infinite;
+          }
+
+          .scenario-4 .ai-response {
+            animation: responseSlideIn4 20s ease-in-out infinite;
+          }
+
+          /* Scenario 1: Response appears at 12% and stays visible through scroll-up position */
+          @keyframes responseSlideIn1 {
+            0%, 11% {
               opacity: 0;
               transform: translateY(-10px);
             }
-            70%, 100% {
+            13%, 40% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            50% {
+              opacity: 0;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+            }
+          }
+
+          /* Scenario 2: Response appears at 37% and stays visible through scroll-up position */
+          @keyframes responseSlideIn2 {
+            0%, 36% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            38%, 65% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            75% {
+              opacity: 0;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+            }
+          }
+
+          /* Scenario 3: Response appears at 62% and stays visible through scroll-up position */
+          @keyframes responseSlideIn3 {
+            0%, 61% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            63%, 90% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(0);
+            }
+          }
+
+          /* Scenario 4: Response appears at 87% and stays visible through scroll-up */
+          @keyframes responseSlideIn4 {
+            0%, 86% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            88%, 100% {
               opacity: 1;
               transform: translateY(0);
             }

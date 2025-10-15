@@ -94,7 +94,6 @@
               <div class="terminal-line">$ npm run build</div>
               <div class="terminal-line error selection-demo">
                 <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
-                <div class="hover-button-demo">✨ Send to AI</div>
               </div>
               <div class="ai-response">
                 <div class="response-text">💡 Missing dependency:</div>
@@ -108,7 +107,6 @@
               <div class="terminal-line">2025-01-14 10:23:45 [INFO] Server started</div>
               <div class="terminal-line selection-demo">
                 <span class="selection-highlight">Extract all ERROR lines with timestamps</span>
-                <div class="hover-button-demo">✨ Send to AI</div>
               </div>
               <div class="ai-response">
                 <div class="response-text">💡 Use grep with regex:</div>
@@ -122,7 +120,6 @@
               <div class="terminal-line">id,name,email,status</div>
               <div class="terminal-line selection-demo">
                 <span class="selection-highlight">Get all active user emails, comma separated</span>
-                <div class="hover-button-demo">✨ Send to AI</div>
               </div>
               <div class="ai-response">
                 <div class="response-text">💡 Use awk and paste:</div>
@@ -136,12 +133,16 @@
               <div class="terminal-line">{"users":[{"id":1,"name":"Alice"}...]}</div>
               <div class="terminal-line selection-demo">
                 <span class="selection-highlight">Extract just the names from JSON response</span>
-                <div class="hover-button-demo">✨ Send to AI</div>
               </div>
               <div class="ai-response">
                 <div class="response-text">💡 Use jq for JSON parsing:</div>
                 <div class="terminal-line success">$ curl -s api.example.com/users | jq -r '.users[].name'</div>
               </div>
+            </div>
+
+            <!-- Single shared hover button that moves between scenarios -->
+            <div class="hover-button-demo">
+              <span style="margin-right: 6px;">✨</span>Send to AI
             </div>
           </div>
         </div>
@@ -150,13 +151,14 @@
           .terminal-demo {
             position: relative;
             overflow: hidden;
-            height: 280px; /* Doubled height to show stacking */
+            height: 280px;
           }
 
           .scenario {
             position: absolute;
             width: 100%;
             opacity: 0;
+            visibility: hidden;
             animation: scenarioScrollUp 20s ease-in-out infinite;
           }
 
@@ -180,34 +182,52 @@
           @keyframes scenarioScrollUp {
             0% {
               opacity: 0;
+              visibility: hidden;
+              transform: translateY(140px);
+            }
+            2% {
+              opacity: 0;
+              visibility: visible;
               transform: translateY(140px);
             }
             5% {
               opacity: 1;
+              visibility: visible;
               transform: translateY(140px);
             }
             20% {
               opacity: 1;
+              visibility: visible;
               transform: translateY(140px);
             }
-            25% {
+            22% {
               opacity: 1;
+              visibility: visible;
               transform: translateY(0);
             }
-            45% {
+            40% {
               opacity: 1;
+              visibility: visible;
               transform: translateY(0);
             }
-            50% {
-              opacity: 0.7;
+            42% {
+              opacity: 1;
+              visibility: visible;
               transform: translateY(-140px);
             }
-            55% {
+            48% {
+              opacity: 0.5;
+              visibility: visible;
+              transform: translateY(-280px);
+            }
+            50% {
               opacity: 0;
+              visibility: hidden;
               transform: translateY(-280px);
             }
             100% {
               opacity: 0;
+              visibility: hidden;
               transform: translateY(-280px);
             }
           }
@@ -246,11 +266,11 @@
               transform: scaleX(0);
               opacity: 0;
             }
-            5% {
+            2% {
               transform: scaleX(0);
               opacity: 1;
             }
-            15% {
+            7% {
               transform: scaleX(1);
               opacity: 1;
               box-shadow: 0 0 12px rgba(148, 186, 51, 0.4);
@@ -260,7 +280,7 @@
               opacity: 1;
               box-shadow: 0 0 8px rgba(148, 186, 51, 0.3);
             }
-            25% {
+            22% {
               transform: scaleX(1);
               opacity: 0;
               box-shadow: 0 0 0 rgba(148, 186, 51, 0);
@@ -271,57 +291,135 @@
             }
           }
 
-          /* Hover button animation */
+          /* Hover button - matches real extension button exactly */
           .hover-button-demo {
             position: absolute;
-            top: -35px;
+            top: 172px; /* Positioned above scenario-1's selection line */
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #94BA33 0%, #7a9b2a 100%);
+            background: linear-gradient(135deg, #94BA33 0%, #6d8c26 100%);
             color: white;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 6px;
             font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            animation: hoverButtonFloat 5s ease-in-out infinite;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             white-space: nowrap;
-            z-index: 10;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            animation: hoverButtonFloat 20s ease-in-out infinite;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
           }
 
           @keyframes hoverButtonFloat {
-            0%, 100% {
+            /* Scenario 1 */
+            0% {
               opacity: 0;
-              transform: translateX(-50%) translateY(-5px);
+              visibility: hidden;
+              top: 172px;
             }
-            10% {
+            7% {
               opacity: 1;
-              transform: translateX(-50%) translateY(0);
+              visibility: visible;
+              top: 172px;
             }
             20% {
               opacity: 1;
-              transform: translateX(-50%) translateY(0);
+              visibility: visible;
+              top: 172px;
             }
+            22% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 2 */
             25% {
               opacity: 0;
-              transform: translateX(-50%) translateY(-5px);
+              visibility: hidden;
+              top: 195px;
+            }
+            32% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            45% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            47% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 3 */
+            50% {
+              opacity: 0;
+              visibility: hidden;
+              top: 195px;
+            }
+            57% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            70% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            72% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 4 */
+            75% {
+              opacity: 0;
+              visibility: hidden;
+              top: 195px;
+            }
+            82% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            95% {
+              opacity: 1;
+              visibility: visible;
+              top: 195px;
+            }
+            97% {
+              opacity: 0;
+              visibility: hidden;
+            }
+            100% {
+              opacity: 0;
+              visibility: hidden;
             }
           }
 
           /* AI response animation */
           .ai-response {
-            animation: responseSlideIn 5s ease-in-out infinite;
+            animation: responseSlideIn 20s ease-in-out infinite;
             opacity: 0;
           }
 
           @keyframes responseSlideIn {
-            0%, 50% {
+            0%, 10% {
               opacity: 0;
               transform: translateY(-10px);
             }
-            60%, 90% {
+            12%, 20% {
               opacity: 1;
+              transform: translateY(0);
+            }
+            22% {
+              opacity: 0;
               transform: translateY(0);
             }
             100% {

@@ -150,14 +150,14 @@
           .terminal-demo {
             position: relative;
             overflow: hidden;
-            height: 140px;
+            height: 280px; /* Doubled height to show stacking */
           }
 
           .scenario {
             position: absolute;
             width: 100%;
             opacity: 0;
-            animation: scenarioRotate 20s ease-in-out infinite;
+            animation: scenarioScrollUp 20s ease-in-out infinite;
           }
 
           /* Stagger each scenario by 5 seconds (20s / 4 scenarios) */
@@ -177,26 +177,38 @@
             animation-delay: 15s;
           }
 
-          @keyframes scenarioRotate {
+          @keyframes scenarioScrollUp {
             0% {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(140px);
             }
             5% {
               opacity: 1;
-              transform: translateY(0);
+              transform: translateY(140px);
             }
             20% {
               opacity: 1;
-              transform: translateY(0);
+              transform: translateY(140px);
             }
             25% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            45% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            50% {
+              opacity: 0.7;
+              transform: translateY(-140px);
+            }
+            55% {
               opacity: 0;
-              transform: translateY(-20px);
+              transform: translateY(-280px);
             }
             100% {
               opacity: 0;
-              transform: translateY(-20px);
+              transform: translateY(-280px);
             }
           }
 

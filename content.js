@@ -130,6 +130,12 @@
   function handleSelection(e) {
     // Small delay to let selection settle
     setTimeout(() => {
+      console.log('🔍 handleSelection triggered', {
+        eventType: e?.type,
+        target: e?.target?.tagName,
+        activeElement: document.activeElement?.tagName
+      });
+
       let selectedText = '';
       let rect = null;
       let sourceElement = null;
@@ -153,9 +159,22 @@
         const selection = window.getSelection();
         selectedText = selection.toString().trim();
 
+        console.log('📝 Selection check:', {
+          selectedText: selectedText.substring(0, 50),
+          length: selectedText.length,
+          rangeCount: selection.rangeCount
+        });
+
         if (selectedText && selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
           rect = range.getBoundingClientRect();
+
+          console.log('📐 Rect:', {
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height
+          });
 
           const container = range.commonAncestorContainer;
           sourceElement = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
@@ -164,9 +183,12 @@
 
       // Remove existing hover button if selection is empty or too short
       if (!selectedText || selectedText.length < 3) {
+        console.log('❌ Selection too short or empty, removing button');
         removeSelectionHoverButton();
         return;
       }
+
+      console.log('✅ Showing hover button for selection:', selectedText.substring(0, 50));
 
       // Don't show inside our own modal
       if (sourceElement && sourceElement.closest && sourceElement.closest('.claude-code-modal')) {
@@ -328,6 +350,7 @@
   // Remove the selection hover button
   function removeSelectionHoverButton() {
     if (selectionHoverButton) {
+      console.log('🗑️ Removing selection hover button');
       selectionHoverButton.remove();
       selectionHoverButton = null;
     }

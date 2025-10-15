@@ -94,7 +94,51 @@
       color: #6d8c26;
       margin-top: 0;
     }
+    #terminal-container {
+      background: #000;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    #terminal {
+      height: 400px;
+    }
+
+    .xterm {
+      font-feature-settings: "liga" 0;
+      position: relative;
+      user-select: none;
+      -ms-user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .xterm.focus,
+    .xterm:focus {
+      outline: none;
+    }
+
+    .xterm .xterm-helpers {
+      position: absolute;
+      top: 0;
+      z-index: 5;
+    }
+
+    .xterm .xterm-helper-textarea {
+      position: absolute;
+      opacity: 0;
+      left: -9999em;
+      top: 0;
+      width: 0;
+      height: 0;
+      z-index: -5;
+      white-space: nowrap;
+      overflow: hidden;
+      resize: none;
+    }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.3.0/css/xterm.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.3.0/lib/xterm.js"></script>
 </head>
 <body>
   <h1>🧪 Selection Hover Button Test Page</h1>
@@ -109,6 +153,25 @@
       <li>Click it to send the selected text to AI</li>
       <li><strong>Note:</strong> The hover button now works universally on all text!</li>
     </ol>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
+      <h4>🔥 Test Case 0: xterm.js Terminal (Like Sshwifty) - THE PROBLEM CASE</h4>
+      <p><strong>THIS REPLICATES THE SSHWIFTY ISSUE!</strong> Select text in the terminal below:</p>
+      <div id="terminal-container">
+        <div id="terminal"></div>
+      </div>
+      <p style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+        <strong>🐛 Known Issue:</strong> If hover button doesn't appear automatically, try <strong>right-clicking</strong> the selected text.
+        This is the exact behavior seen in sshwifty.
+      </p>
+      <div style="margin-top: 10px;">
+        <button onclick="addTerminalContent()" style="padding: 8px 16px; background: #94BA33; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          Add More Terminal Output
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="section">
@@ -249,6 +312,126 @@ nothing to commit, working tree clean
       <li><strong>No AI response:</strong> Check console (F12) for errors, verify API key</li>
     </ul>
   </div>
+
+  <script>
+    // Initialize xterm.js terminal (replicating sshwifty behavior)
+    let term;
+    let termContent = [];
+
+    function initTerminal() {
+      if (!window.Terminal) {
+        console.error('xterm.js not loaded yet, retrying...');
+        setTimeout(initTerminal, 100);
+        return;
+      }
+
+      term = new Terminal({
+        cursorBlink: true,
+        cursorStyle: 'block',
+        fontSize: 14,
+        fontFamily: 'Monaco, Menlo, Consolas, monospace',
+        theme: {
+          background: '#000000',
+          foreground: '#ffffff',
+          cursor: '#ffffff'
+        },
+        rows: 24,
+        cols: 80
+      });
+
+      term.open(document.getElementById('terminal'));
+
+      // Add initial content
+      term.writeln('Welcome to xterm.js Test Terminal (like Sshwifty)');
+      term.writeln('================================================');
+      term.writeln('');
+      term.writeln('$ npm install express');
+      term.writeln('\x1b[31mnpm ERR! code ENOENT\x1b[0m');
+      term.writeln('\x1b[31mnpm ERR! syscall open\x1b[0m');
+      term.writeln('\x1b[31mnpm ERR! path /home/user/package.json\x1b[0m');
+      term.writeln('\x1b[31mnpm ERR! errno -2\x1b[0m');
+      term.writeln('');
+      term.writeln('$ python script.py');
+      term.writeln('Traceback (most recent call last):');
+      term.writeln('  File "script.py", line 10, in <module>');
+      term.writeln('    result = process_data(input_file)');
+      term.writeln('\x1b[31mFileNotFoundError: [Errno 2] No such file or directory\x1b[0m');
+      term.writeln('');
+      term.writeln('$ docker ps');
+      term.writeln('\x1b[31mCannot connect to the Docker daemon. Is the docker daemon running?\x1b[0m');
+      term.writeln('');
+      term.writeln('\x1b[32m✓ Try selecting any text above!\x1b[0m');
+      term.writeln('\x1b[33m⚠ If hover button doesn\'t appear, right-click the selection\x1b[0m');
+
+      // Debug: Log xterm.js events
+      console.log('🔍 xterm.js Terminal initialized');
+      console.log('🔍 Terminal element:', term.element);
+      console.log('🔍 Terminal textarea:', term.textarea);
+
+      // Try to intercept xterm selection events
+      if (term.textarea) {
+        term.textarea.addEventListener('mouseup', (e) => {
+          console.log('🖱️ xterm textarea mouseup event', e);
+        }, true);
+      }
+
+      // Listen to xterm's own selection event (if available)
+      term.onSelectionChange(() => {
+        const selection = term.getSelection();
+        console.log('📝 xterm selection changed:', selection);
+      });
+    }
+
+    function addTerminalContent() {
+      if (!term) return;
+
+      const samples = [
+        '$ tail -f /var/log/nginx/error.log',
+        '\x1b[31m2025/10/15 14:23:45 [error] 1234#1234: *56789 connect() failed\x1b[0m',
+        '',
+        '$ systemctl status myapp',
+        '\x1b[31m● myapp.service - My Application\x1b[0m',
+        '\x1b[31m   Loaded: loaded (/etc/systemd/system/myapp.service)\x1b[0m',
+        '\x1b[31m   Active: failed (Result: exit-code)\x1b[0m',
+        '',
+        '$ grep ERROR application.log',
+        '\x1b[31m[2025-10-15 14:30:00] ERROR: Database connection timeout\x1b[0m',
+        '\x1b[31m[2025-10-15 14:30:15] ERROR: Failed to authenticate user\x1b[0m',
+        ''
+      ];
+
+      samples.forEach(line => term.writeln(line));
+      term.writeln('\x1b[32m✓ More content added! Try selecting it.\x1b[0m');
+    }
+
+    // Initialize terminal when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTerminal);
+    } else {
+      initTerminal();
+    }
+
+    // Add global event listener to see all mouseup events
+    document.addEventListener('mouseup', (e) => {
+      console.log('🌍 Global mouseup event:', {
+        target: e.target,
+        tagName: e.target.tagName,
+        className: e.target.className,
+        inTerminal: e.target.closest('#terminal') !== null
+      });
+    }, true);  // Use capture phase
+
+    // Monitor selection changes
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection();
+      if (selection.toString().length > 0) {
+        console.log('📋 Document selection changed:', {
+          text: selection.toString().substring(0, 50),
+          rangeCount: selection.rangeCount
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>

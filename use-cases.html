@@ -347,27 +347,37 @@
         </div>
 
         <div style="margin-bottom: 20px;">
-          <span class="platform-badge">Shellngn</span>
-          <span class="platform-badge">SSHEasy</span>
-          <span class="platform-badge">WebSSH</span>
-          <span class="platform-badge secondary">Sshwifty</span>
-          <span class="platform-badge secondary">Wetty</span>
+          <span class="platform-badge" style="background: #28a745; position: relative; padding-right: 45px;">
+            Sshwifty
+            <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 16px;">✓</span>
+          </span>
+          <span class="platform-badge" style="background: #28a745; position: relative; padding-right: 45px;">
+            RPort
+            <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 16px;">✓</span>
+          </span>
+          <span class="platform-badge secondary">Shellngn</span>
+          <span class="platform-badge secondary">WebSSH</span>
+          <span class="platform-badge tertiary">Wetty</span>
           <span class="platform-badge tertiary">Google Secure Shell Extension</span>
         </div>
 
         <div class="scenario-box">
           <h3>📋 Scenario: Debugging Production Server Issues</h3>
-          <p><strong>The Problem:</strong> You're troubleshooting a production server through Shellngn's web SSH terminal. Log files show cryptic errors, and you need to understand what's happening quickly.</p>
+          <p><strong>The Problem:</strong> You're troubleshooting a production server through Sshwifty's web SSH terminal. Log files show cryptic errors, and you need to understand what's happening quickly.</p>
 
           <h4 style="margin-top: 20px; color: var(--text-dark);">How to Use AI Code Buddy:</h4>
           <ol class="step-list">
-            <li>Open Shellngn (https://shellngn.com) and connect to your server via SSH in the browser</li>
+            <li>Open Sshwifty (localhost:8182 or your instance) and connect to your server via SSH in the browser</li>
             <li>Run: <code>tail -n 100 /var/log/nginx/error.log</code></li>
-            <li>Select the error messages in the terminal output</li>
+            <li>Select the error messages in the terminal output (right-click if needed to show hover button)</li>
             <li>Click the AI Code Buddy hover button that appears</li>
             <li>AI analyzes the logs and suggests: root cause, debugging commands, and fixes</li>
-            <li>Click "Use Code" to insert the suggested diagnostic commands</li>
+            <li>Use "Copy to Clipboard" to get the suggested diagnostic commands and paste into terminal</li>
           </ol>
+
+          <div class="info-box" style="margin-top: 15px;">
+            <p><strong>💡 Sshwifty Tip:</strong> Use site-specific prompt: <code>"create one line commands to be run on a linux ssh terminal. do not create bash scripts"</code> for optimal results. Right-click selected text if hover button doesn't appear automatically.</p>
+          </div>
 
           <div class="code-block"><span class="comment"># Original error log output</span>
 <span class="error">2025/01/14 10:23:45 [error] 1234#1234: *56789 connect() failed (111: Connection refused)</span>

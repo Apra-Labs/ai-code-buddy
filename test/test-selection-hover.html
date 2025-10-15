@@ -317,9 +317,10 @@ Line 42: Velit esse quam nihil molestiae consequatur
 Line 43: Vel illum qui dolorem eum fugiat quo
 Line 44: Voluptas nulla pariatur?
 Line 45: End of test content</textarea>
-      <p style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px;">
-        <strong>✅ Expected:</strong> Button stays above selection even when scrolling inside textarea.<br>
-        <strong>❌ Bug (before fix):</strong> Button would move higher/out of view as you scroll.
+      <p style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px; font-size: 13px; line-height: 1.6;">
+        <strong>✅ Expected:</strong> Button appears above selection (or below if selection is near top of viewport).<br>
+        <strong>✅ Smart Positioning:</strong> Button repositions intelligently when selection is near viewport edges.<br>
+        <strong>❌ Bug (before fix):</strong> Button would move out of view as you scroll inside textarea.
       </p>
     </div>
   </div>

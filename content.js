@@ -220,8 +220,27 @@
     // Position the button above the selection (like Medium)
     // Use fixed positioning since getBoundingClientRect() returns viewport-relative coordinates
     // This ensures correct positioning even in scrollable containers
-    const buttonTop = rect.top - 45; // 45px above selection (viewport-relative)
+    let buttonTop = rect.top - 45; // 45px above selection (viewport-relative)
     const buttonLeft = rect.left + (rect.width / 2); // Center horizontally (viewport-relative)
+
+    // Bounds checking: ensure button stays within visible viewport
+    // If selection is too close to top (would place button above viewport), move it below selection instead
+    const minTopPosition = 10; // At least 10px from top of viewport
+    const buttonHeight = 40; // Approximate button height
+
+    if (buttonTop < minTopPosition) {
+      // Not enough space above - place button below the selection instead
+      buttonTop = rect.bottom + 10; // 10px below selection
+      console.log('📍 Button repositioned below selection (not enough space above)');
+    }
+
+    // Also check if button would be below viewport
+    const maxTopPosition = window.innerHeight - buttonHeight - 10;
+    if (buttonTop > maxTopPosition) {
+      // Would be below viewport - clamp to bottom of viewport
+      buttonTop = maxTopPosition;
+      console.log('📍 Button repositioned to bottom of viewport (selection too low)');
+    }
 
     button.style.position = 'fixed';
     button.style.top = `${buttonTop}px`;

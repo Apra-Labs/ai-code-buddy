@@ -218,14 +218,16 @@
     button.title = 'Send selected text to AI (Alt+Shift+A)';
 
     // Position the button above the selection (like Medium)
-    // Calculate position relative to viewport
-    const buttonTop = rect.top + window.scrollY - 45; // 45px above selection
-    const buttonLeft = rect.left + window.scrollX + (rect.width / 2); // Center horizontally
+    // Use fixed positioning since getBoundingClientRect() returns viewport-relative coordinates
+    // This ensures correct positioning even in scrollable containers
+    const buttonTop = rect.top - 45; // 45px above selection (viewport-relative)
+    const buttonLeft = rect.left + (rect.width / 2); // Center horizontally (viewport-relative)
 
-    button.style.position = 'absolute';
+    button.style.position = 'fixed';
     button.style.top = `${buttonTop}px`;
     button.style.left = `${buttonLeft}px`;
     button.style.transform = 'translateX(-50%)'; // Center the button
+    button.style.zIndex = '2147483647'; // Ensure button stays on top
 
     // Store the selected text and source element for click handler
     button._selectedText = selectedText;

@@ -263,6 +263,69 @@ This tests that the hover button now works universally on all text (editable and
 
   <div class="section">
     <div class="test-case">
+      <h4>Test Case 6.5: Scrollable Textarea (POSITIONING FIX TEST)</h4>
+      <p><strong>This tests the positioning fix for scrollable containers:</strong></p>
+      <ol style="font-size: 13px; line-height: 1.8;">
+        <li>Scroll down inside the textarea below to line 30-40</li>
+        <li>Select some text in the middle of the visible area</li>
+        <li>Hover button should appear <strong>directly above the selection</strong></li>
+        <li>Scroll up or down - button should <strong>stay with the selection</strong></li>
+        <li>The button should <strong>NOT</strong> move out of the visible area</li>
+      </ol>
+      <textarea style="height: 200px; overflow-y: scroll;" readonly>Line 1: This is a scrollable textarea test
+Line 2: Scroll down to test the positioning fix
+Line 3: The hover button should stay above the selection
+Line 4: Even when you scroll the textarea content
+Line 5: This tests the fixed positioning fix
+Line 6: Previously, the button would move higher as you scrolled
+Line 7: Now it should stay correctly positioned
+Line 8: Try selecting text anywhere in this textarea
+Line 9: Then scroll up or down
+Line 10: The button should move with the selection
+Line 11: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+Line 12: Sed do eiusmod tempor incididunt ut labore et dolore
+Line 13: Magna aliqua. Ut enim ad minim veniam
+Line 14: Quis nostrud exercitation ullamco laboris
+Line 15: Nisi ut aliquip ex ea commodo consequat
+Line 16: Duis aute irure dolor in reprehenderit
+Line 17: In voluptate velit esse cillum dolore
+Line 18: Eu fugiat nulla pariatur. Excepteur sint
+Line 19: Occaecat cupidatat non proident, sunt in
+Line 20: Culpa qui officia deserunt mollit anim
+Line 21: Id est laborum. Sed ut perspiciatis unde
+Line 22: Omnis iste natus error sit voluptatem
+Line 23: Accusantium doloremque laudantium totam
+Line 24: Rem aperiam eaque ipsa quae ab illo
+Line 25: Inventore veritatis et quasi architecto
+Line 26: Beatae vitae dicta sunt explicabo
+Line 27: Nemo enim ipsam voluptatem quia voluptas
+Line 28: Sit aspernatur aut odit aut fugit
+Line 29: Sed quia consequuntur magni dolores eos
+Line 30: *** SELECT THIS LINE AND SCROLL ***
+Line 31: Qui ratione voluptatem sequi nesciunt
+Line 32: Neque porro quisquam est, qui dolorem
+Line 33: Ipsum quia dolor sit amet, consectetur
+Line 34: Adipisci velit, sed quia non numquam
+Line 35: Eius modi tempora incidunt ut labore
+Line 36: Et dolore magnam aliquam quaerat voluptatem
+Line 37: Ut enim ad minima veniam, quis nostrum
+Line 38: Exercitationem ullam corporis suscipit
+Line 39: Laboriosam, nisi ut aliquid ex ea
+Line 40: Commodi consequatur? Quis autem vel eum
+Line 41: Iure reprehenderit qui in ea voluptate
+Line 42: Velit esse quam nihil molestiae consequatur
+Line 43: Vel illum qui dolorem eum fugiat quo
+Line 44: Voluptas nulla pariatur?
+Line 45: End of test content</textarea>
+      <p style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+        <strong>✅ Expected:</strong> Button stays above selection even when scrolling inside textarea.<br>
+        <strong>❌ Bug (before fix):</strong> Button would move higher/out of view as you scroll.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="test-case">
       <h4>Test Case 7: Code Snippet (Readonly)</h4>
       <p>Select this inline code <code>npm install --save express</code> or the block below:</p>
       <div class="terminal-output">

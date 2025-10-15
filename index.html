@@ -89,18 +89,117 @@
             <div class="browser-url">github.com/codespaces</div>
           </div>
           <div class="terminal-demo">
-            <div class="terminal-line">$ npm run build</div>
-            <div class="terminal-line error selection-demo">
-              <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
-              <div class="hover-button-demo">✨ Send to AI</div>
+            <!-- Scenario 1: npm error -->
+            <div class="scenario scenario-1">
+              <div class="terminal-line">$ npm run build</div>
+              <div class="terminal-line error selection-demo">
+                <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
+                <div class="hover-button-demo">✨ Send to AI</div>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Missing dependency:</div>
+                <div class="terminal-line success">$ npm install react-dom</div>
+              </div>
             </div>
-            <div class="ai-response">
-              <div class="response-text">💡 Missing dependency. Install it:</div>
-              <div class="terminal-line success">$ npm install react-dom</div>
+
+            <!-- Scenario 2: log parsing -->
+            <div class="scenario scenario-2">
+              <div class="terminal-line">$ cat server.log</div>
+              <div class="terminal-line">2025-01-14 10:23:45 [INFO] Server started</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Extract all ERROR lines with timestamps</span>
+                <div class="hover-button-demo">✨ Send to AI</div>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use grep with regex:</div>
+                <div class="terminal-line success">$ grep -E '^\d{4}-\d{2}-\d{2}.*ERROR' server.log</div>
+              </div>
+            </div>
+
+            <!-- Scenario 3: CSV processing -->
+            <div class="scenario scenario-3">
+              <div class="terminal-line">$ head users.csv</div>
+              <div class="terminal-line">id,name,email,status</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Get all active user emails, comma separated</span>
+                <div class="hover-button-demo">✨ Send to AI</div>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use awk and paste:</div>
+                <div class="terminal-line success">$ awk -F, '$4=="active"{print $3}' users.csv | paste -sd,</div>
+              </div>
+            </div>
+
+            <!-- Scenario 4: JSON extraction -->
+            <div class="scenario scenario-4">
+              <div class="terminal-line">$ curl -s api.example.com/users</div>
+              <div class="terminal-line">{"users":[{"id":1,"name":"Alice"}...]}</div>
+              <div class="terminal-line selection-demo">
+                <span class="selection-highlight">Extract just the names from JSON response</span>
+                <div class="hover-button-demo">✨ Send to AI</div>
+              </div>
+              <div class="ai-response">
+                <div class="response-text">💡 Use jq for JSON parsing:</div>
+                <div class="terminal-line success">$ curl -s api.example.com/users | jq -r '.users[].name'</div>
+              </div>
             </div>
           </div>
         </div>
         <style>
+          /* Scenario container */
+          .terminal-demo {
+            position: relative;
+            overflow: hidden;
+            height: 140px;
+          }
+
+          .scenario {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            animation: scenarioRotate 20s ease-in-out infinite;
+          }
+
+          /* Stagger each scenario by 5 seconds (20s / 4 scenarios) */
+          .scenario-1 {
+            animation-delay: 0s;
+          }
+
+          .scenario-2 {
+            animation-delay: 5s;
+          }
+
+          .scenario-3 {
+            animation-delay: 10s;
+          }
+
+          .scenario-4 {
+            animation-delay: 15s;
+          }
+
+          @keyframes scenarioRotate {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            5% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            20% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            25% {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+          }
+
           /* Selection highlight animation */
           .selection-demo {
             position: relative;
@@ -108,25 +207,54 @@
           }
 
           .selection-highlight {
-            background: linear-gradient(90deg,
-              rgba(148, 186, 51, 0) 0%,
-              rgba(148, 186, 51, 0.3) 20%,
-              rgba(148, 186, 51, 0.3) 80%,
-              rgba(148, 186, 51, 0) 100%
-            );
-            animation: selectionGlow 3s ease-in-out infinite;
+            position: relative;
             padding: 2px 4px;
             border-radius: 3px;
+            display: inline-block;
+            color: inherit;
           }
 
-          @keyframes selectionGlow {
-            0%, 100% {
-              background: rgba(148, 186, 51, 0.2);
-              box-shadow: 0 0 0 rgba(148, 186, 51, 0);
+          /* Animated selection sweep - simulates user selecting text */
+          .selection-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(148, 186, 51, 0.35);
+            border-radius: 3px;
+            animation: textSelectionSweep 5s ease-in-out infinite;
+            transform-origin: left center;
+            box-shadow: 0 0 8px rgba(148, 186, 51, 0.2);
+          }
+
+          @keyframes textSelectionSweep {
+            0% {
+              transform: scaleX(0);
+              opacity: 0;
             }
-            50% {
-              background: rgba(148, 186, 51, 0.4);
+            5% {
+              transform: scaleX(0);
+              opacity: 1;
+            }
+            15% {
+              transform: scaleX(1);
+              opacity: 1;
+              box-shadow: 0 0 12px rgba(148, 186, 51, 0.4);
+            }
+            20%, 70% {
+              transform: scaleX(1);
+              opacity: 1;
               box-shadow: 0 0 8px rgba(148, 186, 51, 0.3);
+            }
+            75% {
+              transform: scaleX(1);
+              opacity: 0.6;
+            }
+            80%, 100% {
+              transform: scaleX(1);
+              opacity: 0;
             }
           }
 
@@ -143,7 +271,7 @@
             font-size: 13px;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            animation: hoverButtonFloat 3s ease-in-out infinite;
+            animation: hoverButtonFloat 5s ease-in-out infinite;
             cursor: pointer;
             white-space: nowrap;
             z-index: 10;
@@ -154,25 +282,33 @@
               opacity: 0;
               transform: translateX(-50%) translateY(-5px);
             }
-            20%, 80% {
+            10%, 70% {
               opacity: 1;
               transform: translateX(-50%) translateY(0);
+            }
+            80% {
+              opacity: 0;
+              transform: translateX(-50%) translateY(-5px);
             }
           }
 
           /* AI response animation */
           .ai-response {
-            animation: responseSlideIn 3s ease-in-out infinite;
+            animation: responseSlideIn 5s ease-in-out infinite;
             opacity: 0;
           }
 
           @keyframes responseSlideIn {
-            0%, 60% {
+            0%, 50% {
               opacity: 0;
               transform: translateY(-10px);
             }
-            70%, 100% {
+            60%, 90% {
               opacity: 1;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
               transform: translateY(0);
             }
           }

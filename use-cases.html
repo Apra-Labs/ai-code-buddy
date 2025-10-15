@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en" data-claude-extension="skip">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-World Use Cases - AI Code Buddy</title>
+  <meta name="description" content="Discover powerful use cases for AI Code Buddy across browser-based terminals, databases, development environments, and more.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <script src="header.js"></script>
+  <script src="config.js"></script>
+  <script src="install-links.js"></script>
+  <style>
+    .breadcrumb {
+      padding: 20px 0;
+      background: var(--bg-light);
+    }
+    .breadcrumb a {
+      color: var(--apra-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb span {
+      color: var(--text-medium);
+      margin: 0 10px;
+    }
+    .page-hero {
+      background: linear-gradient(135deg, #f8fef0 0%, #ffffff 100%);
+      padding: 60px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+    .page-hero p {
+      font-size: 20px;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .content-section {
+      padding: 60px 0;
+    }
+    .use-case-card {
+      background: white;
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 40px;
+      transition: all 0.3s;
+    }
+    .use-case-card:hover {
+      border-color: var(--apra-green);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .use-case-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--bg-light);
+    }
+    .use-case-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+    .use-case-header h2 {
+      font-size: 32px;
+      margin: 0 0 5px 0;
+      color: var(--text-dark);
+    }
+    .use-case-header .subtitle {
+      font-size: 16px;
+      color: var(--text-light);
+      margin: 0;
+    }
+    .platform-badge {
+      display: inline-block;
+      background: var(--apra-green);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .platform-badge.secondary {
+      background: #4a90e2;
+    }
+    .platform-badge.tertiary {
+      background: #9b59b6;
+    }
+    .scenario-box {
+      background: var(--bg-light);
+      border-left: 4px solid var(--apra-green);
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .scenario-box h3 {
+      margin-top: 0;
+      color: var(--text-dark);
+      font-size: 20px;
+    }
+    .scenario-box p {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+    .scenario-box ol, .scenario-box ul {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+    .scenario-box li {
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .code-block .comment {
+      color: #6a9955;
+    }
+    .code-block .error {
+      color: #f48771;
+    }
+    .code-block .success {
+      color: #4ec9b0;
+    }
+    .highlight-box {
+      background: #fff8e1;
+      border-left: 4px solid #ffa726;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .highlight-box h4 {
+      margin-top: 0;
+      color: #e65100;
+      font-size: 18px;
+    }
+    .highlight-box p {
+      margin: 10px 0;
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+    .info-box {
+      background: #e8f4ff;
+      border-left: 4px solid #4a90e2;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .info-box p {
+      margin: 0;
+      color: var(--text-dark);
+    }
+    .category-header {
+      text-align: center;
+      margin: 60px 0 40px 0;
+      padding: 30px 0;
+      background: var(--bg-light);
+      border-radius: 12px;
+    }
+    .category-header h2 {
+      font-size: 36px;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+    .category-header p {
+      font-size: 18px;
+      color: var(--text-medium);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+    .step-list {
+      counter-reset: step-counter;
+      list-style: none;
+      padding-left: 0;
+    }
+    .step-list li {
+      counter-increment: step-counter;
+      position: relative;
+      padding-left: 45px;
+      margin-bottom: 20px;
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 30px;
+      height: 30px;
+      background: var(--apra-green);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#94BA33;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7a9b2a;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="26" fill="url(#grad1)"/>
+          <g transform="translate(64, 64)">
+            <path d="M -28 -20 L -35 -20 Q -40 -20 -40 -15 L -40 15 Q -40 20 -35 20 L -28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M 28 -20 L 35 -20 Q 40 -20 40 -15 L 40 15 Q 40 20 35 20 L 28 20"
+                  stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="0" cy="0" r="6" fill="#b5d957" opacity="0.9"/>
+            <circle cx="0" cy="0" r="3.5" fill="white"/>
+            <line x1="0" y1="-12" x2="0" y2="-18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="0" y1="12" x2="0" y2="18" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="-12" y1="0" x2="-18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="12" y1="0" x2="18" y2="0" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          </g>
+        </svg>
+        <div>
+          <h1 class="logo-text">AI Code Buddy</h1>
+          <p class="logo-tagline">by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="quick-start.html">Quick Start</a>
+        <a href="api-keys.html">API Keys</a>
+        <a href="security.html">Security</a>
+        <a href="troubleshooting.html">Troubleshooting</a>
+        <a href="#" target="_blank" class="btn-primary install-link">Install Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="index.html">Home</a>
+      <span>&gt;</span>
+      <a href="index.html#docs">Docs</a>
+      <span>&gt;</span>
+      <span>Real-World Use Cases</span>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Real-World Use Cases</h1>
+      <p>Discover how AI Code Buddy transforms workflows across browser-based terminals, databases, IDEs, and infrastructure tools</p>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+
+      <!-- Introduction -->
+      <div class="info-box" style="font-size: 16px; line-height: 1.8;">
+        <p><strong>Why AI Code Buddy is Revolutionary:</strong> Many cloud platforms (GCP, Azure) have built-in AI assistants, but countless browser-based tools have NO AI support. AI Code Buddy fills this gap by bringing AI assistance to ANY web-based tool through universal text selection. Simply select text, click the hover button, and get instant AI help!</p>
+      </div>
+
+      <!-- Disclaimer and Compatibility -->
+      <div class="highlight-box" style="margin: 40px 0;">
+        <h4>📢 Important: Community-Driven Compatibility</h4>
+        <p style="margin-bottom: 15px;">The platforms listed on this page are based on research and should work with AI Code Buddy's universal text selection capability. However, <strong>we haven't tested every platform yet</strong>.</p>
+        <p style="margin-bottom: 15px;"><strong>We need YOUR help!</strong> If you try AI Code Buddy on any of these platforms (or others), please report your experience:</p>
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="https://github.com/Apra-Labs/ai-code-buddy/issues/new?assignees=&labels=compatibility%2Cdocumentation&template=compatibility_report.md&title=%5BCOMPATIBILITY%5D+Platform+Name+-+" target="_blank" style="background: var(--apra-green); color: white; text-decoration: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 16px;">
+            📋 Report Platform Compatibility
+          </a>
+        </div>
+        <p style="margin-top: 20px; font-size: 14px; opacity: 0.9;"><strong>What happens when you report?</strong> Your feedback helps us update documentation, build our <a href="https://github.com/Apra-Labs/ai-code-buddy/blob/main/PROMPT-LIBRARY.md" target="_blank" style="color: #e65100; text-decoration: underline;">Prompt Library</a> for different tools, fix bugs, and improve the extension for everyone!</p>
+      </div>
+
+      <!-- Category 1: Browser-Based SSH & Remote Access -->
+      <div class="category-header">
+        <h2>🖥️ Browser-Based SSH & Remote Access</h2>
+        <p>Manage remote servers with AI-powered assistance - no desktop SSH client needed</p>
+      </div>
+
+      <!-- Use Case 1: WebSSH Terminals -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">🔐</div>
+          <div>
+            <h2>WebSSH Terminals</h2>
+            <p class="subtitle">Get AI help while managing remote servers through browser-based SSH</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">Shellngn</span>
+          <span class="platform-badge">SSHEasy</span>
+          <span class="platform-badge">WebSSH</span>
+          <span class="platform-badge secondary">Sshwifty</span>
+          <span class="platform-badge secondary">Wetty</span>
+          <span class="platform-badge tertiary">Google Secure Shell Extension</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Production Server Issues</h3>
+          <p><strong>The Problem:</strong> You're troubleshooting a production server through Shellngn's web SSH terminal. Log files show cryptic errors, and you need to understand what's happening quickly.</p>
+
+          <h4 style="margin-top: 20px; color: var(--text-dark);">How to Use AI Code Buddy:</h4>
+          <ol class="step-list">
+            <li>Open Shellngn (https://shellngn.com) and connect to your server via SSH in the browser</li>
+            <li>Run: <code>tail -n 100 /var/log/nginx/error.log</code></li>
+            <li>Select the error messages in the terminal output</li>
+            <li>Click the AI Code Buddy hover button that appears</li>
+            <li>AI analyzes the logs and suggests: root cause, debugging commands, and fixes</li>
+            <li>Click "Use Code" to insert the suggested diagnostic commands</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># Original error log output</span>
+<span class="error">2025/01/14 10:23:45 [error] 1234#1234: *56789 connect() failed (111: Connection refused)</span>
+<span class="error">while connecting to upstream, client: 192.168.1.100</span>
+
+<span class="comment">[Select error text → AI Code Buddy analyzes]</span>
+
+<span class="comment"># AI suggests diagnostic commands:</span>
+<span class="success">sudo netstat -tulpn | grep 8080</span>
+<span class="success">sudo systemctl status myapp</span>
+<span class="success">ps aux | grep myapp</span>
+
+<span class="comment"># AI explains: "Your upstream application on port 8080 isn't running"</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Why This is Powerful</h4>
+          <p><strong>No Built-in AI:</strong> WebSSH terminals have zero AI integration. You'd normally need to copy errors, paste into ChatGPT, then manually type solutions.</p>
+          <p><strong>With AI Code Buddy:</strong> Select → Click → Get intelligent suggestions instantly, without leaving your SSH session!</p>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Another Scenario: Server Configuration</h3>
+          <p>You need to configure a firewall rule but can't remember the exact syntax.</p>
+
+          <ol class="step-list">
+            <li>Type your intent: <code>allow port 443 from specific IP</code></li>
+            <li>Select this text in the terminal</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI provides the exact <code>ufw</code> or <code>iptables</code> command</li>
+            <li>Click "Use Code" to insert the command directly</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Category 2: Database Management -->
+      <div class="category-header">
+        <h2>🗄️ Browser-Based Database Tools</h2>
+        <p>Write better SQL queries and understand database errors instantly</p>
+      </div>
+
+      <!-- Use Case 2: Database GUIs -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">💾</div>
+          <div>
+            <h2>Database Management Interfaces</h2>
+            <p class="subtitle">AI-powered SQL assistance in browser-based database tools</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">phpMyAdmin</span>
+          <span class="platform-badge">Adminer</span>
+          <span class="platform-badge">CloudBeaver</span>
+          <span class="platform-badge secondary">MongoDB Compass Web</span>
+          <span class="platform-badge secondary">Redis Commander</span>
+          <span class="platform-badge tertiary">pgAdmin Web</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Complex SQL Query Optimization</h3>
+          <p><strong>The Problem:</strong> You're using phpMyAdmin to analyze slow queries. The EXPLAIN output shows performance issues, but you're not sure how to optimize it.</p>
+
+          <ol class="step-list">
+            <li>Open phpMyAdmin in your browser and run your query</li>
+            <li>Click "Explain" to see the query execution plan</li>
+            <li>Select the EXPLAIN output showing "Using filesort" or "Using temporary"</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI analyzes and suggests: missing indexes, query rewrites, schema improvements</li>
+            <li>Apply AI suggestions and re-test query performance</li>
+          </ol>
+
+          <div class="code-block"><span class="comment">-- Original slow query</span>
+SELECT u.*, COUNT(o.id) as order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+WHERE u.created_at > '2024-01-01'
+GROUP BY u.id
+ORDER BY order_count DESC;
+
+<span class="comment">[Select EXPLAIN showing "Using filesort; Using temporary"]</span>
+
+<span class="comment"># AI Code Buddy suggests:</span>
+<span class="success">-- Add composite index for better performance:</span>
+<span class="success">CREATE INDEX idx_users_created ON users(created_at, id);</span>
+<span class="success">CREATE INDEX idx_orders_user ON orders(user_id);</span>
+
+<span class="comment">-- Optimized query with materialized CTE:</span>
+WITH user_orders AS (
+  SELECT user_id, COUNT(*) as cnt
+  FROM orders
+  GROUP BY user_id
+)
+SELECT u.*, COALESCE(uo.cnt, 0) as order_count
+FROM users u
+LEFT JOIN user_orders uo ON u.id = uo.user_id
+WHERE u.created_at > '2024-01-01'
+ORDER BY order_count DESC;</div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding Database Errors</h3>
+          <p>You're using Adminer to import a SQL dump, but it fails with cryptic error codes.</p>
+
+          <ol class="step-list">
+            <li>Run your SQL import in Adminer's query interface</li>
+            <li>Select the error message (e.g., "Error 1062: Duplicate entry")</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains the error in plain English and suggests fixes</li>
+            <li>Get a corrected query with proper conflict handling</li>
+          </ol>
+
+          <div class="code-block"><span class="error">Error 1062: Duplicate entry '12345' for key 'users.email'</span>
+
+<span class="comment">[Select error → AI analyzes]</span>
+
+<span class="comment"># AI suggests using INSERT IGNORE or ON DUPLICATE KEY UPDATE:</span>
+<span class="success">INSERT INTO users (id, email, name) VALUES (12345, 'user@example.com', 'John')</span>
+<span class="success">ON DUPLICATE KEY UPDATE name = VALUES(name);</span>
+
+<span class="comment"># Or handle at application level with UPSERT pattern</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Game-Changer for Database Work</h4>
+          <p><strong>Traditional Workflow:</strong> Screenshot error → Google → Read StackOverflow → Try solution → Repeat</p>
+          <p><strong>With AI Code Buddy:</strong> Select error → Instant explanation and working fix → Apply immediately</p>
+        </div>
+      </div>
+
+      <!-- Category 3: Cloud IDEs -->
+      <div class="category-header">
+        <h2>💻 Browser-Based Development Environments</h2>
+        <p>Code faster with AI assistance in cloud IDEs and online editors</p>
+      </div>
+
+      <!-- Use Case 3: Cloud IDEs -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">⚡</div>
+          <div>
+            <h2>Cloud IDEs & Online Editors</h2>
+            <p class="subtitle">AI-powered coding assistance in browser-based development environments</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">GitHub Codespaces</span>
+          <span class="platform-badge">vscode.dev</span>
+          <span class="platform-badge">Gitpod</span>
+          <span class="platform-badge secondary">StackBlitz</span>
+          <span class="platform-badge secondary">CodeSandbox</span>
+          <span class="platform-badge secondary">Replit</span>
+          <span class="platform-badge tertiary">AWS Cloud9</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Terminal Errors in GitHub Codespaces</h3>
+          <p><strong>The Problem:</strong> You're developing in GitHub Codespaces. Your build fails with compiler errors in the integrated terminal, but the error messages are unclear.</p>
+
+          <ol class="step-list">
+            <li>Open your project in GitHub Codespaces (github.dev or codespaces.new)</li>
+            <li>Run <code>npm run build</code> in the integrated terminal</li>
+            <li>Build fails with TypeScript errors or webpack issues</li>
+            <li>Select the error output in the terminal</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI provides: error explanation, root cause, and exact fix</li>
+            <li>Apply fix and rebuild successfully</li>
+          </ol>
+
+          <div class="code-block"><span class="comment">$ npm run build</span>
+
+<span class="error">ERROR in src/components/UserProfile.tsx:45:12</span>
+<span class="error">TS2339: Property 'userName' does not exist on type 'User'.</span>
+<span class="error">Did you mean 'username'?</span>
+
+<span class="comment">[Select error text → AI Code Buddy analyzes]</span>
+
+<span class="comment"># AI suggests the fix:</span>
+<span class="success">// In UserProfile.tsx line 45, change:</span>
+<span class="error">const name = user.userName;</span>
+<span class="success">// To:</span>
+<span class="success">const name = user.username;</span>
+
+<span class="comment"># AI also recommends adding type safety:</span>
+<span class="success">interface User {
+  id: number;
+  username: string; // ✓ Consistent naming
+  email: string;
+}</span></div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding Runtime Errors in Replit</h3>
+          <p>You're learning to code on Replit. Your Python script crashes with a stack trace you don't understand.</p>
+
+          <ol class="step-list">
+            <li>Write and run your Python code in Replit's online IDE</li>
+            <li>Program crashes with traceback in console</li>
+            <li>Select the entire error traceback</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains the error in beginner-friendly language</li>
+            <li>Get corrected code with explanatory comments</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># Your code in Replit:</span>
+numbers = [1, 2, 3, 4, 5]
+print(numbers[10])
+
+<span class="error">Traceback (most recent call last):</span>
+<span class="error">  File "main.py", line 2, in &lt;module&gt;</span>
+<span class="error">    print(numbers[10])</span>
+<span class="error">IndexError: list index out of range</span>
+
+<span class="comment">[Select traceback → AI explains]</span>
+
+<span class="comment"># AI provides beginner-friendly explanation and fix:</span>
+<span class="success"># The list only has 5 items (indexes 0-4), but you tried to access index 10</span>
+<span class="success"># Safe way to access list items:</span>
+
+<span class="success">numbers = [1, 2, 3, 4, 5]</span>
+<span class="success">if len(numbers) > 10:</span>
+<span class="success">    print(numbers[10])</span>
+<span class="success">else:</span>
+<span class="success">    print(f"List only has {len(numbers)} items")</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Perfect for Learning and Collaboration</h4>
+          <p><strong>Why It Matters:</strong> GitHub Codespaces and vscode.dev are powerful but don't have dedicated AI for terminal errors or build output.</p>
+          <p><strong>AI Code Buddy fills the gap:</strong> Get AI help for ANY text in the terminal, console, or editor - perfect for debugging, learning, and code reviews!</p>
+        </div>
+      </div>
+
+      <!-- Category 4: Data Science & Notebooks -->
+      <div class="category-header">
+        <h2>📊 Browser-Based Data Science Tools</h2>
+        <p>Debug notebooks and analyze data with AI-powered insights</p>
+      </div>
+
+      <!-- Use Case 4: Jupyter -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">📈</div>
+          <div>
+            <h2>Jupyter Notebooks & Data Platforms</h2>
+            <p class="subtitle">AI assistance for data science, analytics, and machine learning workflows</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">JupyterLab</span>
+          <span class="platform-badge">Google Colab</span>
+          <span class="platform-badge">Kaggle Notebooks</span>
+          <span class="platform-badge secondary">Observable</span>
+          <span class="platform-badge secondary">Deepnote</span>
+          <span class="platform-badge tertiary">Databricks Notebooks</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Pandas Errors in JupyterLab</h3>
+          <p><strong>The Problem:</strong> You're analyzing data in JupyterLab. A pandas operation throws a cryptic error about data types or indices.</p>
+
+          <ol class="step-list">
+            <li>Open JupyterLab in your browser and load your dataset</li>
+            <li>Run data transformation: <code>df.merge(df2, on='user_id')</code></li>
+            <li>Cell fails with KeyError or ValueError</li>
+            <li>Select the error traceback in the cell output</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI diagnoses the issue and provides corrected pandas code</li>
+            <li>Apply fix and continue your analysis</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># In JupyterLab cell:</span>
+result = df.merge(df2, on='user_id', how='inner')
+
+<span class="error">KeyError: 'user_id'</span>
+<span class="error">During handling of the above exception, another exception occurred:</span>
+<span class="error">...</span>
+
+<span class="comment">[Select error → AI Code Buddy analyzes]</span>
+
+<span class="comment"># AI discovers the issue and suggests:</span>
+<span class="success"># Check actual column names first:</span>
+<span class="success">print("df columns:", df.columns.tolist())</span>
+<span class="success">print("df2 columns:", df2.columns.tolist())</span>
+
+<span class="comment"># AI explains: "Column is likely 'userId' (camelCase) not 'user_id'"</span>
+<span class="success">result = df.merge(df2, left_on='userId', right_on='userId', how='inner')</span>
+
+<span class="comment"># Or rename for consistency:</span>
+<span class="success">df2 = df2.rename(columns={'userId': 'user_id'})</span>
+<span class="success">result = df.merge(df2, on='user_id', how='inner')</span></div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding ML Model Errors</h3>
+          <p>Training a machine learning model in Google Colab, but getting dimension mismatch or convergence errors.</p>
+
+          <ol class="step-list">
+            <li>Run your model training code in Google Colab</li>
+            <li>Model fails with ValueError about shapes or convergence</li>
+            <li>Select the error message in cell output</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains the error and suggests fixes (reshape data, adjust parameters, etc.)</li>
+            <li>Apply corrections and retrain successfully</li>
+          </ol>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Data Science Superpower</h4>
+          <p><strong>Common Pain Point:</strong> Jupyter notebooks show errors, but explaining them requires deep pandas/numpy/sklearn knowledge.</p>
+          <p><strong>AI Code Buddy advantage:</strong> Instantly understand any error, get working fixes, and learn best practices - all without leaving your notebook!</p>
+        </div>
+      </div>
+
+      <!-- Category 5: Infrastructure & DevOps -->
+      <div class="category-header">
+        <h2>⚙️ Infrastructure Management Tools</h2>
+        <p>Manage containers, Kubernetes, and infrastructure with AI guidance</p>
+      </div>
+
+      <!-- Use Case 5: K8s & Container Platforms -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">🐳</div>
+          <div>
+            <h2>Container & Kubernetes Management</h2>
+            <p class="subtitle">AI-powered assistance for Docker, Kubernetes, and container orchestration</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">Portainer</span>
+          <span class="platform-badge">Rancher</span>
+          <span class="platform-badge">Kubernetes Dashboard</span>
+          <span class="platform-badge secondary">OpenShift Web Console</span>
+          <span class="platform-badge secondary">Docker Desktop Dashboard</span>
+          <span class="platform-badge tertiary">Lens (Web Version)</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Pod Failures in Rancher</h3>
+          <p><strong>The Problem:</strong> You're managing a Kubernetes cluster through Rancher's web UI. Pods are in CrashLoopBackOff state, and the logs show errors you don't fully understand.</p>
+
+          <ol class="step-list">
+            <li>Open Rancher web interface and navigate to your cluster</li>
+            <li>Find the failing pod and click "View Logs"</li>
+            <li>Logs show error messages about failed health checks or missing dependencies</li>
+            <li>Select the error lines in the log viewer</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI analyzes the error and suggests: YAML fixes, troubleshooting commands, resource adjustments</li>
+            <li>Apply fixes through Rancher UI or kubectl</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># Pod logs in Rancher showing:</span>
+<span class="error">Error: ECONNREFUSED 10.96.0.1:5432</span>
+<span class="error">at TCPConnectWrap.afterConnect [as oncomplete]</span>
+<span class="error">Waiting for PostgreSQL to be ready...</span>
+
+<span class="comment">[Select error → AI Code Buddy analyzes]</span>
+
+<span class="comment"># AI identifies: PostgreSQL service isn't accessible</span>
+<span class="comment"># Suggests diagnostic steps:</span>
+
+<span class="success"># 1. Check if PostgreSQL service exists:</span>
+<span class="success">kubectl get svc -n default | grep postgres</span>
+
+<span class="success"># 2. Verify service endpoints:</span>
+<span class="success">kubectl get endpoints postgres-service</span>
+
+<span class="success"># 3. Check network policies:</span>
+<span class="success">kubectl get networkpolicies</span>
+
+<span class="comment"># AI also suggests updating deployment environment variable:</span>
+<span class="success">env:</span>
+<span class="success">  - name: DB_HOST</span>
+<span class="success">    value: "postgres-service.default.svc.cluster.local"</span></div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding Resource Limits in Portainer</h3>
+          <p>Managing Docker containers through Portainer, but containers are being OOM-killed or throttled.</p>
+
+          <ol class="step-list">
+            <li>Open Portainer web UI and check container stats</li>
+            <li>Notice memory usage spikes or CPU throttling in graphs</li>
+            <li>Check container logs showing OOMKilled events</li>
+            <li>Select the relevant error or metric</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI suggests optimal resource limits and docker-compose adjustments</li>
+          </ol>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 DevOps Efficiency Boost</h4>
+          <p><strong>Traditional Process:</strong> Read logs → Search documentation → Test fixes → Repeat for hours</p>
+          <p><strong>With AI Code Buddy:</strong> Select logs → Get instant diagnosis → Apply correct fix → Back to productive work in minutes!</p>
+        </div>
+      </div>
+
+      <!-- Category 6: CI/CD & Monitoring -->
+      <div class="category-header">
+        <h2>🔄 CI/CD & Monitoring Platforms</h2>
+        <p>Understand build failures and monitoring alerts faster</p>
+      </div>
+
+      <!-- Use Case 6: Jenkins & Grafana -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">📡</div>
+          <div>
+            <h2>Build Systems & Monitoring Dashboards</h2>
+            <p class="subtitle">AI help for CI/CD pipelines and infrastructure monitoring</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">Jenkins Web UI</span>
+          <span class="platform-badge">Grafana</span>
+          <span class="platform-badge">GitLab CI Web UI</span>
+          <span class="platform-badge secondary">CircleCI Dashboard</span>
+          <span class="platform-badge secondary">Travis CI</span>
+          <span class="platform-badge tertiary">Prometheus</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Failed Jenkins Builds</h3>
+          <p><strong>The Problem:</strong> Your Jenkins build failed. The console output is hundreds of lines long with nested errors.</p>
+
+          <ol class="step-list">
+            <li>Open Jenkins web interface and navigate to failed build</li>
+            <li>Click "Console Output" to see build logs</li>
+            <li>Scroll through output and find the error section</li>
+            <li>Select the critical error lines (compilation errors, test failures, etc.)</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI identifies: root cause, which step failed, and how to fix</li>
+            <li>Apply fix to Jenkinsfile or source code and rebuild</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># Jenkins console output:</span>
+[Pipeline] sh
++ mvn clean install
+<span class="error">[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile</span>
+<span class="error">[ERROR] /workspace/src/main/java/com/app/Service.java:[42,15] cannot find symbol</span>
+<span class="error">[ERROR]   symbol:   method getUserById(String)</span>
+<span class="error">[ERROR]   location: class UserRepository</span>
+
+<span class="comment">[Select error → AI analyzes]</span>
+
+<span class="comment"># AI identifies the issue and suggests:</span>
+<span class="success">// In UserRepository.java, add the missing method:</span>
+<span class="success">public User getUserById(String id) {</span>
+<span class="success">    return userDatabase.findById(id).orElse(null);</span>
+<span class="success">}</span>
+
+<span class="comment"># Or update Service.java to use existing method:</span>
+<span class="success">User user = userRepository.findById(userId).orElse(null);</span></div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding Grafana Alerts</h3>
+          <p>Grafana is showing alerts, but the query and threshold settings are complex to understand.</p>
+
+          <ol class="step-list">
+            <li>Open Grafana dashboard showing active alerts</li>
+            <li>Click on alert to see query and evaluation results</li>
+            <li>Select the PromQL query or alert condition</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains: what the query measures, why alert fired, suggested thresholds</li>
+            <li>Adjust alert rules based on AI recommendations</li>
+          </ol>
+        </div>
+
+        <div class="info-box">
+          <p><strong>Pro Tip:</strong> Works with ANY CI/CD or monitoring tool that has a web interface - GitHub Actions, GitLab CI, Datadog, New Relic, and more!</p>
+        </div>
+      </div>
+
+      <!-- Category 7: Creative & Unique Use Cases -->
+      <div class="category-header">
+        <h2>🚀 Beyond Development: Creative Use Cases</h2>
+        <p>AI Code Buddy works on ANY browser-based tool with text - here are some creative applications</p>
+      </div>
+
+      <!-- Use Case 7: Documentation & Learning -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">📚</div>
+          <div>
+            <h2>Documentation Sites & Learning Platforms</h2>
+            <p class="subtitle">Get instant explanations and examples from documentation</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">Official Docs</span>
+          <span class="platform-badge">MDN Web Docs</span>
+          <span class="platform-badge">StackOverflow</span>
+          <span class="platform-badge secondary">Dev.to</span>
+          <span class="platform-badge secondary">Medium</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding Complex Documentation</h3>
+          <p>You're reading Kubernetes documentation, but a complex example isn't clear.</p>
+
+          <ol class="step-list">
+            <li>Browse to official Kubernetes documentation</li>
+            <li>Find a complex YAML configuration example</li>
+            <li>Select the confusing section (e.g., advanced networking config)</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI provides: simplified explanation, use cases, alternative approaches</li>
+            <li>Get a customized version for your specific needs</li>
+          </ol>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Learning Accelerator</h4>
+          <p>Turn any documentation into an interactive learning experience! Select confusing code examples and get instant clarification, simplification, or customization.</p>
+        </div>
+      </div>
+
+      <!-- Use Case 8: API Testing -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">🔌</div>
+          <div>
+            <h2>API Testing & Development Tools</h2>
+            <p class="subtitle">Debug API responses and understand errors instantly</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge">Swagger UI</span>
+          <span class="platform-badge">Postman Web</span>
+          <span class="platform-badge">Insomnia</span>
+          <span class="platform-badge secondary">REST Client Extensions</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding API Error Responses</h3>
+          <p>Testing an API through Swagger UI, but getting cryptic error responses.</p>
+
+          <ol class="step-list">
+            <li>Open Swagger UI for your API documentation</li>
+            <li>Try an API endpoint and receive error response</li>
+            <li>Select the JSON error response or status message</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains: what caused the error, required parameters, correct format</li>
+            <li>Get a corrected request example to try</li>
+          </ol>
+
+          <div class="code-block"><span class="comment">// API response in Swagger UI:</span>
+{
+  <span class="error">"error": "ValidationError",</span>
+  <span class="error">"message": "Invalid request body",</span>
+  <span class="error">"details": [</span>
+    <span class="error">"body.email must be a valid email",</span>
+    <span class="error">"body.age must be a number"</span>
+  <span class="error">]</span>
+}
+
+<span class="comment">[Select error response → AI analyzes]</span>
+
+<span class="comment"># AI provides corrected request body:</span>
+<span class="success">{</span>
+<span class="success">  "email": "user@example.com",  // ✓ Valid email format</span>
+<span class="success">  "age": 25,                     // ✓ Number, not string</span>
+<span class="success">  "name": "John Doe"</span>
+<span class="success">}</span></div>
+        </div>
+      </div>
+
+      <!-- Summary CTA -->
+      <div style="background: linear-gradient(135deg, var(--apra-green) 0%, var(--apra-green-dark) 100%); color: white; padding: 50px; border-radius: 12px; text-align: center; margin-top: 60px;">
+        <h2 style="font-size: 32px; margin-bottom: 20px;">Ready to Transform Your Workflow?</h2>
+        <p style="font-size: 18px; margin-bottom: 30px; opacity: 0.95; max-width: 700px; margin-left: auto; margin-right: auto;">AI Code Buddy brings AI assistance to hundreds of browser-based tools that have NO built-in AI. Install now and experience the difference!</p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+          <a href="quick-start.html" class="btn-large" style="background: white; color: var(--apra-green); text-decoration: none; padding: 15px 35px; border-radius: 8px; font-weight: 600; display: inline-block;">Get Started Now</a>
+          <a href="api-keys.html" class="btn-large" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 15px 35px; border-radius: 8px; font-weight: 600; display: inline-block; border: 2px solid white;">View API Keys Guide</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>AI Code Buddy</h3>
+          <p>Built by <a href="https://www.apralabs.com" target="_blank">Apra Labs</a></p>
+          <p class="footer-tagline">Streamline your terminal workflows with AI assistance</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="index.html#features">Features</a>
+            <a href="quick-start.html">Quick Start</a>
+            <a href="#" target="_blank" class="install-link">Install</a>
+          </div>
+          <div class="footer-column">
+            <h4>Documentation</h4>
+            <a href="use-cases.html">Use Cases</a>
+            <a href="api-keys.html">API Keys</a>
+            <a href="security.html">Security</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+            <a href="privacy.html">Privacy Policy</a>
+          </div>
+          <div class="footer-column">
+            <h4>Community</h4>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy" target="_blank">GitHub</a>
+            <a href="https://github.com/Apra-Labs/ai-code-buddy/issues" target="_blank">Issues</a>
+            <a href="index.html#feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 <a href="https://www.apralabs.com" target="_blank">Apra Labs</a>. Open Source Project.</p>
+        <p>Your API keys are safe - stored locally, never sent to us. <a href="security.html">Learn more</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top">↑</a>
+</body>
+</html>

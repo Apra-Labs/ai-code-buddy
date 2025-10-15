@@ -112,7 +112,8 @@
 
   // Setup selection-based hover button for Feature 2 (readonly content)
   function setupSelectionHover() {
-    document.addEventListener('mouseup', handleSelection);
+    // Use capture phase (third parameter: true) to catch events before they're stopped by libraries like xterm.js
+    document.addEventListener('mouseup', handleSelection, true);
     document.addEventListener('selectionchange', handleSelection);
 
     // Also handle keyboard selection (Shift+Arrow keys)

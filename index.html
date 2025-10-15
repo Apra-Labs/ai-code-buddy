@@ -144,6 +144,13 @@
             <div class="hover-button-demo">
               <span style="margin-right: 6px;">✨</span>Send to AI
             </div>
+
+            <!-- Animated mouse cursor -->
+            <div class="mouse-cursor">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1">
+                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+              </svg>
+            </div>
           </div>
         </div>
         <style>
@@ -340,84 +347,144 @@
           }
 
           @keyframes hoverButtonFloat {
-            /* Scenario 1 - Button appears at 4.5% (halfway through selection) */
+            /* Scenario 1 - Button appears at 5%, pressed at 10-12%, disappears when AI response shows */
             0%, 4% {
               opacity: 0;
               visibility: hidden;
               top: 185px;
+              transform: translateX(-50%) scale(1);
             }
             5% {
               opacity: 1;
               visibility: visible;
               top: 185px;
+              transform: translateX(-50%) scale(1);
             }
-            20% {
+            10% {
               opacity: 1;
               visibility: visible;
               top: 185px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            12% {
+              opacity: 1;
+              visibility: visible;
+              top: 185px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            13% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
             }
             22% {
               opacity: 0;
               visibility: hidden;
             }
 
-            /* Scenario 2 - Button appears at 29.5% (halfway through selection) */
+            /* Scenario 2 - Button appears at 30%, pressed at 35-37%, disappears when AI response shows */
             25%, 29% {
               opacity: 0;
               visibility: hidden;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
             30% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
-            45% {
+            35% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            37% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            38% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
             }
             47% {
               opacity: 0;
               visibility: hidden;
             }
 
-            /* Scenario 3 - Button appears at 54.5% (halfway through selection) */
+            /* Scenario 3 - Button appears at 55%, pressed at 60-62%, disappears when AI response shows */
             50%, 54% {
               opacity: 0;
               visibility: hidden;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
             55% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
-            70% {
+            60% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            62% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            63% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
             }
             72% {
               opacity: 0;
               visibility: hidden;
             }
 
-            /* Scenario 4 - Button appears at 79.5% (halfway through selection) */
+            /* Scenario 4 - Button appears at 80%, pressed at 85-87%, disappears when AI response shows */
             75%, 79% {
               opacity: 0;
               visibility: hidden;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
             80% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(1);
             }
-            95% {
+            85% {
               opacity: 1;
               visibility: visible;
               top: 213px;
+              transform: translateX(-50%) scale(0.95);
+            }
+            87% {
+              opacity: 1;
+              visibility: visible;
+              top: 213px;
+              transform: translateX(-50%) scale(0.95);
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            88% {
+              opacity: 0;
+              visibility: hidden;
+              transform: translateX(-50%) scale(1);
             }
             97% {
               opacity: 0;
@@ -427,6 +494,150 @@
               opacity: 0;
               visibility: hidden;
             }
+          }
+
+          /* Mouse cursor animation */
+          .mouse-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            animation: mouseCursorMove 20s ease-in-out infinite;
+          }
+
+          @keyframes mouseCursorMove {
+            /* Scenario 1: Cursor appears and moves to button */
+            0%, 6% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 165px;
+            }
+            7% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 165px;
+            }
+            9% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 193px;
+            }
+            10%, 11% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 193px;
+            }
+            12% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 2 */
+            25%, 31% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            32% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            34% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            35%, 36% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            37% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 3 */
+            50%, 56% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            57% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            59% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            60%, 61% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            62% {
+              opacity: 0;
+              visibility: hidden;
+            }
+
+            /* Scenario 4 */
+            75%, 81% {
+              opacity: 0;
+              visibility: hidden;
+              left: 40%;
+              top: 193px;
+            }
+            82% {
+              opacity: 1;
+              visibility: visible;
+              left: 40%;
+              top: 193px;
+            }
+            84% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            85%, 86% {
+              opacity: 1;
+              visibility: visible;
+              left: 50%;
+              top: 221px;
+            }
+            87% {
+              opacity: 0;
+              visibility: hidden;
+            }
+            100% {
+              opacity: 0;
+              visibility: hidden;
+            }
+          }
+
+          /* Button pressed state - shows when cursor is clicking */
+          .hover-button-demo.pressed {
+            transform: translateX(-50%) scale(0.95);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
           }
 
           /* AI response animation - starts hidden, appears after button click, stays visible */

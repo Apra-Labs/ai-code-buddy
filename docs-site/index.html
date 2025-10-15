@@ -86,16 +86,104 @@
             <div class="browser-dots">
               <span></span><span></span><span></span>
             </div>
-            <div class="browser-url">localhost:8080/terminal</div>
+            <div class="browser-url">github.com/codespaces</div>
           </div>
           <div class="terminal-demo">
-            <div class="terminal-line">$ ./deploy.sh</div>
-            <div class="terminal-line error">Error: Permission denied</div>
-            <div class="terminal-button">✨ Send to AI</div>
-            <div class="terminal-line success">$ chmod +x deploy.sh && ./deploy.sh</div>
-            <div class="terminal-line success">✅ Deployment successful!</div>
+            <div class="terminal-line">$ npm run build</div>
+            <div class="terminal-line error selection-demo">
+              <span class="selection-highlight">Error: Module not found: 'react-dom'</span>
+              <div class="hover-button-demo">✨ Send to AI</div>
+            </div>
+            <div class="ai-response">
+              <div class="response-text">💡 Missing dependency. Install it:</div>
+              <div class="terminal-line success">$ npm install react-dom</div>
+            </div>
           </div>
         </div>
+        <style>
+          /* Selection highlight animation */
+          .selection-demo {
+            position: relative;
+            padding: 4px 0;
+          }
+
+          .selection-highlight {
+            background: linear-gradient(90deg,
+              rgba(148, 186, 51, 0) 0%,
+              rgba(148, 186, 51, 0.3) 20%,
+              rgba(148, 186, 51, 0.3) 80%,
+              rgba(148, 186, 51, 0) 100%
+            );
+            animation: selectionGlow 3s ease-in-out infinite;
+            padding: 2px 4px;
+            border-radius: 3px;
+          }
+
+          @keyframes selectionGlow {
+            0%, 100% {
+              background: rgba(148, 186, 51, 0.2);
+              box-shadow: 0 0 0 rgba(148, 186, 51, 0);
+            }
+            50% {
+              background: rgba(148, 186, 51, 0.4);
+              box-shadow: 0 0 8px rgba(148, 186, 51, 0.3);
+            }
+          }
+
+          /* Hover button animation */
+          .hover-button-demo {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #94BA33 0%, #7a9b2a 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: hoverButtonFloat 3s ease-in-out infinite;
+            cursor: pointer;
+            white-space: nowrap;
+            z-index: 10;
+          }
+
+          @keyframes hoverButtonFloat {
+            0%, 100% {
+              opacity: 0;
+              transform: translateX(-50%) translateY(-5px);
+            }
+            20%, 80% {
+              opacity: 1;
+              transform: translateX(-50%) translateY(0);
+            }
+          }
+
+          /* AI response animation */
+          .ai-response {
+            animation: responseSlideIn 3s ease-in-out infinite;
+            opacity: 0;
+          }
+
+          @keyframes responseSlideIn {
+            0%, 60% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            70%, 100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .response-text {
+            color: #94BA33;
+            font-weight: 600;
+            margin: 8px 0 4px 0;
+            font-size: 14px;
+          }
+        </style>
       </div>
     </div>
   </section>
@@ -154,8 +242,8 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
-          <h3>One-Click Workflow</h3>
-          <p>Select text → Hover button appears → Get improved script → Click "Insert" → Done! No copy-paste.</p>
+          <h3>Selection-Based AI</h3>
+          <p>Select any text → Hover button appears → Click "Send to AI" → Get instant help. Works everywhere!</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🔒</div>

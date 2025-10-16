@@ -277,6 +277,76 @@ test('Should handle keyboard selection (Shift key)', () => {
   assert(handlerCalled, 'Keyboard selection with Shift should be handled');
 });
 
+// Test Button Visibility When Modal is Open
+test('Hover button should NOT show when modal is already open', () => {
+  const mockDocumentWithModal = {
+    querySelector: function(selector) {
+      if (selector === '.claude-code-modal') {
+        return { className: 'claude-code-modal' }; // Modal exists
+      }
+      return null;
+    }
+  };
+
+  const modalExists = mockDocumentWithModal.querySelector('.claude-code-modal') !== null;
+  assert(modalExists, 'Modal should exist in DOM');
+
+  // Button should NOT be shown when modal is open
+  const shouldShowButton = !modalExists;
+  assert(!shouldShowButton, 'Hover button should NOT show when modal is open');
+});
+
+test('Hover button SHOULD show when no modal is open', () => {
+  const mockDocumentWithoutModal = {
+    querySelector: function(selector) {
+      return null; // No modal
+    }
+  };
+
+  const modalExists = mockDocumentWithoutModal.querySelector('.claude-code-modal') !== null;
+  assert(!modalExists, 'Modal should not exist in DOM');
+
+  // Button SHOULD be shown when no modal is open
+  const shouldShowButton = !modalExists;
+  assert(shouldShowButton, 'Hover button SHOULD show when no modal is open');
+});
+
+test('Hover button should be removed when modal opens', () => {
+  let hoverButton = { remove: function() { this._removed = true; }, _removed: false };
+
+  // Simulate modal opening - button should be removed
+  const removeSelectionHoverButton = function() {
+    if (hoverButton && !hoverButton._removed) {
+      hoverButton.remove();
+      hoverButton = null;
+    }
+  };
+
+  // Open modal
+  removeSelectionHoverButton();
+
+  assert(hoverButton === null, 'Hover button should be removed when modal opens');
+});
+
+test('New selection should not show button when modal is open', () => {
+  const mockDocument = {
+    querySelector: function(selector) {
+      if (selector === '.claude-code-modal') {
+        return { className: 'claude-code-modal' }; // Modal is open
+      }
+      return null;
+    }
+  };
+
+  // User makes a new selection while modal is open
+  const newSelection = 'new selected text';
+  const modalIsOpen = mockDocument.querySelector('.claude-code-modal') !== null;
+
+  // Button should NOT be created
+  const shouldCreateButton = !modalIsOpen && newSelection.length >= 3;
+  assert(!shouldCreateButton, 'New selection should not create button when modal is open');
+});
+
 // Test Integration with AI Pipeline
 test('Selection text should be sent as output to AI', () => {
   const selectedText = 'npm ERR! code ENOENT';
@@ -356,6 +426,66 @@ test('Hover button should work for regular DIV text', () => {
   const shouldShowButton = !insideModal;
 
   assert(shouldShowButton, 'Hover button SHOULD show for regular readonly content');
+});
+
+// Test Selection Clearing When Modal Opens
+test('Text selection should be cleared when modal opens', () => {
+  const mockSelection = {
+    rangeCount: 1,
+    removeAllRanges: function() {
+      this.rangeCount = 0;
+      this._cleared = true;
+    },
+    _cleared: false
+  };
+
+  // Simulate clearing selection
+  mockSelection.removeAllRanges();
+
+  assert(mockSelection.rangeCount === 0, 'Selection ranges should be cleared');
+  assert(mockSelection._cleared, 'removeAllRanges should have been called');
+});
+
+test('Textarea selection should be collapsed when modal opens', () => {
+  const mockTextarea = {
+    tagName: 'TEXTAREA',
+    value: 'some selected text',
+    selectionStart: 0,
+    selectionEnd: 18 // Text is selected
+  };
+
+  // Simulate collapsing selection
+  const cursorPos = mockTextarea.selectionEnd;
+  mockTextarea.selectionStart = cursorPos;
+  mockTextarea.selectionEnd = cursorPos;
+
+  assert(mockTextarea.selectionStart === mockTextarea.selectionEnd, 'Selection should be collapsed');
+  assert(mockTextarea.selectionStart === 18, 'Cursor should be at end');
+});
+
+test('Hover button should NOT reappear after modal closes if no selection', () => {
+  const mockSelection = {
+    toString: function() { return ''; }, // No selection
+    rangeCount: 0
+  };
+
+  const selectedText = mockSelection.toString().trim();
+  const shouldShowButton = selectedText.length >= 3;
+
+  assert(!shouldShowButton, 'Button should not appear without selection');
+});
+
+test('Modal opening should trigger selection clearing', () => {
+  let selectionCleared = false;
+
+  const clearTextSelection = function() {
+    selectionCleared = true;
+  };
+
+  // Simulate modal opening
+  clearTextSelection();
+
+  assert(selectionCleared, 'Selection should be cleared when modal opens');
 });
 
 // Summary

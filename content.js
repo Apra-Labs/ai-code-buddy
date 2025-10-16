@@ -202,6 +202,14 @@
         return;
       }
 
+      // Don't show if ANY modal is currently open
+      const existingModal = document.querySelector('.claude-code-modal');
+      if (existingModal) {
+        console.log('❌ Modal is open, not showing hover button');
+        removeSelectionHoverButton();
+        return;
+      }
+
       // Show or update the hover button position
       // Now works for BOTH editable and non-editable text
       showSelectionHoverButton(rect, selectedText, sourceElement);
@@ -363,6 +371,28 @@
       selectionHoverButton.remove();
       selectionHoverButton = null;
     }
+  }
+
+  // Clear text selection to prevent hover button from reappearing
+  function clearTextSelection() {
+    // Clear window selection
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      if (selection.removeAllRanges) {
+        selection.removeAllRanges();
+      }
+    }
+
+    // Clear selection in active textarea/input
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+      // Move cursor to end without selection
+      const cursorPos = activeElement.selectionEnd;
+      activeElement.selectionStart = cursorPos;
+      activeElement.selectionEnd = cursorPos;
+    }
+
+    console.log('🧹 Text selection cleared');
   }
 
   // Initialize extension
@@ -854,6 +884,12 @@
       existing.remove();
     }
 
+    // Remove any hover button since we're showing the modal
+    removeSelectionHoverButton();
+
+    // Clear text selection to prevent button from reappearing
+    clearTextSelection();
+
     const modal = document.createElement('div');
     modal.className = 'claude-code-modal';
     modal.innerHTML = `
@@ -1109,6 +1145,12 @@
     if (existing) {
       existing.remove();
     }
+
+    // Remove any hover button since we're showing the modal
+    removeSelectionHoverButton();
+
+    // Clear text selection to prevent button from reappearing
+    clearTextSelection();
 
     // Use the lastTriggeredInputElement that we stored when "Send to AI" was clicked
     // This is the textarea/input the user was working in!

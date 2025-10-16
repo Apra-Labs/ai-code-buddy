@@ -330,13 +330,98 @@
         <p style="margin-top: 20px; font-size: 14px; opacity: 0.9;"><strong>What happens when you report?</strong> Your feedback helps us update documentation, build our <a href="https://github.com/Apra-Labs/ai-code-buddy/blob/main/PROMPT-LIBRARY.md" target="_blank" style="color: #e65100; text-decoration: underline;">Prompt Library</a> for different tools, fix bugs, and improve the extension for everyone!</p>
       </div>
 
-      <!-- Category 1: Browser-Based SSH & Remote Access -->
+      <!-- Category 1: Data Science & Notebooks -->
+      <div class="category-header">
+        <h2>📊 Browser-Based Data Science Tools</h2>
+        <p>Debug notebooks and analyze data with AI-powered insights</p>
+      </div>
+
+      <!-- Use Case 1: Jupyter -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <div class="use-case-icon">📈</div>
+          <div>
+            <h2>Jupyter Notebooks & Data Platforms</h2>
+            <p class="subtitle">AI assistance for data science, analytics, and machine learning workflows</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <span class="platform-badge" style="background: #28a745; position: relative; padding-right: 45px;">
+            JupyterLab
+            <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 16px;">✓</span>
+          </span>
+          <span class="platform-badge">Google Colab</span>
+          <span class="platform-badge">Kaggle Notebooks</span>
+          <span class="platform-badge secondary">Observable</span>
+          <span class="platform-badge secondary">Deepnote</span>
+          <span class="platform-badge tertiary">Databricks Notebooks</span>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Debugging Pandas Errors in JupyterLab</h3>
+          <p><strong>The Problem:</strong> You're analyzing data in JupyterLab. A pandas operation throws a cryptic error about data types or indices.</p>
+
+          <ol class="step-list">
+            <li>Open JupyterLab in your browser and load your dataset</li>
+            <li>Run data transformation: <code>df.merge(df2, on='user_id')</code></li>
+            <li>Cell fails with KeyError or ValueError</li>
+            <li>Select the error traceback in the cell output</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI diagnoses the issue and provides corrected pandas code</li>
+            <li>Apply fix and continue your analysis</li>
+          </ol>
+
+          <div class="code-block"><span class="comment"># In JupyterLab cell:</span>
+result = df.merge(df2, on='user_id', how='inner')
+
+<span class="error">KeyError: 'user_id'</span>
+<span class="error">During handling of the above exception, another exception occurred:</span>
+<span class="error">...</span>
+
+<span class="comment">[Select error → AI Code Buddy analyzes]</span>
+
+<span class="comment"># AI discovers the issue and suggests:</span>
+<span class="success"># Check actual column names first:</span>
+<span class="success">print("df columns:", df.columns.tolist())</span>
+<span class="success">print("df2 columns:", df2.columns.tolist())</span>
+
+<span class="comment"># AI explains: "Column is likely 'userId' (camelCase) not 'user_id'"</span>
+<span class="success">result = df.merge(df2, left_on='userId', right_on='userId', how='inner')</span>
+
+<span class="comment"># Or rename for consistency:</span>
+<span class="success">df2 = df2.rename(columns={'userId': 'user_id'})</span>
+<span class="success">result = df.merge(df2, on='user_id', how='inner')</span></div>
+        </div>
+
+        <div class="scenario-box">
+          <h3>📋 Scenario: Understanding ML Model Errors</h3>
+          <p>Training a machine learning model in Google Colab, but getting dimension mismatch or convergence errors.</p>
+
+          <ol class="step-list">
+            <li>Run your model training code in Google Colab</li>
+            <li>Model fails with ValueError about shapes or convergence</li>
+            <li>Select the error message in cell output</li>
+            <li>Click AI Code Buddy hover button</li>
+            <li>AI explains the error and suggests fixes (reshape data, adjust parameters, etc.)</li>
+            <li>Apply corrections and retrain successfully</li>
+          </ol>
+        </div>
+
+        <div class="highlight-box">
+          <h4>💡 Data Science Superpower</h4>
+          <p><strong>Common Pain Point:</strong> Jupyter notebooks show errors, but explaining them requires deep pandas/numpy/sklearn knowledge.</p>
+          <p><strong>AI Code Buddy advantage:</strong> Instantly understand any error, get working fixes, and learn best practices - all without leaving your notebook!</p>
+        </div>
+      </div>
+
+      <!-- Category 2: Browser-Based SSH & Remote Access -->
       <div class="category-header">
         <h2>🖥️ Browser-Based SSH & Remote Access</h2>
         <p>Manage remote servers with AI-powered assistance - no desktop SSH client needed</p>
       </div>
 
-      <!-- Use Case 1: WebSSH Terminals -->
+      <!-- Use Case 2: WebSSH Terminals -->
       <div class="use-case-card">
         <div class="use-case-header">
           <div class="use-case-icon">🔐</div>
@@ -413,13 +498,13 @@
         </div>
       </div>
 
-      <!-- Category 2: Database Management -->
+      <!-- Category 3: Database Management -->
       <div class="category-header">
         <h2>🗄️ Browser-Based Database Tools</h2>
         <p>Write better SQL queries and understand database errors instantly</p>
       </div>
 
-      <!-- Use Case 2: Database GUIs -->
+      <!-- Use Case 3: Database GUIs -->
       <div class="use-case-card">
         <div class="use-case-header">
           <div class="use-case-icon">💾</div>
@@ -509,13 +594,13 @@ ORDER BY order_count DESC;</div>
         </div>
       </div>
 
-      <!-- Category 3: Cloud IDEs -->
+      <!-- Category 4: Cloud IDEs -->
       <div class="category-header">
         <h2>💻 Browser-Based Development Environments</h2>
         <p>Code faster with AI assistance in cloud IDEs and online editors</p>
       </div>
 
-      <!-- Use Case 3: Cloud IDEs -->
+      <!-- Use Case 4: Cloud IDEs -->
       <div class="use-case-card">
         <div class="use-case-header">
           <div class="use-case-icon">⚡</div>
@@ -610,88 +695,6 @@ print(numbers[10])
           <h4>💡 Perfect for Learning and Collaboration</h4>
           <p><strong>Why It Matters:</strong> GitHub Codespaces and vscode.dev are powerful but don't have dedicated AI for terminal errors or build output.</p>
           <p><strong>AI Code Buddy fills the gap:</strong> Get AI help for ANY text in the terminal, console, or editor - perfect for debugging, learning, and code reviews!</p>
-        </div>
-      </div>
-
-      <!-- Category 4: Data Science & Notebooks -->
-      <div class="category-header">
-        <h2>📊 Browser-Based Data Science Tools</h2>
-        <p>Debug notebooks and analyze data with AI-powered insights</p>
-      </div>
-
-      <!-- Use Case 4: Jupyter -->
-      <div class="use-case-card">
-        <div class="use-case-header">
-          <div class="use-case-icon">📈</div>
-          <div>
-            <h2>Jupyter Notebooks & Data Platforms</h2>
-            <p class="subtitle">AI assistance for data science, analytics, and machine learning workflows</p>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <span class="platform-badge">JupyterLab</span>
-          <span class="platform-badge">Google Colab</span>
-          <span class="platform-badge">Kaggle Notebooks</span>
-          <span class="platform-badge secondary">Observable</span>
-          <span class="platform-badge secondary">Deepnote</span>
-          <span class="platform-badge tertiary">Databricks Notebooks</span>
-        </div>
-
-        <div class="scenario-box">
-          <h3>📋 Scenario: Debugging Pandas Errors in JupyterLab</h3>
-          <p><strong>The Problem:</strong> You're analyzing data in JupyterLab. A pandas operation throws a cryptic error about data types or indices.</p>
-
-          <ol class="step-list">
-            <li>Open JupyterLab in your browser and load your dataset</li>
-            <li>Run data transformation: <code>df.merge(df2, on='user_id')</code></li>
-            <li>Cell fails with KeyError or ValueError</li>
-            <li>Select the error traceback in the cell output</li>
-            <li>Click AI Code Buddy hover button</li>
-            <li>AI diagnoses the issue and provides corrected pandas code</li>
-            <li>Apply fix and continue your analysis</li>
-          </ol>
-
-          <div class="code-block"><span class="comment"># In JupyterLab cell:</span>
-result = df.merge(df2, on='user_id', how='inner')
-
-<span class="error">KeyError: 'user_id'</span>
-<span class="error">During handling of the above exception, another exception occurred:</span>
-<span class="error">...</span>
-
-<span class="comment">[Select error → AI Code Buddy analyzes]</span>
-
-<span class="comment"># AI discovers the issue and suggests:</span>
-<span class="success"># Check actual column names first:</span>
-<span class="success">print("df columns:", df.columns.tolist())</span>
-<span class="success">print("df2 columns:", df2.columns.tolist())</span>
-
-<span class="comment"># AI explains: "Column is likely 'userId' (camelCase) not 'user_id'"</span>
-<span class="success">result = df.merge(df2, left_on='userId', right_on='userId', how='inner')</span>
-
-<span class="comment"># Or rename for consistency:</span>
-<span class="success">df2 = df2.rename(columns={'userId': 'user_id'})</span>
-<span class="success">result = df.merge(df2, on='user_id', how='inner')</span></div>
-        </div>
-
-        <div class="scenario-box">
-          <h3>📋 Scenario: Understanding ML Model Errors</h3>
-          <p>Training a machine learning model in Google Colab, but getting dimension mismatch or convergence errors.</p>
-
-          <ol class="step-list">
-            <li>Run your model training code in Google Colab</li>
-            <li>Model fails with ValueError about shapes or convergence</li>
-            <li>Select the error message in cell output</li>
-            <li>Click AI Code Buddy hover button</li>
-            <li>AI explains the error and suggests fixes (reshape data, adjust parameters, etc.)</li>
-            <li>Apply corrections and retrain successfully</li>
-          </ol>
-        </div>
-
-        <div class="highlight-box">
-          <h4>💡 Data Science Superpower</h4>
-          <p><strong>Common Pain Point:</strong> Jupyter notebooks show errors, but explaining them requires deep pandas/numpy/sklearn knowledge.</p>
-          <p><strong>AI Code Buddy advantage:</strong> Instantly understand any error, get working fixes, and learn best practices - all without leaving your notebook!</p>
         </div>
       </div>
 
